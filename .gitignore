@@ -1,0 +1,31 @@
+# ---- Build output (Maven) ----
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# ---- Local configuration and secrets (never commit) ----
+application-local.properties
+src/main/resources/application-local.properties
+*.env
+.env
+
+# ---- IDEs ----
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.project
+.classpath
+.settings/
+.factorypath
+bin/
+.vscode/
+
+# ---- Logs ----
+*.log
+logs/
+
+# ---- OS files ----
+.DS_Store
+Thumbs.db
+desktop.ini
