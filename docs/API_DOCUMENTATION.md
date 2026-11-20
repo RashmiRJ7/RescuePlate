@@ -250,7 +250,11 @@ Optional `?status=RESERVED`. Response `200`: array of the object above plus, whe
 
 ### 5.3 Live feed: `GET /donations/feed` (NGO, P1)
 
-Returns **claimable** donations (`AVAILABLE` or `DISPATCHING`, not expired) **that the logged-in NGO is eligible for**, sorted by **urgency score descending**, ties by earlier `safeUntil`.
+Returns **claimable** donations (`AVAILABLE` or `DISPATCHING`, not expired) **that the logged-in NGO is eligible for**, sorted by the 4-level feed priority:
+1. Urgency score descending (scores equal after rounding to 1 decimal place are treated as tied)
+2. Earlier `safeUntil` ascending (earliest expiry first)
+3. Larger `quantity` descending (larger batch first)
+4. Lower donation `id` ascending (stable, deterministic order)
 
 Eligibility is always applied, using the NGO profile (`ALGORITHMS.md` §3.1):
 - the donation's category is in `acceptedCategories`,
@@ -291,7 +295,7 @@ Response `200`:
     "id": 9,
     "foodName": "Bread loaves",
     "category": "BAKERY",
-    "quantity": 150,
+    "quantity": 30,
     "donorName": "City Bakery",
     "pickupAddress": "Tilakwadi, Belagavi",
     "distanceKm": 4.1,

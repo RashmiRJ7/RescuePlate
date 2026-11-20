@@ -50,7 +50,7 @@ Surplus Food Rescue is a web platform where food donors post surplus food and ne
 |---|---|---|
 | Registration and login (Donor, NGO; seeded Admin can log in) | ✅ | |
 | Donor posts donations, views own donations | ✅ | |
-| Live feed sorted by **urgency score** | ✅ | |
+| Live feed sorted by **urgency score** (4-level tie-breaking) | ✅ | |
 | Search and filter feed (category, quantity, distance) | ✅ | |
 | NGO claim with duplicate-claim prevention | ✅ | |
 | NGO cancels own claim → donation reopens | ✅ | |
@@ -94,7 +94,7 @@ Priority: **M** = must, **S** = should, **C** = could.
 ### 6.3 Live feed and claiming
 | ID | Requirement | Role | Phase | Pri |
 |---|---|---|---|---|
-| FR-20 | Live feed of claimable donations the NGO is eligible for (accepted category, service radius; flags donations exceeding nominal capacity with a warning), **most urgent first** | NGO | 1 | M |
+| FR-20 | Live feed of claimable donations the NGO is eligible for (accepted category, service radius; flags donations exceeding nominal capacity with a warning), sorted by 4-level priority: (1) urgency score ↓, (2) earlier safeUntil ↑, (3) larger quantity ↓, (4) lower donation id ↑ | NGO | 1 | M |
 | FR-21 | Filter by category, minimum quantity and max distance | NGO | 1 | S |
 | FR-22 | Claim a donation; **first valid claim wins**, later attempts are rejected with a clear message | NGO | 1 | M |
 | FR-23 | NGO can cancel its own claim; donation returns to the feed (Admin claim cancel: Phase 2) | NGO | 1 | M |
@@ -166,7 +166,7 @@ Definitions: **Rescued** = quantity of donations in `DELIVERED`. **Expired** = q
 
 - [ ] Donor and NGO can register; all three roles (Admin is seeded) can log in and only reach their own pages and APIs.
 - [ ] A donor can post a valid donation; invalid input shows clear errors.
-- [ ] The NGO feed is ordered by urgency; a nearly-expired cooked meal appears above a long-life packaged item.
+- [ ] The NGO feed is ordered by urgency with 4-level tie-breaking (urgency score ↓, safeUntil ↑, quantity ↓, donation id ↑); a nearly-expired cooked meal appears above a long-life packaged item.
 - [ ] Two NGOs claiming the same donation simultaneously: exactly one succeeds, the other receives a conflict message.
 - [ ] Cancelling a claim returns the donation to the feed.
 - [ ] Status timeline shows every change with time and actor (checked via `GET /donations/{id}/history`; the timeline UI is Phase 2).

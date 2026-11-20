@@ -228,7 +228,7 @@ If you fall behind, protect **Steps 3, 4, 8, 9, 11**. They are the core of the p
 1. Load claimable donations.
 2. Keep only those the NGO is eligible for (active, accepted category, distance ≤ radius). `maxDistanceKm` may narrow the radius, never widen it. (Capacity is an informational guideline, not a blocker).
 3. Compute `urgencyScore`, `minutesLeft` (whole minutes, rounded down), `distanceKm`, and `exceedsCapacity` flag (`quantity > ngo.capacityMeals`).
-4. Sort by urgency descending, then `safeUntil` ascending. Use a `Comparator`; `PriorityQueue` is the alternative to explain.
+4. Sort using the 4-level feed comparator (`DonationFeedComparator` / `ScoredDonation.comparator()`): (1) urgency score descending (rounded to 1 decimal place), (2) earlier `safeUntil` ascending, (3) larger `quantity` descending, (4) lower donation `id` ascending (stable, deterministic order). `PriorityQueue` is the alternative to explain.
 5. Return DTOs.
 
 **Check:** seed 3 donations (cooked/30 min, cooked/3 h, packaged/5 h). The order must be 95.0, 66.7, 26.9. Then change the NGO's accepted categories and confirm the feed shrinks.
@@ -310,7 +310,7 @@ If you fall behind, protect **Steps 3, 4, 8, 9, 11**. They are the core of the p
 | Auth | Login wrong password | 401 |
 | Donor | Post valid donation | 201 `AVAILABLE` |
 | Donor | Post with past `safeUntil` | 400 with `fieldErrors` |
-| NGO | Feed | Sorted by urgency |
+| NGO | Feed | Sorted by urgency (4-level tie-breaking) |
 | NGO | Claim | 201 |
 | NGO 2 | Claim same donation | **409** |
 | NGO | Pickup, then deliver | 200, 200 |

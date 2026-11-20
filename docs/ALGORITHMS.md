@@ -51,6 +51,8 @@ else                  : timeScore = 100 × (360 - minutesLeft) / (360 - 30)
 quantityScore = min(quantity, 100)   // 100 or more meals = 100
 ```
 
+Quantity is capped at 100 in the score and batch size is only used as a tie-breaker, while the NGO match score handles capacity fit.
+
 ### 1.2 Worked example
 
 | Donation | Category | Time left | Qty | timeScore | perish. | qtyScore | **Urgency** |
@@ -59,7 +61,7 @@ quantityScore = min(quantity, 100)   // 100 or more meals = 100
 | B | Cooked meal | 3 h (180 min) | 40 | 54.5 | 100 | 40 | 32.7 + 30 + 4 = **66.7** |
 | C | Packaged | 5 h (300 min) | 100 | 18.2 | 20 | 100 | 10.9 + 6 + 10 = **26.9** |
 
-Order shown to NGOs: **A → B → C**. Ties are broken by earlier `safeUntil`.
+Order shown to NGOs: **A → B → C**. Feed order follows a 4-level priority: (1) Urgency score descending (scores equal after rounding to 1 decimal place are tied), (2) earlier `safeUntil` ascending, (3) larger `quantity` descending, and (4) lower donation `id` ascending (stable, deterministic order).
 
 ### 1.3 Important notes
 
@@ -76,7 +78,15 @@ Order shown to NGOs: **A → B → C**. Ties are broken by earlier `safeUntil`.
 | 195 min left | timeScore = 50 |
 | Cooked vs packaged, same time/qty | cooked scores higher |
 | qty = 500 | qtyScore capped at 100 |
-| Same urgency, different safeUntil | earlier safeUntil sorts first |
+| Benchmark A (Cooked, 30m, qty 50) | urgency = 95.0 |
+| Benchmark B (Cooked, 180m, qty 40) | urgency = 66.7 |
+| Benchmark C (Packaged, 300m, qty 100) | urgency = 26.9 |
+| Benchmark D (Bakery, 310m, qty 30) | urgency = 30.1 |
+| Clear urgency difference | higher urgency sorts first |
+| Tied urgency (raw scores differing only after 1st decimal) | earlier safeUntil sorts first |
+| Tied urgency and safeUntil | larger quantity sorts first |
+| Everything tied (urgency, safeUntil, quantity) | lower donation id sorts first (deterministic) |
+| Qty 150 vs 200 (both qtyScore = 100) | 200 listed first (tie-breaker) |
 
 ---
 
@@ -292,7 +302,7 @@ Not a scoring algorithm, but a correctness one. Summary of the safeguards (full 
 
 | Structure | Where | Why |
 |---|---|---|
-| `PriorityQueue<Donation>` | Dispatch loop; feed ordering | Always yields the most urgent donation next (comparator: urgency ↓, `safeUntil` ↑) |
+| `PriorityQueue<Donation>` | Dispatch loop; feed ordering | Always yields the most urgent donation next (comparator: urgency ↓, safeUntil ↑, quantity ↓, id ↑) |
 | `ArrayList` | Feed results, NGO candidate lists | Ordered display lists, sorting with `Comparator` |
 | `HashMap<Long, Donation>` | In-memory lookup during a dispatch tick | O(1) lookup by donation ID |
 | `HashSet<Long>` | NGO IDs already notified for a donation | Prevents re-notifying the same NGO |
