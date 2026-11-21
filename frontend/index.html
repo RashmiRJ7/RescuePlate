@@ -12,7 +12,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 </head>
-<body>
+  <body class="mr-entrance">
   <header>
     <nav class="navbar navbar-expand-lg mr-nav" aria-label="Main">
       <div class="container">
@@ -24,7 +24,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="mainNav">
-          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
             <li class="nav-item"><a class="nav-link" href="#how-it-works">How it works</a></li>
             <li class="nav-item"><a class="nav-link" href="#impact">Impact</a></li>
             <li class="nav-item"><a class="nav-link" href="#get-involved">Get involved</a></li>
@@ -40,25 +40,43 @@
 
   <main>
     <section class="mr-hero">
-      <div class="container">
+      <!-- Floating food atmosphere -->
+      <div class="mr-food-float f1" style="width:72px;top:8%;left:4%;" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none"><ellipse cx="32" cy="38" rx="26" ry="10" fill="#F2EDE1" stroke="#174D38" stroke-width="2"/><ellipse cx="32" cy="35" rx="24" ry="8" fill="#fffdf8"/><circle cx="24" cy="33" r="5" fill="#E5B94D" opacity=".7"/><circle cx="35" cy="32" r="4" fill="#E98A35" opacity=".5"/><circle cx="30" cy="36" r="3.5" fill="#174D38" opacity=".15"/></svg>
+      </div>
+      <div class="mr-food-float f2" style="width:56px;top:18%;right:6%;" aria-hidden="true">
+        <svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="30" r="18" fill="#F2EDE1" stroke="#174D38" stroke-width="1.8"/><path d="M14 28c0-7 6-12 14-12s14 5 14 12" fill="#E5B94D" opacity=".35"/><ellipse cx="28" cy="30" rx="10" ry="4" fill="#E98A35" opacity=".2"/></svg>
+      </div>
+      <div class="mr-food-float f3" style="width:48px;bottom:12%;left:8%;" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none"><path d="M8 32c0-8 7-16 16-16s16 8 16 16" fill="#F2EDE1" stroke="#174D38" stroke-width="1.5"/><path d="M12 30c0-6 5-11 12-11s12 5 12 11" fill="#E7EFE8"/></svg>
+      </div>
+      <div class="mr-food-float f4" style="width:52px;bottom:22%;right:3%;" aria-hidden="true">
+        <svg viewBox="0 0 52 52" fill="none"><rect x="10" y="16" width="32" height="24" rx="4" fill="#F2EDE1" stroke="#174D38" stroke-width="1.5"/><path d="M10 22h32" stroke="#174D38" stroke-width="1.5"/><circle cx="26" cy="30" r="5" fill="#E98A35" opacity=".25"/></svg>
+      </div>
+
+      <div class="container position-relative" style="z-index:2;">
         <div class="row align-items-center g-4 g-lg-5">
-          <div class="col-lg-6">
-            <p class="mr-kicker"><i class="bi bi-clock-history" aria-hidden="true"></i> Before it spoils</p>
-            <h1>Rescue surplus food while it is still a meal.</h1>
-            <p class="mr-hero-lead">RescuePlate links Indian kitchens, hostels, bakeries and event teams with nearby NGOs so edible surplus is collected and served in time.</p>
-            <div class="d-flex flex-wrap gap-3 mr-hero-actions">
+          <div class="col-lg-6 mr-reveal">
+            <p class="mr-kicker"><i class="bi bi-heart-pulse" aria-hidden="true"></i> Indian food-rescue network</p>
+            <h1 class="mt-2">Turn surplus food into someone's next meal.</h1>
+            <p class="mr-hero-lead mt-3">RescuePlate connects hostels, bakeries, weddings and kitchens with nearby NGOs — so fresh Indian meals are rescued before they spoil.</p>
+            <div class="d-flex flex-wrap gap-3 mr-hero-actions mt-4">
               <a class="btn mr-btn mr-btn-primary" href="register.html">Donate Surplus Food <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-              <a class="btn mr-btn mr-btn-ghost" href="#how-it-works">Learn More</a>
+              <a class="btn mr-btn mr-btn-ghost" href="#how-it-works">See How It Works</a>
+            </div>
+            <div class="mr-hero-trust mt-4">
+              <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Free for donors & NGOs</span>
+              <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Made for Indian communities</span>
             </div>
           </div>
-          <div class="col-lg-6">
+          <div class="col-lg-6 mr-reveal" style="--mr-stagger-delay: 120ms">
             <div class="mr-hero-frame">
-              <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=1400&q=80" alt="A colourful Indian thali with rice, dal, roti and vegetable dishes" width="1400" height="900">
+              <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=1400&q=80" alt="A colourful Indian thali with rice, dal, roti and sabzi, ready to be shared" width="1400" height="900" loading="eager">
               <div class="mr-float-card">
                 <span class="mr-pulse" aria-hidden="true"></span>
                 <div>
-                  <strong>Urgent donation nearby</strong>
-                  <span>Prepared trays, ready for pickup</span>
+                  <strong>Fresh donation nearby</strong>
+                  <span>40 plates of rice, dal & sabzi</span>
                 </div>
               </div>
             </div>
@@ -69,36 +87,34 @@
 
     <section class="mr-section" id="how-it-works">
       <div class="container">
-        <div class="row mb-4 mb-lg-5">
-          <div class="col-lg-7">
-            <p class="mr-kicker">How RescuePlate works</p>
-            <h2 class="display-6 mb-3">Three steps from surplus to a served meal.</h2>
-            <p class="mr-muted mb-0">Donors list what they have. NGOs claim what they can collect. The handoff happens before the food expires.</p>
-          </div>
+        <div class="text-center mb-4 mb-lg-5 mr-reveal">
+          <p class="mr-kicker">How it works</p>
+          <h2 class="display-6 mb-3">Three simple steps to rescue a meal.</h2>
+          <p class="mr-muted mx-auto mb-0" style="max-width:38rem;">From a hostel mess in Pune to a wedding hall in Delhi — surplus food finds its way to people who need it.</p>
         </div>
         <div class="row g-4">
           <div class="col-md-4">
-            <article class="mr-step">
+            <article class="mr-step mr-reveal">
               <div class="mr-step-icon" aria-hidden="true"><i class="bi bi-basket2"></i></div>
               <p class="mr-step-num mb-0">Step 01</p>
-              <h3>Donate Food</h3>
-              <p class="mr-muted mb-0">Hostel messes, hotels, bakeries, wedding caterers and campus events share surplus with quantities, pickup locations and safe-to-collect times.</p>
+              <h3>List surplus food</h3>
+              <p class="mr-muted mb-0">Donors post what’s available — 40 plates of dal-rice, 25 bread packets, or 120 wedding portions — with a pickup window.</p>
             </article>
           </div>
           <div class="col-md-4">
-            <article class="mr-step">
+            <article class="mr-step mr-reveal" style="transition-delay:100ms">
               <div class="mr-step-icon" aria-hidden="true"><i class="bi bi-geo-alt"></i></div>
               <p class="mr-step-num mb-0">Step 02</p>
-              <h3>Find NGO</h3>
-              <p class="mr-muted mb-0">Nearby organisations see open listings that match their capacity and can respond while the food is still safe to eat.</p>
+              <h3>NGOs discover nearby</h3>
+              <p class="mr-muted mb-0">Nearby organisations see fresh listings, check quantity and safe-until time, and claim what they can collect.</p>
             </article>
           </div>
           <div class="col-md-4">
-            <article class="mr-step">
+            <article class="mr-step mr-reveal" style="transition-delay:200ms">
               <div class="mr-step-icon" aria-hidden="true"><i class="bi bi-heart-pulse"></i></div>
               <p class="mr-step-num mb-0">Step 03</p>
-              <h3>Rescue Food</h3>
-              <p class="mr-muted mb-0">An NGO claims the listing, collects it in the pickup window, and confirms the rescue so nothing edible is left waiting.</p>
+              <h3>Food gets rescued</h3>
+              <p class="mr-muted mb-0">The NGO collects in time, serves the meal, and the rescue is confirmed. Good food reaches people, not landfills.</p>
             </article>
           </div>
         </div>
@@ -107,64 +123,77 @@
 
     <section class="mr-section pt-0" id="impact">
       <div class="container">
-        <div class="mr-impact">
+        <div class="mr-impact mr-reveal">
           <div class="row align-items-end mb-2">
             <div class="col-lg-7">
-              <p class="mr-kicker">Illustrative impact</p>
-              <h2 class="mb-2">What a busy rescue network can look like.</h2>
-              <p class="mr-impact-copy mb-0">These figures are sample data for the design preview. They are not live RescuePlate results.</p>
+              <p class="mr-kicker" style="background:rgba(255,255,255,.12);color:#F2EDE1;">Illustrative impact</p>
+              <h2 class="mb-2">A growing network of care.</h2>
+              <p class="mr-impact-copy mb-0">Sample figures for the design preview — not live RescuePlate data.</p>
             </div>
           </div>
           <div class="row text-center text-lg-start mt-4">
             <div class="col-6 col-lg-3">
               <div class="mr-stat">
-                <strong>12,400</strong>
-                <span>Meals rescued (sample)</span>
+                <strong class="mr-counter" data-count="12400">0</strong>
+                <span>Meals rescued</span>
               </div>
             </div>
             <div class="col-6 col-lg-3">
               <div class="mr-stat">
-                <strong>86</strong>
-                <span>NGO partners (sample)</span>
+                <strong class="mr-counter" data-count="86">0</strong>
+                <span>NGO partners</span>
               </div>
             </div>
             <div class="col-6 col-lg-3">
               <div class="mr-stat">
-                <strong>38 min</strong>
-                <span>Average claim time (sample)</span>
+                <strong class="mr-counter" data-count="38" data-suffix=" min">0</strong>
+                <span>Avg. claim time</span>
               </div>
             </div>
             <div class="col-6 col-lg-3">
               <div class="mr-stat">
-                <strong>9.2 t</strong>
-                <span>Kept from landfill (sample)</span>
+                <strong class="mr-counter" data-count="9.2" data-suffix=" t" data-decimal="1">0</strong>
+                <span>Kept from landfill</span>
               </div>
             </div>
           </div>
-          <p class="mr-sample-note mb-0"><i class="bi bi-info-circle me-1" aria-hidden="true"></i> Illustrative only. Real totals will come from the Spring Boot API once donations are recorded.</p>
+          <p class="mr-sample-note mb-0"><i class="bi bi-info-circle me-1" aria-hidden="true"></i> Illustrative preview data only.</p>
         </div>
       </div>
     </section>
 
     <section class="mr-section pt-0" id="get-involved">
       <div class="container">
+        <div class="text-center mb-4 mb-lg-5 mr-reveal">
+          <p class="mr-kicker">Get involved</p>
+          <h2 class="display-6 mb-3">Built for donors and NGOs.</h2>
+          <p class="mr-muted mx-auto mb-0" style="max-width:34rem;">Whether you have surplus food or serve communities, RescuePlate makes the connection simple.</p>
+        </div>
         <div class="row g-4">
           <div class="col-lg-6">
-            <article class="mr-cta">
-              <img class="mr-cta-photo" src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=1200&q=80" alt="Indian rice and curry meal ready to share" width="1200" height="800">
-              <p class="mr-kicker mr-kicker-urgent"><i class="bi bi-shop" aria-hidden="true"></i> For donors</p>
-              <h3>Have extra food to share today?</h3>
-              <p class="mr-muted">List rice and dal, fresh bakery packets or event meals with a pickup window. A nearby NGO can collect them in time.</p>
-              <a class="btn mr-btn mr-btn-primary" href="register.html">Start donating</a>
+            <article class="mr-cta mr-reveal">
+              <div class="mr-cta-photo-wrap mr-image-wrap">
+                <img class="mr-cta-photo" src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=1200&q=80" alt="Fresh Indian curry and rice meal ready to share" width="1200" height="800" loading="lazy">
+              </div>
+              <div class="mr-cta-body">
+                <p class="mr-kicker mr-kicker-urgent"><i class="bi bi-shop" aria-hidden="true"></i> For donors</p>
+                <h3>Share surplus, not waste.</h3>
+                <p class="mr-muted">Post extra rice, dal, bakery packets or event meals in minutes. Nearby NGOs collect before the food spoils.</p>
+                <a class="btn mr-btn mr-btn-primary" href="register.html">Start donating</a>
+              </div>
             </article>
           </div>
           <div class="col-lg-6">
-            <article class="mr-cta mr-cta-ngo">
-              <img class="mr-cta-photo" src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=1200&q=80" alt="A freshly prepared Indian biryani meal" width="1200" height="800">
-              <p class="mr-kicker mr-kicker-on-dark"><i class="bi bi-people" aria-hidden="true"></i> For NGOs</p>
-              <h3>Looking for meals for the people you serve?</h3>
-              <p>See time-sensitive listings near you and claim the ones your team can collect today.</p>
-              <a class="btn mr-btn mr-btn-light" href="register.html">Join as an NGO</a>
+            <article class="mr-cta mr-cta-ngo mr-reveal" style="transition-delay:100ms">
+              <div class="mr-cta-photo-wrap mr-image-wrap">
+                <img class="mr-cta-photo" src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=1200&q=80" alt="Freshly prepared vegetable biryani ready for community pickup" width="1200" height="800" loading="lazy">
+              </div>
+              <div class="mr-cta-body">
+                <p class="mr-kicker mr-kicker-on-dark"><i class="bi bi-people" aria-hidden="true"></i> For NGOs</p>
+                <h3>Find meals for your community.</h3>
+                <p>See time-sensitive listings nearby and claim the ones your team can collect and serve today.</p>
+                <a class="btn mr-btn mr-btn-light" href="register.html">Join as an NGO</a>
+              </div>
             </article>
           </div>
         </div>
@@ -174,13 +203,13 @@
 
   <footer class="mr-footer">
     <div class="container">
-      <div class="row g-4">
+      <div class="row g-4 g-lg-5">
         <div class="col-lg-5">
           <a class="mr-brand mb-3" href="index.html">
             <span class="mr-logo" aria-hidden="true"><i class="bi bi-basket2-fill"></i></span>
             RescuePlate
           </a>
-          <p class="mt-3 mb-0">A time-sensitive surplus food rescue platform. Donors post what they have. NGOs collect it before it spoils.</p>
+          <p class="mt-3 mb-0" style="max-width:28rem;">Turning surplus food into someone's next meal. A warm, time-sensitive platform connecting Indian donors with nearby NGOs.</p>
         </div>
         <div class="col-6 col-lg-3">
           <p class="mr-footer-title">Explore</p>
@@ -201,13 +230,14 @@
         </div>
       </div>
       <div class="mr-footer-bottom d-flex flex-column flex-md-row justify-content-between gap-2">
-        <span>&copy; <span id="year">2026</span> RescuePlate. Surplus food, rescued in time.</span>
-        <span>Frontend preview. Backend APIs are separate.</span>
+        <span>&copy; <span id="year">2026</span> RescuePlate. Good food deserves a good home.</span>
+        <span>Frontend preview · Sample data only</span>
       </div>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
   <script>
     const yearEl = document.getElementById("year");
     if (yearEl) {

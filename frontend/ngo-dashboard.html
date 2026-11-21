@@ -13,7 +13,7 @@
   <link href="css/style.css" rel="stylesheet">
   <link href="css/ngo-dashboard.css" rel="stylesheet">
 </head>
-<body class="ngo-body">
+<body class="ngo-body mr-entrance">
   <div class="ngo-app">
     <aside class="ngo-sidebar offcanvas-lg offcanvas-start" id="ngo-sidebar" tabindex="-1" aria-labelledby="ngo-sidebar-title">
       <div class="offcanvas-header d-lg-none">
@@ -47,7 +47,11 @@
       </header>
 
       <div class="ngo-content">
-        <section class="ngo-section ngo-dashboard-section" id="dashboard" aria-labelledby="welcome-title">
+        <section class="ngo-section ngo-dashboard-section mr-reveal" id="dashboard" aria-labelledby="welcome-title">
+          <div class="ngo-float-foods" aria-hidden="true">
+            <div class="mr-food-float f1" style="width:52px;top:-10px;right:12%;"><svg viewBox="0 0 64 64" fill="none"><ellipse cx="32" cy="38" rx="26" ry="10" fill="#F2EDE1" stroke="#174D38" stroke-width="2"/><ellipse cx="32" cy="35" rx="24" ry="8" fill="#fffdf8"/><circle cx="24" cy="33" r="5" fill="#E5B94D" opacity=".7"/><circle cx="35" cy="32" r="4" fill="#E98A35" opacity=".5"/></svg></div>
+            <div class="mr-food-float f2" style="width:40px;top:60px;right:3%;"><svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="30" r="18" fill="#F2EDE1" stroke="#174D38" stroke-width="1.8"/><path d="M14 28c0-7 6-12 14-12s14 5 14 12" fill="#E5B94D" opacity=".35"/></svg></div>
+          </div>
           <div class="ngo-welcome">
             <div>
               <p class="ngo-eyebrow"><span class="ngo-live-dot"></span>Your community workspace</p>
@@ -72,23 +76,39 @@
             </article>
           </div>
 
-          <section class="ngo-arrival" aria-labelledby="arrival-title">
+          <section class="ngo-arrival" id="arrival-banner" aria-labelledby="arrival-title">
             <div class="ngo-arrival-scene" id="arrival-scene" aria-hidden="true">
-              <span class="ngo-arrival-sparkle sparkle-one">✦</span>
-              <span class="ngo-arrival-sparkle sparkle-two">✧</span>
-              <div class="ngo-arrival-parcel"><span></span></div>
-              <div class="ngo-arrival-basket"><span></span></div>
+              <div class="ngo-arrival-track">
+                <div class="ngo-arrival-parcel" id="arrival-parcel">
+                  <svg viewBox="0 0 64 56" fill="none" width="64" height="56">
+                    <path d="M8 22l24-12 24 12v20L32 54 8 42V22z" fill="#F2EDE1" stroke="#174D38" stroke-width="2"/>
+                    <path d="M8 22l24 12 24-12" stroke="#174D38" stroke-width="2"/>
+                    <path d="M32 34v20" stroke="#174D38" stroke-width="2"/>
+                    <path d="M20 16l24 12" stroke="#E98A35" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="32" cy="26" r="4" fill="#E5B94D" opacity=".6"/>
+                  </svg>
+                </div>
+                <div class="ngo-arrival-basket" id="arrival-basket">
+                  <svg viewBox="0 0 96 64" fill="none" width="96" height="64">
+                    <path d="M12 28h72l-8 28a6 6 0 01-6 4H26a6 6 0 01-6-4l-8-28z" fill="#F2EDE1" stroke="#174D38" stroke-width="2"/>
+                    <path d="M8 28h80" stroke="#174D38" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M32 28c0-10 7-18 16-18s16 8 16 18" stroke="#174D38" stroke-width="2.2" fill="none"/>
+                    <path d="M24 40h48M28 48h40" stroke="#174D38" stroke-width="1.2" opacity=".25"/>
+                  </svg>
+                </div>
+              </div>
             </div>
             <div class="ngo-arrival-copy">
-              <span class="ngo-arrival-kicker">COMMUNITY UPDATE</span>
+              <span class="ngo-arrival-kicker"><i class="bi bi-stars" aria-hidden="true"></i> LIVE UPDATE</span>
               <h2 id="arrival-title">New food donation arrived!</h2>
               <p id="arrival-message" aria-live="polite">A fresh demo donation will appear here shortly.</p>
+              <p class="ngo-arrival-success" id="arrival-success" aria-live="polite" hidden><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Fresh food is ready to be rescued!</p>
             </div>
-            <button class="ngo-button ngo-button-outline ngo-preview-button" id="preview-arrival" type="button"><i class="bi bi-play-circle" aria-hidden="true"></i> Preview Food Arrival</button>
+            <button class="ngo-button ngo-button-outline ngo-preview-button" id="preview-arrival" type="button"><i class="bi bi-play-circle" aria-hidden="true"></i> Preview animation</button>
           </section>
         </section>
 
-        <section class="ngo-section" id="available-food" aria-labelledby="food-title">
+        <section class="ngo-section mr-reveal mr-stagger" id="available-food" aria-labelledby="food-title" style="--mr-stagger-delay: 100ms">
           <div class="ngo-section-heading">
             <div>
               <p class="ngo-eyebrow">Fresh opportunities nearby</p>
@@ -121,7 +141,7 @@
           </div>
         </section>
 
-        <section class="ngo-section" id="my-claims" aria-labelledby="claims-title">
+        <section class="ngo-section mr-reveal mr-stagger" id="my-claims" aria-labelledby="claims-title" style="--mr-stagger-delay: 200ms">
           <div class="ngo-section-heading">
             <div>
               <p class="ngo-eyebrow">Your local demo activity</p>
@@ -138,7 +158,7 @@
           </div>
         </section>
 
-        <section class="ngo-section" id="notifications" aria-labelledby="notifications-title">
+        <section class="ngo-section mr-reveal mr-stagger" id="notifications" aria-labelledby="notifications-title" style="--mr-stagger-delay: 300ms">
           <div class="ngo-section-heading">
             <div>
               <p class="ngo-eyebrow">A helpful heads-up</p>
@@ -188,6 +208,7 @@
 
   <div class="ngo-live-message" id="live-message" role="status" aria-live="polite" hidden></div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
   <script src="js/ngo-dashboard.js"></script>
 </body>
 </html>

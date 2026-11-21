@@ -12,262 +12,86 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
   <style>
-    .register-page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+    .auth-split { min-height: 100vh; display: grid; grid-template-columns: minmax(0, 420px) 1fr; }
+    .auth-visual { position: relative; overflow: hidden; background: var(--mr-green-deep); display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(2rem,4vw,3rem); }
+    .auth-visual img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .5; }
+    .auth-visual-content { position: relative; z-index: 1; color: #fff; }
+    .auth-visual-content .mr-brand { color: #fff; margin-bottom: 1.75rem; }
+    .auth-visual-content .mr-logo { background: rgba(255,255,255,.15); color: #fff; }
+    .auth-visual-content h2 { font-family: var(--mr-display); font-size: clamp(1.6rem,2.8vw,2.3rem); margin: 0 0 .65rem; line-height: 1.15; color: #fff; }
+    .auth-visual-content p { color: rgba(242,237,225,.8); margin: 0; font-size: .95rem; line-height: 1.6; max-width: 24rem; }
+    .auth-form-side { display: flex; flex-direction: column; background: var(--mr-cream); overflow-y: auto; }
+    .auth-form-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem clamp(1.25rem,4vw,2.5rem); }
+    .auth-form-header .mr-brand { display: none; }
+    .auth-home { display: inline-flex; align-items: center; gap: .45rem; color: var(--mr-muted); font-size: .9rem; font-weight: 700; text-decoration: none; margin-left: auto; }
+    .auth-home:hover { color: var(--mr-green); }
+    .auth-form-main { flex: 1; padding: 1rem clamp(1.25rem,4vw,2.5rem) 3rem; }
+    .auth-card { width: 100%; max-width: 680px; margin: 0 auto; }
+    .register-heading { margin: 0 0 .5rem; color: var(--mr-ink); font-size: clamp(1.9rem,3.5vw,2.6rem); }
+    .register-subtitle { max-width: 38rem; margin-bottom: 1.75rem; color: var(--mr-muted); font-size: .95rem; }
+    .register-label { display: block; margin-bottom: .4rem; color: var(--mr-ink); font-size: .86rem; font-weight: 700; }
+    .register-control { min-height: 2.9rem; border-color: rgba(23,77,56,.18); background-color: #fff; border-radius: .75rem; font-size: .92rem; }
+    .register-control:focus { border-color: var(--mr-green); box-shadow: 0 0 0 .2rem rgba(23,77,56,.1); }
+    .register-hint { margin: .35rem 0 0; color: var(--mr-muted); font-size: .78rem; }
+    .account-types { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .75rem; }
+    .account-type { position: relative; }
+    .account-type input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .account-type label { display: flex; height: 100%; align-items: center; gap: .7rem; padding: .85rem 1rem; border: 1px solid rgba(23,77,56,.18); border-radius: .75rem; color: var(--mr-muted); cursor: pointer; font-weight: 700; font-size: .9rem; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+    .account-type label i { color: var(--mr-green); font-size: 1.2rem; }
+    .account-type input:checked + label { border-color: var(--mr-green); background: var(--mr-green-soft); color: var(--mr-green-deep); }
+    .account-type input:focus-visible + label { outline: 3px solid rgba(233,138,53,.45); outline-offset: 2px; }
+    .account-type input[aria-invalid="true"] + label { border-color: #b02a37; }
+    .conditional-fields { margin-top: 1.25rem; padding: 1.25rem; border: 1px solid var(--mr-line); border-radius: .875rem; background: rgba(231,239,232,.35); }
+    .conditional-fields[hidden] { display: none; }
+    .conditional-heading { margin-bottom: 1rem; color: var(--mr-green-deep); font-size: 1rem; font-weight: 800; font-family: var(--mr-font); letter-spacing: 0; }
+    .password-wrap { position: relative; }
+    .password-wrap .register-control { padding-right: 3.25rem; }
+    .password-toggle { position: absolute; top: 50%; right: .35rem; display: grid; width: 2.75rem; height: 2.75rem; place-items: center; padding: 0; transform: translateY(-50%); border: 0; background: transparent; color: var(--mr-muted); font-size: 1.1rem; }
+    .password-toggle:hover, .password-toggle:focus-visible { color: var(--mr-green-deep); }
+    .password-toggle:focus-visible, .auth-home:focus-visible, .register-link:focus-visible { outline: 3px solid rgba(233,138,53,.45); outline-offset: 3px; border-radius: .25rem; }
+    .register-submit { width: 100%; min-height: 3.1rem; margin-top: 1.25rem; }
+    .register-feedback { min-height: 1.5rem; margin: .85rem 0 0; font-size: .88rem; }
+    .register-login { margin: 1.5rem 0 0; color: var(--mr-muted); font-size: .9rem; text-align: center; }
+    .register-link { color: var(--mr-green); font-weight: 700; text-decoration: none; }
+    .register-link:hover { color: var(--mr-green-deep); text-decoration: underline; }
+    @media (max-width: 991.98px) {
+      .auth-split { grid-template-columns: 1fr; }
+      .auth-visual { min-height: 240px; padding: 1.75rem; }
+      .auth-form-header .mr-brand { display: inline-flex; }
+      .auth-home { margin-left: 0; }
     }
-
-    .register-header {
-      padding: 1.25rem 0;
-    }
-
-    .register-home {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      color: var(--mr-muted);
-      font-size: 0.92rem;
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .register-home:hover {
-      color: var(--mr-green);
-    }
-
-    .register-main {
-      flex: 1;
-      padding: 1.5rem 0 3.75rem;
-    }
-
-    .register-card {
-      width: 100%;
-      max-width: 760px;
-      margin: 0 auto;
-      padding: clamp(1.4rem, 4vw, 2.75rem);
-      border: 1px solid var(--mr-line);
-      border-radius: var(--mr-radius);
-      background: var(--mr-paper);
-      box-shadow: var(--mr-shadow);
-    }
-
-    .register-heading {
-      margin: 0 0 0.65rem;
-      color: var(--mr-ink);
-      font-size: clamp(2.2rem, 5vw, 3rem);
-    }
-
-    .register-subtitle {
-      max-width: 39rem;
-      margin-bottom: 1.75rem;
-      color: var(--mr-muted);
-    }
-
-    .register-label {
-      display: block;
-      margin-bottom: 0.45rem;
-      color: var(--mr-ink);
-      font-size: 0.92rem;
-      font-weight: 700;
-    }
-
-    .register-control {
-      min-height: 3.1rem;
-      border-color: rgba(20, 61, 46, 0.2);
-      background-color: #fff;
-    }
-
-    .register-control:focus {
-      border-color: var(--mr-green);
-      box-shadow: 0 0 0 0.2rem rgba(31, 107, 74, 0.14);
-    }
-
-    .register-hint {
-      margin: 0.35rem 0 0;
-      color: var(--mr-muted);
-      font-size: 0.8rem;
-    }
-
-    .account-types {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
-    }
-
-    .account-type {
-      position: relative;
-    }
-
-    .account-type input {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
-    }
-
-    .account-type label {
-      display: flex;
-      height: 100%;
-      align-items: center;
-      gap: 0.7rem;
-      padding: 0.85rem;
-      border: 1px solid rgba(20, 61, 46, 0.2);
-      border-radius: var(--mr-radius-sm);
-      color: var(--mr-muted);
-      cursor: pointer;
-      font-weight: 700;
-      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-    }
-
-    .account-type label i {
-      color: var(--mr-green);
-      font-size: 1.25rem;
-    }
-
-    .account-type input:checked + label {
-      border-color: var(--mr-green);
-      background: var(--mr-green-soft);
-      color: var(--mr-green-deep);
-    }
-
-    .account-type input:focus-visible + label {
-      outline: 3px solid rgba(232, 106, 26, 0.55);
-      outline-offset: 2px;
-    }
-
-    .account-type input[aria-invalid="true"] + label {
-      border-color: #b02a37;
-    }
-
-    .conditional-fields {
-      margin-top: 1.4rem;
-      padding: 1.2rem;
-      border: 1px solid var(--mr-line);
-      border-radius: var(--mr-radius-sm);
-      background: rgba(231, 243, 236, 0.45);
-    }
-
-    .conditional-fields[hidden] {
-      display: none;
-    }
-
-    .conditional-heading {
-      margin-bottom: 1rem;
-      color: var(--mr-green-deep);
-      font-size: 1.1rem;
-      font-weight: 800;
-    }
-
-    .password-wrap {
-      position: relative;
-    }
-
-    .password-wrap .register-control {
-      padding-right: 3.25rem;
-    }
-
-    .password-toggle {
-      position: absolute;
-      top: 50%;
-      right: 0.35rem;
-      display: grid;
-      width: 2.75rem;
-      height: 2.75rem;
-      place-items: center;
-      padding: 0;
-      transform: translateY(-50%);
-      border: 0;
-      background: transparent;
-      color: var(--mr-muted);
-      font-size: 1.1rem;
-    }
-
-    .password-toggle:hover,
-    .password-toggle:focus-visible {
-      color: var(--mr-green-deep);
-    }
-
-    .password-toggle:focus-visible,
-    .register-home:focus-visible,
-    .register-link:focus-visible {
-      outline: 3px solid rgba(232, 106, 26, 0.55);
-      outline-offset: 3px;
-      border-radius: 0.25rem;
-    }
-
-    .register-submit {
-      width: 100%;
-      min-height: 3.15rem;
-      margin-top: 1.2rem;
-    }
-
-    .register-feedback {
-      min-height: 1.5rem;
-      margin: 0.85rem 0 0;
-      font-size: 0.9rem;
-    }
-
-    .register-login {
-      margin: 1.35rem 0 0;
-      color: var(--mr-muted);
-      font-size: 0.92rem;
-      text-align: center;
-    }
-
-    .register-link {
-      color: var(--mr-green);
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .register-link:hover {
-      color: var(--mr-green-deep);
-      text-decoration: underline;
-    }
-
-    .register-footer {
-      padding: 0 0 1.25rem;
-      color: var(--mr-muted);
-      font-size: 0.82rem;
-      text-align: center;
-    }
-
-    @media (max-width: 575.98px) {
-      .account-types {
-        grid-template-columns: 1fr;
-      }
-
-      .conditional-fields {
-        padding: 1rem;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .account-type label {
-        transition: none;
-      }
-    }
+    @media (max-width: 575.98px) { .account-types { grid-template-columns: 1fr; } .conditional-fields { padding: 1rem; } }
+    @media (prefers-reduced-motion: reduce) { .account-type label { transition: none; } }
   </style>
 </head>
-<body>
-  <div class="register-page">
-    <header class="register-header">
-      <div class="container d-flex align-items-center justify-content-between">
+<body class="mr-entrance">
+  <div class="auth-split">
+    <aside class="auth-visual" aria-hidden="true">
+      <img src="https://images.unsplash.com/photo-1567337710282-00832b415979?auto=format&fit=crop&w=1200&q=80" alt="" width="1200" height="800" loading="eager">
+      <div class="auth-visual-content">
+        <a class="mr-brand" href="index.html" aria-label="RescuePlate home">
+          <span class="mr-logo"><i class="bi bi-basket2-fill"></i></span>
+          RescuePlate
+        </a>
+        <h2>Join a community that rescues meals.</h2>
+        <p>Whether you're a hostel mess, bakery, wedding caterer, or an NGO — your next rescue starts here.</p>
+      </div>
+    </aside>
+
+    <div class="auth-form-side">
+      <header class="auth-form-header">
         <a class="mr-brand" href="index.html" aria-label="RescuePlate home">
           <span class="mr-logo" aria-hidden="true"><i class="bi bi-basket2-fill"></i></span>
           RescuePlate
         </a>
-        <a class="register-home" href="index.html"><i class="bi bi-arrow-left" aria-hidden="true"></i> Home</a>
-      </div>
-    </header>
+        <a class="auth-home" href="index.html"><i class="bi bi-arrow-left" aria-hidden="true"></i> Home</a>
+      </header>
 
-    <main class="register-main">
-      <div class="container">
-        <section class="register-card" aria-labelledby="register-heading">
+      <main class="auth-form-main">
+        <section class="auth-card" aria-labelledby="register-heading">
           <p class="mr-kicker"><i class="bi bi-heart-pulse" aria-hidden="true"></i> Make good food go further</p>
-          <h1 class="register-heading" id="register-heading">Join the RescuePlate Community</h1>
-          <p class="register-subtitle">Join local food rescue efforts. Donate surplus food or help collect meals for your community.</p>
+          <h1 class="register-heading" id="register-heading">Join the RescuePlate community</h1>
+          <p class="register-subtitle">Donate surplus food or help collect meals for your community. It takes less than a minute.</p>
 
           <form id="register-form" novalidate>
             <div class="row g-3">
@@ -380,14 +204,11 @@
 
           <p class="register-login">Already part of the community? <a class="register-link" href="login.html">Sign in</a></p>
         </section>
-      </div>
-    </main>
-
-    <footer class="register-footer">
-      <div class="container">Surplus food, rescued in time.</div>
-    </footer>
+      </main>
+    </div>
   </div>
 
+  <script src="js/app.js"></script>
   <script>
     const registrationForm = document.getElementById("register-form");
     const accountTypeInputs = document.querySelectorAll('input[name="accountType"]');

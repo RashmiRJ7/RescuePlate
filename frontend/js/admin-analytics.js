@@ -7,6 +7,7 @@
   const chartError = document.getElementById("analytics-chart-error");
   const charts = {};
   const numberFormat = new Intl.NumberFormat("en-IN");
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const dateFormat = new Intl.DateTimeFormat("en-IN", {
     timeZone: "Asia/Kolkata",
     day: "numeric",
@@ -22,15 +23,15 @@
   const donationStatuses = ["Available", "Reserved", "Picked Up", "Delivered", "Expired"];
   const foodCategories = ["Cooked Meals", "Bakery & Sweets", "Event Meals", "Packaged Snacks", "Fresh Produce"];
   const colors = {
-    forest: "#1f6b4a",
-    deepForest: "#143d2e",
-    greenSoft: "#87a98e",
-    orange: "#c56b2d",
-    saffron: "#e5aa54",
-    turmeric: "#d8bf63",
-    sage: "#a9bd9e",
-    cream: "#e9e1d3",
-    muted: "#879286"
+    forest: "#174D38",
+    deepForest: "#103A2B",
+    greenSoft: "#7FA08A",
+    orange: "#E98A35",
+    saffron: "#E5B94D",
+    turmeric: "#E5B94D",
+    sage: "#A8BCA8",
+    cream: "#F2EDE1",
+    muted: "#8A958C"
   };
   const donorTypeColors = [
     colors.forest,
@@ -342,6 +343,34 @@
     document.getElementById(id).textContent = value;
   }
 
+  function animateCounter(id, targetText) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (prefersReduced) {
+      el.textContent = targetText;
+      return;
+    }
+    var target = Number(String(targetText).replace(/\D/g, ""));
+    if (!Number.isFinite(target)) {
+      el.textContent = targetText;
+      return;
+    }
+    var startValue = Number(String(el.textContent || "0").replace(/\D/g, "")) || 0;
+    var duration = 900;
+    var startTime = performance.now();
+    function step(now) {
+      var progress = Math.min((now - startTime) / duration, 1);
+      var value = Math.floor(startValue + (target - startValue) * progress);
+      el.textContent = value.toLocaleString("en-IN");
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = targetText;
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
   function updateInsights(filteredRecords, buckets, rescuedMeals) {
     const donorCounts = countBy(filteredRecords, "donorType", donorTypes);
     const topDonorIndex = donorCounts.indexOf(Math.max.apply(null, donorCounts));
@@ -383,10 +412,10 @@
       "analytics-date-summary",
       dateFormat.format(filteredData.start) + " – " + dateFormat.format(filteredData.end)
     );
-    setText("analytics-total-donations", formatNumber(filteredRecords.length));
-    setText("analytics-total-meals", formatNumber(rescuedMeals));
-    setText("analytics-active-donors", formatNumber(activeDonors));
-    setText("analytics-registered-ngos", formatNumber(registeredNgos));
+    animateCounter("analytics-total-donations", formatNumber(filteredRecords.length));
+    animateCounter("analytics-total-meals", formatNumber(rescuedMeals));
+    animateCounter("analytics-active-donors", formatNumber(activeDonors));
+    animateCounter("analytics-registered-ngos", formatNumber(registeredNgos));
 
     updateDonorTypeChart(filteredRecords);
     updateStatusChart(filteredRecords);

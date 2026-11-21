@@ -13,7 +13,7 @@
   <link href="css/style.css" rel="stylesheet">
   <link href="css/admin-dashboard.css" rel="stylesheet">
 </head>
-<body class="admin-body">
+<body class="admin-body mr-entrance">
   <div class="admin-app">
     <aside class="admin-sidebar offcanvas-lg offcanvas-start" id="admin-sidebar" tabindex="-1" aria-labelledby="admin-sidebar-title">
       <div class="offcanvas-header d-lg-none">
@@ -59,7 +59,7 @@
       </header>
 
       <div class="admin-content">
-        <section class="admin-section admin-overview" id="overview" aria-labelledby="overview-title">
+        <section class="admin-section admin-overview mr-reveal" id="overview" aria-labelledby="overview-title">
           <div class="admin-welcome">
             <div>
               <p class="admin-eyebrow"><span class="admin-eyebrow-dot"></span>Platform overview</p>
@@ -94,7 +94,7 @@
           </div>
         </section>
 
-        <section class="admin-section" id="analytics" aria-labelledby="analytics-title">
+        <section class="admin-section mr-reveal mr-stagger" id="analytics" aria-labelledby="analytics-title" style="--mr-stagger-delay: 100ms">
           <div class="admin-section-heading">
             <div>
               <p class="admin-eyebrow">Food rescue activity · DEMO DATA</p>
@@ -229,7 +229,7 @@
           </div>
         </section>
 
-        <section class="admin-section" id="users" aria-labelledby="users-title">
+        <section class="admin-section mr-reveal mr-stagger" id="users" aria-labelledby="users-title" style="--mr-stagger-delay: 200ms">
           <div class="admin-section-heading">
             <div>
               <p class="admin-eyebrow">Community accounts</p>
@@ -270,7 +270,7 @@
           </div>
         </section>
 
-        <section class="admin-section" id="donations" aria-labelledby="donations-title">
+        <section class="admin-section mr-reveal mr-stagger" id="donations" aria-labelledby="donations-title" style="--mr-stagger-delay: 300ms">
           <div class="admin-section-heading">
             <div>
               <p class="admin-eyebrow">Food handoffs</p>
@@ -314,7 +314,7 @@
           </div>
         </section>
 
-        <section class="admin-section" id="reports" aria-labelledby="reports-title">
+        <section class="admin-section mr-reveal mr-stagger" id="reports" aria-labelledby="reports-title" style="--mr-stagger-delay: 400ms">
           <div class="admin-section-heading">
             <div>
               <p class="admin-eyebrow">A small impact snapshot</p>
@@ -380,6 +380,7 @@
   <div class="admin-toast" id="admin-toast" role="status" aria-live="polite" hidden></div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="js/app.js"></script>
   <script src="js/demo-session.js"></script>
   <script src="js/admin-analytics-data.js"></script>
   <script src="js/admin-dashboard.js"></script>

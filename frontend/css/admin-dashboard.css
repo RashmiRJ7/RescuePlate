@@ -7,6 +7,11 @@
   font-family: var(--mr-font);
 }
 
+.admin-sidebar { background: var(--mr-green-deep) !important; }
+.admin-brand-mark, .admin-avatar { color: var(--mr-green-deep); }
+.admin-topbar { background: rgba(250,248,241,.92); }
+.admin-stat-card, .admin-table-card, .admin-report-card, .admin-analytics-card, .admin-analytics-kpi, .admin-analytics-toolbar, .admin-analytics-insights { box-shadow: var(--mr-shadow); }
+
 .admin-body a {
   text-decoration: none;
 }

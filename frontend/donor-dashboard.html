@@ -727,7 +727,7 @@
     }
   </style>
 </head>
-<body>
+  <body class="mr-entrance">
   <aside class="offcanvas-lg offcanvas-start donor-sidebar" tabindex="-1" id="dashboardSidebar" aria-labelledby="sidebar-title">
     <div class="offcanvas-header d-lg-none">
       <a class="mr-brand sidebar-brand" href="index.html">
@@ -789,7 +789,7 @@
     </header>
 
     <div class="dashboard-content">
-      <section class="dashboard-section" id="overview" aria-labelledby="overview-title">
+      <section class="dashboard-section mr-reveal" id="overview" aria-labelledby="overview-title">
         <div class="section-heading">
           <p class="mr-kicker mb-2">Your impact</p>
           <h2 id="overview-title">Food donation overview</h2>
@@ -797,44 +797,44 @@
         </div>
         <div class="sample-note" role="note">
           <i class="bi bi-info-circle" aria-hidden="true"></i>
-          <span>All figures and donation activity on this page are sample data. They are not live RescuePlate records.</span>
+          <span>Sample preview data — figures and donation activity are not live RescuePlate records.</span>
         </div>
         <div class="row g-3">
           <div class="col-12 col-sm-6 col-xxl-3">
-            <article class="dashboard-card stat-card">
+            <article class="dashboard-card stat-card mr-card-entrance mr-stagger">
               <div>
                 <p class="stat-label">Total Donations</p>
-                <strong class="stat-value">5</strong>
+                <strong class="stat-value mr-counter" data-count="5">5</strong>
                 <span class="stat-caption">Sample donations posted</span>
               </div>
               <span class="stat-icon"><i class="bi bi-basket2" aria-hidden="true"></i></span>
             </article>
           </div>
           <div class="col-12 col-sm-6 col-xxl-3">
-            <article class="dashboard-card stat-card">
+            <article class="dashboard-card stat-card mr-card-entrance mr-stagger" style="--mr-stagger-delay: 80ms">
               <div>
                 <p class="stat-label">Available Meals</p>
-                <strong class="stat-value">2</strong>
+                <strong class="stat-value mr-counter" data-count="2">2</strong>
                 <span class="stat-caption">Sample listings open to claim</span>
               </div>
               <span class="stat-icon orange"><i class="bi bi-clock-history" aria-hidden="true"></i></span>
             </article>
           </div>
           <div class="col-12 col-sm-6 col-xxl-3">
-            <article class="dashboard-card stat-card">
+            <article class="dashboard-card stat-card mr-card-entrance mr-stagger" style="--mr-stagger-delay: 160ms">
               <div>
                 <p class="stat-label">Meals Rescued</p>
-                <strong class="stat-value">35</strong>
+                <strong class="stat-value mr-counter" data-count="35">35</strong>
                 <span class="stat-caption">Sample meals rescued</span>
               </div>
               <span class="stat-icon"><i class="bi bi-heart-pulse" aria-hidden="true"></i></span>
             </article>
           </div>
           <div class="col-12 col-sm-6 col-xxl-3">
-            <article class="dashboard-card stat-card">
+            <article class="dashboard-card stat-card mr-card-entrance mr-stagger" style="--mr-stagger-delay: 240ms">
               <div>
                 <p class="stat-label">Pending Pickups</p>
-                <strong class="stat-value">3</strong>
+                <strong class="stat-value mr-counter" data-count="3">3</strong>
                 <span class="stat-caption">Sample pickups awaiting handoff</span>
               </div>
               <span class="stat-icon orange"><i class="bi bi-truck" aria-hidden="true"></i></span>
@@ -843,7 +843,7 @@
         </div>
       </section>
 
-      <section class="dashboard-section" id="new-donation" aria-labelledby="new-donation-title">
+      <section class="dashboard-section mr-reveal mr-stagger" id="new-donation" aria-labelledby="new-donation-title" style="--mr-stagger-delay: 100ms">
         <div class="section-heading">
           <p class="mr-kicker mb-2">Share surplus</p>
           <h2 id="new-donation-title">Donate Surplus Food</h2>
@@ -929,7 +929,7 @@
               <span class="text-secondary small">Demo preview only. Nothing is submitted.</span>
             </div>
             <p class="donation-feedback" id="donation-feedback" aria-live="polite"></p>
-            <section class="preview-result" id="donation-preview" aria-live="polite" hidden>
+            <section class="preview-result mr-reveal" id="donation-preview" aria-live="polite" hidden>
               <h3>Donation preview is ready</h3>
               <p id="preview-explanation">This is only a local preview. No real donation has been submitted; backend integration is pending.</p>
               <dl>
@@ -943,7 +943,7 @@
         </div>
       </section>
 
-      <section class="dashboard-section" id="my-donations" aria-labelledby="my-donations-title">
+      <section class="dashboard-section mr-reveal mr-stagger" id="my-donations" aria-labelledby="my-donations-title" style="--mr-stagger-delay: 200ms">
         <div class="section-heading">
           <p class="mr-kicker mb-2">Track your listings</p>
           <h2 id="my-donations-title">My donations</h2>
@@ -990,7 +990,7 @@
         </div>
       </section>
 
-      <section class="dashboard-section" id="notifications" aria-labelledby="notifications-title">
+      <section class="dashboard-section mr-reveal mr-stagger" id="notifications" aria-labelledby="notifications-title" style="--mr-stagger-delay: 300ms">
         <div class="section-heading">
           <p class="mr-kicker mb-2">Stay in the loop</p>
           <h2 id="notifications-title">Notifications</h2>
@@ -1068,6 +1068,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
   <script>
     function dateFromNow(dayOffset, hourOffset) {
       const date = new Date();
@@ -1090,6 +1091,13 @@
       });
     }
 
+    const foodImages = {
+      thali: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=200&q=70",
+      bakery: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=200&q=70",
+      biryani: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=200&q=70",
+      snacks: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=200&q=70"
+    };
+
     const demoDonations = [
       {
         id: "demo-1",
@@ -1099,6 +1107,7 @@
         postedAt: dateFromNow(-1, -3),
         safeUntil: dateFromNow(0, 5),
         status: "AVAILABLE",
+        image: foodImages.thali,
         description: "Fresh hostel mess lunch, packed safely and ready for same-day collection.",
         address: "Shivaji College Hostel Mess, Deccan, Pune 411004",
         contact: "+91 98765 43210",
@@ -1112,6 +1121,7 @@
         postedAt: dateFromNow(-2, -4),
         safeUntil: dateFromNow(0, 3),
         status: "RESERVED",
+        image: foodImages.bakery,
         description: "Today's unsold bread and buns, packed in clean food-safe bags.",
         address: "Asha Bakery & Sweets, Kothrud, Pune 411038",
         contact: "+91 98765 43210",
@@ -1125,6 +1135,7 @@
         postedAt: dateFromNow(-3, -6),
         safeUntil: dateFromNow(-2, 0),
         status: "PICKED_UP",
+        image: foodImages.biryani,
         description: "A freshly prepared wedding buffet surplus, kept covered and ready for prompt collection.",
         address: "Saanvi Wedding Hall, Baner, Pune 411045",
         contact: "+91 98765 43210",
@@ -1138,6 +1149,7 @@
         postedAt: dateFromNow(-5, -2),
         safeUntil: dateFromNow(4, 0),
         status: "DELIVERED",
+        image: foodImages.thali,
         description: "Hotel kitchen surplus prepared today and packed for a community meal.",
         address: "Deccan Heritage Hotel, Shivajinagar, Pune 411005",
         contact: "+91 98765 43210",
@@ -1151,6 +1163,7 @@
         postedAt: dateFromNow(-6, -8),
         safeUntil: dateFromNow(-4, 0),
         status: "AVAILABLE",
+        image: foodImages.snacks,
         description: "Sealed snack boxes from a college event, available within the stated safe-until time.",
         address: "Campus Utsav, Fergusson College Road, Pune 411004",
         contact: "+91 98765 43210",
@@ -1178,16 +1191,40 @@
       });
 
       donationsTableBody.replaceChildren();
-      filteredDonations.forEach(function (donation) {
+      filteredDonations.forEach(function (donation, index) {
         const row = document.createElement("tr");
+        row.className = "mr-card-entrance mr-stagger";
+        row.style.setProperty("--mr-stagger-delay", (index * 70) + "ms");
         const foodCell = document.createElement("td");
+        const foodWrap = document.createElement("div");
+        foodWrap.style.display = "flex";
+        foodWrap.style.alignItems = "center";
+        foodWrap.style.gap = "0.75rem";
+        if (donation.image) {
+          const thumb = document.createElement("img");
+          thumb.src = donation.image;
+          thumb.alt = "";
+          thumb.loading = "lazy";
+          thumb.width = 52;
+          thumb.height = 52;
+          thumb.style.width = "52px";
+          thumb.style.height = "52px";
+          thumb.style.objectFit = "cover";
+          thumb.style.borderRadius = "0.65rem";
+          thumb.style.flexShrink = "0";
+          thumb.style.background = "#F2EDE1";
+          foodWrap.append(thumb);
+        }
+        const foodText = document.createElement("div");
         const name = document.createElement("span");
         const category = document.createElement("span");
         name.className = "donation-name";
         name.textContent = donation.name;
         category.className = "donation-category";
         category.textContent = donation.category + " · demo";
-        foodCell.append(name, category);
+        foodText.append(name, category);
+        foodWrap.append(foodText);
+        foodCell.append(foodWrap);
 
         const quantityCell = document.createElement("td");
         quantityCell.textContent = donation.quantity;

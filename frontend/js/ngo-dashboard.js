@@ -196,10 +196,11 @@
     });
 
     els.foodGrid.replaceChildren();
-    filtered.forEach(function (donation) {
+    filtered.forEach(function (donation, index) {
       const urgency = urgencyFor(donation.safeUntil);
       const card = document.createElement("article");
-      card.className = "ngo-food-card";
+      card.className = "ngo-food-card mr-card-entrance mr-stagger";
+      card.style.setProperty("--mr-stagger-delay", (index * 70) + "ms");
 
       const photo = document.createElement("div");
       photo.className = "ngo-food-photo";
@@ -288,7 +289,7 @@
     els.claimsList.replaceChildren();
     claims.forEach(function (claim) {
       const item = document.createElement("article");
-      item.className = "ngo-claim-card";
+      item.className = "ngo-claim-card mr-card-entrance";
       const image = document.createElement("img");
       image.src = claim.image;
       image.alt = "";
@@ -394,8 +395,17 @@
     donations.splice(index, 1);
     renderDonations();
     renderClaims();
+    setTimeout(function () {
+      var firstClaim = els.claimsList.querySelector(".ngo-claim-card");
+      if (firstClaim) {
+        firstClaim.classList.add("mr-success-bounce");
+        setTimeout(function () {
+          firstClaim.classList.remove("mr-success-bounce");
+        }, 550);
+      }
+    }, 0);
     addNotification("Demo claim added", donation.name + " is now in My Claims. No real food was reserved.", "claim");
-    showMessage("Added to My Claims · demo only. No real donation was reserved.");
+    showMessage("Food rescued successfully! Added to My Claims (demo only).");
   }
 
   function openDetails(donationId) {
@@ -416,40 +426,57 @@
     donationModal.show();
   }
 
-  function playArrivalAnimation() {
+  var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function playArrivalAnimation(onComplete) {
+    var success = document.getElementById("arrival-success");
+    if (success) success.hidden = true;
     els.arrival.classList.remove("is-animating");
     void els.arrival.offsetWidth;
     els.arrival.classList.add("is-animating");
     window.clearTimeout(arrivalAnimationTimer);
+    var delay = prefersReducedMotion ? 0 : 2000;
     arrivalAnimationTimer = window.setTimeout(function () {
-      els.arrival.classList.remove("is-animating");
-    }, 1500);
+      if (success) success.hidden = false;
+      if (typeof onComplete === "function") onComplete();
+    }, delay);
   }
 
-  function revealDemoDonation() {
-    if (!arrivalAdded) {
-      arrivalAdded = true;
-      const newDonation = {
-        id: "food-arrival-105",
-        name: "Idli and chutney breakfast plates",
-        category: "Cooked Meals",
-        quantity: "30 plates",
-        location: "Prerna Student Residence, Aundh, Pune 411007",
-        safeUntil: hoursFromNow(5),
-        description: "Fresh idli and chutney from the hostel breakfast service, packed for prompt pickup.",
-        image: imageUrls.thali,
-        alt: "A freshly prepared Indian breakfast for collection",
-        donor: "Prerna Student Residence",
-        meals: 30
-      };
+  function revealDemoDonation(isPreview) {
+    var newDonation = {
+      id: "food-arrival-105",
+      name: "Idli and chutney breakfast plates",
+      category: "Cooked Meals",
+      quantity: "30 plates",
+      location: "Prerna Student Residence, Aundh, Pune 411007",
+      safeUntil: hoursFromNow(5),
+      description: "Fresh idli and chutney from the hostel breakfast service, packed for prompt pickup.",
+      image: imageUrls.thali,
+      alt: "Fresh idli and chutney breakfast plates ready for pickup",
+      donor: "Prerna Student Residence",
+      meals: 30
+    };
+
+    var alreadyExists = donations.some(function (d) { return d.id === newDonation.id; });
+    if (alreadyExists) {
+      els.arrivalMessage.textContent = newDonation.name + " is already waiting in Available Meals.";
+      playArrivalAnimation();
+      return;
+    }
+
+    els.arrivalMessage.textContent = isPreview ? "Preview: a new donation is arriving..." : "A fresh donation is arriving...";
+    playArrivalAnimation(function () {
       donations.unshift(newDonation);
       renderDonations();
-      addNotification("New food donation arrived!", newDonation.name + " is a simulated listing for this demo.", "new");
-      els.arrivalMessage.textContent = newDonation.name + " is now available in the local demo listings.";
-    } else {
-      els.arrivalMessage.textContent = "The demo donation is already waiting in Available Meals.";
-    }
-    playArrivalAnimation();
+      addNotification("New food donation arrived!", newDonation.name + " — 30 plates, safe until " + formatDate(newDonation.safeUntil) + ".", "new");
+      els.arrivalMessage.textContent = newDonation.name + " is now available for rescue.";
+      // Highlight the newly added card
+      var firstCard = els.foodGrid.querySelector(".ngo-food-card");
+      if (firstCard) {
+        firstCard.classList.add("ngo-new-arrival");
+        setTimeout(function () { firstCard.classList.remove("ngo-new-arrival"); }, 1600);
+      }
+    });
   }
 
   function setActiveNavigation(sectionId) {
@@ -471,7 +498,7 @@
 
   els.search.addEventListener("input", renderDonations);
   els.category.addEventListener("change", renderDonations);
-  document.getElementById("preview-arrival").addEventListener("click", revealDemoDonation);
+  document.getElementById("preview-arrival").addEventListener("click", function () { revealDemoDonation(true); });
 
   els.foodGrid.addEventListener("click", function (event) {
     const detailsButton = event.target.closest("[data-donation-details]");
@@ -485,6 +512,11 @@
 
   document.getElementById("modal-claim-button").addEventListener("click", function () {
     if (!activeDonationId) return;
+    var claimBtn = document.getElementById("modal-claim-button");
+    claimBtn.classList.add("mr-success-bounce");
+    setTimeout(function () {
+      claimBtn.classList.remove("mr-success-bounce");
+    }, 550);
     donationModal.hide();
     claimDonation(activeDonationId);
     activeDonationId = null;
@@ -520,5 +552,5 @@
     });
   }
 
-  window.setTimeout(revealDemoDonation, 900);
+  window.setTimeout(function () { revealDemoDonation(false); }, 1200);
 }());
