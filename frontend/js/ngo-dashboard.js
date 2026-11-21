@@ -406,6 +406,21 @@
     }, 0);
     addNotification("Demo claim added", donation.name + " is now in My Claims. No real food was reserved.", "claim");
     showMessage("Food rescued successfully! Added to My Claims (demo only).");
+    showClaimSuccessToast(donation);
+  }
+
+  function showClaimSuccessToast(donation) {
+    var toast = document.getElementById("claim-success-toast");
+    var titleEl = document.getElementById("claim-success-title");
+    var msgEl = document.getElementById("claim-success-message");
+    if (!toast) return;
+    titleEl.textContent = "Food rescued successfully!";
+    msgEl.textContent = donation.name + " (" + donation.quantity + ") added to My Claims — demo only.";
+    toast.classList.add("show");
+    window.clearTimeout(toast.timer);
+    toast.timer = window.setTimeout(function () {
+      toast.classList.remove("show");
+    }, 3500);
   }
 
   function openDetails(donationId) {

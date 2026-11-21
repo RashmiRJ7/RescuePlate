@@ -40,38 +40,69 @@
 
   <main>
     <section class="mr-hero">
-      <!-- Floating food atmosphere -->
-      <div class="mr-food-float f1" style="width:72px;top:8%;left:4%;" aria-hidden="true">
-        <svg viewBox="0 0 64 64" fill="none"><ellipse cx="32" cy="38" rx="26" ry="10" fill="#F2EDE1" stroke="#174D38" stroke-width="2"/><ellipse cx="32" cy="35" rx="24" ry="8" fill="#fffdf8"/><circle cx="24" cy="33" r="5" fill="#E5B94D" opacity=".7"/><circle cx="35" cy="32" r="4" fill="#E98A35" opacity=".5"/><circle cx="30" cy="36" r="3.5" fill="#174D38" opacity=".15"/></svg>
+      <!-- Background decoration -->
+      <div class="mr-hero-bg"></div>
+
+      <!-- Floating food atmosphere — SVG illustrations that never block content -->
+      <div class="mr-food-float f1" style="width:80px;top:10%;left:4%;" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="44" r="18" fill="#F2EDE1" stroke="#174D38" stroke-width="2"/>
+          <circle cx="32" cy="36" r="16" fill="#fffdf8" stroke="#174D38" stroke-width="1.5"/>
+          <circle cx="32" cy="30" r="14" fill="#F2EDE1" opacity="0.6"/>
+          <circle cx="26" cy="38" r="3" fill="#E98A35" opacity="0.5"/>
+          <circle cx="38" cy="38" r="3" fill="#E5B94D" opacity="0.4"/>
+        </svg>
       </div>
-      <div class="mr-food-float f2" style="width:56px;top:18%;right:6%;" aria-hidden="true">
-        <svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="30" r="18" fill="#F2EDE1" stroke="#174D38" stroke-width="1.8"/><path d="M14 28c0-7 6-12 14-12s14 5 14 12" fill="#E5B94D" opacity=".35"/><ellipse cx="28" cy="30" rx="10" ry="4" fill="#E98A35" opacity=".2"/></svg>
+      <div class="mr-food-float f2" style="width:64px;top:16%;right:6%;" aria-hidden="true">
+        <svg viewBox="0 0 56 56" fill="none">
+          <circle cx="28" cy="28" r="20" fill="#F2EDE1" stroke="#174D38" stroke-width="1.5"/>
+          <circle cx="28" cy="28" r="14" fill="#E5B94D" opacity="0.3"/>
+          <path d="M14 28c0-7 6-12 14-12s14 5 14 12" fill="none" stroke="#E98A35" stroke-width="2" opacity="0.4"/>
+          <circle cx="20" cy="24" r="2" fill="#174D38" opacity="0.2"/>
+          <circle cx="36" cy="32" r="2" fill="#174D38" opacity="0.2"/>
+        </svg>
       </div>
-      <div class="mr-food-float f3" style="width:48px;bottom:12%;left:8%;" aria-hidden="true">
-        <svg viewBox="0 0 48 48" fill="none"><path d="M8 32c0-8 7-16 16-16s16 8 16 16" fill="#F2EDE1" stroke="#174D38" stroke-width="1.5"/><path d="M12 30c0-6 5-11 12-11s12 5 12 11" fill="#E7EFE8"/></svg>
+      <div class="mr-food-float f3" style="width:56px;bottom:14%;left:6%;" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none">
+          <path d="M12 32c0-8 7-16 16-16s16 8 16 16" fill="#F2EDE1" stroke="#174D38" stroke-width="1.5"/>
+          <path d="M16 30c0-6 5-11 12-11s12 5 12 11" fill="#fffdf8"/>
+          <path d="M14 26c0-4 3-8 8-8s8 4 8 8" fill="#E5B94D" opacity="0.3"/>
+          <circle cx="20" cy="28" r="1.5" fill="#174D38" opacity="0.2"/>
+          <circle cx="28" cy="26" r="1.5" fill="#174D38" opacity="0.2"/>
+        </svg>
       </div>
-      <div class="mr-food-float f4" style="width:52px;bottom:22%;right:3%;" aria-hidden="true">
-        <svg viewBox="0 0 52 52" fill="none"><rect x="10" y="16" width="32" height="24" rx="4" fill="#F2EDE1" stroke="#174D38" stroke-width="1.5"/><path d="M10 22h32" stroke="#174D38" stroke-width="1.5"/><circle cx="26" cy="30" r="5" fill="#E98A35" opacity=".25"/></svg>
+      <div class="mr-food-float f4" style="width:60px;bottom:24%;right:4%;" aria-hidden="true">
+        <svg viewBox="0 0 52 52" fill="none">
+          <rect x="10" y="16" width="32" height="24" rx="4" fill="#F2EDE1" stroke="#174D38" stroke-width="1.5"/>
+          <path d="M10 22h32" stroke="#174D38" stroke-width="1.5"/>
+          <path d="M26 16l8 8 -8 8" fill="none" stroke="#E98A35" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="26" cy="30" r="5" fill="#E5B94D" opacity="0.25"/>
+        </svg>
       </div>
 
       <div class="container position-relative" style="z-index:2;">
         <div class="row align-items-center g-4 g-lg-5">
-          <div class="col-lg-6 mr-reveal">
-            <p class="mr-kicker"><i class="bi bi-heart-pulse" aria-hidden="true"></i> Indian food-rescue network</p>
-            <h1 class="mt-2">Turn surplus food into someone's next meal.</h1>
-            <p class="mr-hero-lead mt-3">RescuePlate connects hostels, bakeries, weddings and kitchens with nearby NGOs — so fresh Indian meals are rescued before they spoil.</p>
+          <div class="col-lg-6 order-lg-1 mr-reveal">
+            <div class="mr-hero-eyebrow">
+              <span class="mr-hero-dot"></span>
+              <span>RescuePlate · India’s food-rescue network</span>
+            </div>
+            <p class="mr-kicker"><i class="bi bi-heart-pulse" aria-hidden="true"></i> Turning surplus into nourishment</p>
+            <h1>Good food should feed people,<br>not landfills.</h1>
+            <p class="mr-hero-lead mt-3">RescuePlate connects hostels, bakeries, weddings and kitchens with nearby NGOs — so fresh Indian meals are rescued before they spoil. Every plate counts.</p>
             <div class="d-flex flex-wrap gap-3 mr-hero-actions mt-4">
               <a class="btn mr-btn mr-btn-primary" href="register.html">Donate Surplus Food <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
               <a class="btn mr-btn mr-btn-ghost" href="#how-it-works">See How It Works</a>
             </div>
-            <div class="mr-hero-trust mt-4">
+            <div class="mr-hero-trust mt-5 pt-4 border-top">
               <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Free for donors & NGOs</span>
-              <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Made for Indian communities</span>
+              <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Built for Indian communities</span>
+              <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Pickup in under an hour</span>
             </div>
           </div>
-          <div class="col-lg-6 mr-reveal" style="--mr-stagger-delay: 120ms">
+          <div class="col-lg-6 order-lg-2 mr-reveal" style="--mr-stagger-delay: 120ms">
             <div class="mr-hero-frame">
-              <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=1400&q=80" alt="A colourful Indian thali with rice, dal, roti and sabzi, ready to be shared" width="1400" height="900" loading="eager">
+              <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=1600&q=85" alt="A colourful Indian thali with rice, dal, roti and sabzi, ready to be shared" width="1600" height="1000" loading="eager">
               <div class="mr-float-card">
                 <span class="mr-pulse" aria-hidden="true"></span>
                 <div>
@@ -121,44 +152,40 @@
       </div>
     </section>
 
-    <section class="mr-section pt-0" id="impact">
+    <section class="mr-section" id="impact">
       <div class="container">
-        <div class="mr-impact mr-reveal">
-          <div class="row align-items-end mb-2">
-            <div class="col-lg-7">
-              <p class="mr-kicker" style="background:rgba(255,255,255,.12);color:#F2EDE1;">Illustrative impact</p>
-              <h2 class="mb-2">A growing network of care.</h2>
-              <p class="mr-impact-copy mb-0">Sample figures for the design preview — not live RescuePlate data.</p>
-            </div>
-          </div>
-          <div class="row text-center text-lg-start mt-4">
-            <div class="col-6 col-lg-3">
-              <div class="mr-stat">
-                <strong class="mr-counter" data-count="12400">0</strong>
-                <span>Meals rescued</span>
-              </div>
-            </div>
-            <div class="col-6 col-lg-3">
-              <div class="mr-stat">
-                <strong class="mr-counter" data-count="86">0</strong>
-                <span>NGO partners</span>
-              </div>
-            </div>
-            <div class="col-6 col-lg-3">
-              <div class="mr-stat">
-                <strong class="mr-counter" data-count="38" data-suffix=" min">0</strong>
-                <span>Avg. claim time</span>
-              </div>
-            </div>
-            <div class="col-6 col-lg-3">
-              <div class="mr-stat">
-                <strong class="mr-counter" data-count="9.2" data-suffix=" t" data-decimal="1">0</strong>
-                <span>Kept from landfill</span>
-              </div>
-            </div>
-          </div>
-          <p class="mr-sample-note mb-0"><i class="bi bi-info-circle me-1" aria-hidden="true"></i> Illustrative preview data only.</p>
+        <div class="text-center mb-5 mb-lg-6 mr-reveal">
+          <p class="mr-kicker">Illustrative impact</p>
+          <h2 class="mb-3">A growing network of care.</h2>
+          <p class="mr-muted mx-auto mb-0" style="max-width:42rem;">Sample figures for this design preview — not live RescuePlate data. Every number represents a meal saved from waste.</p>
         </div>
+        <div class="row g-4 g-lg-5 text-center text-lg-start">
+          <div class="col-6 col-lg-3 mr-reveal">
+            <div class="mr-stat">
+              <strong class="mr-counter" data-count="12400">0</strong>
+              <span>Meals rescued</span>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3 mr-reveal" style="--mr-stagger-delay: 100ms">
+            <div class="mr-stat">
+              <strong class="mr-counter" data-count="86">0</strong>
+              <span>NGO partners</span>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3 mr-reveal" style="--mr-stagger-delay: 200ms">
+            <div class="mr-stat">
+              <strong class="mr-counter" data-count="38" data-suffix=" min">0</strong>
+              <span>Avg. claim time</span>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3 mr-reveal" style="--mr-stagger-delay: 300ms">
+            <div class="mr-stat">
+              <strong class="mr-counter" data-count="9.2" data-suffix=" t" data-decimal="1">0</strong>
+              <span>Kept from landfill</span>
+            </div>
+          </div>
+        </div>
+        <p class="mr-sample-note mt-4 mb-0 text-center"><i class="bi bi-info-circle me-1" aria-hidden="true"></i> Illustrative preview data only.</p>
       </div>
     </section>
 

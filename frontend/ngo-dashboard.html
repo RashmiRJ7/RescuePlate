@@ -59,6 +59,7 @@
               <p>Find available meals nearby and plan a safe pickup.</p>
             </div>
             <a class="ngo-button ngo-button-light" href="#available-food">Find Available Meals <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+            <span class="ngo-welcome-icon" aria-hidden="true"><i class="bi bi-basket2-fill"></i></span>
           </div>
 
           <div class="ngo-stats" aria-label="Dashboard summary">
@@ -78,6 +79,7 @@
 
           <section class="ngo-arrival" id="arrival-banner" aria-labelledby="arrival-title">
             <div class="ngo-arrival-scene" id="arrival-scene" aria-hidden="true">
+              <div class="ngo-arrival-glow"></div>
               <div class="ngo-arrival-track">
                 <div class="ngo-arrival-parcel" id="arrival-parcel">
                   <svg viewBox="0 0 64 56" fill="none" width="64" height="56">
@@ -177,6 +179,14 @@
         <footer class="ngo-footer"><a href="index.html">RescuePlate</a><span>Good food deserves a good home.</span><span>Local demo · No real reservations</span></footer>
       </div>
     </main>
+  </div>
+
+  <div class="ngo-claim-success-toast" id="claim-success-toast" role="status" aria-live="polite">
+    <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+    <div>
+      <strong id="claim-success-title">Food rescued successfully!</strong>
+      <span id="claim-success-message">The donation has been added to My Claims.</span>
+    </div>
   </div>
 
   <div class="modal fade ngo-modal" id="donation-modal" tabindex="-1" aria-labelledby="modal-food-name" aria-hidden="true">
