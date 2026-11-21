@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Find nearby food donations and manage your NGO's local demo claims.">
+  <title>NGO Dashboard | RescuePlate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,640&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/ngo-dashboard.css" rel="stylesheet">
+</head>
+<body class="ngo-body">
+  <div class="ngo-app">
+    <aside class="ngo-sidebar offcanvas-lg offcanvas-start" id="ngo-sidebar" tabindex="-1" aria-labelledby="ngo-sidebar-title">
+      <div class="offcanvas-header d-lg-none">
+        <a class="ngo-brand" href="index.html"><span class="ngo-brand-mark"><i class="bi bi-heart-pulse-fill" aria-hidden="true"></i></span>RescuePlate</a>
+        <button class="btn-close btn-close-white" type="button" data-bs-dismiss="offcanvas" data-bs-target="#ngo-sidebar" aria-label="Close navigation"></button>
+      </div>
+      <div class="offcanvas-body ngo-sidebar-body">
+        <div>
+          <a class="ngo-brand d-none d-lg-flex" href="index.html"><span class="ngo-brand-mark"><i class="bi bi-heart-pulse-fill" aria-hidden="true"></i></span>RescuePlate</a>
+          <p class="ngo-sidebar-label" id="ngo-sidebar-title">NGO workspace</p>
+          <nav class="ngo-nav" aria-label="Dashboard sections">
+            <a class="ngo-nav-link active" href="#dashboard" aria-current="page"><i class="bi bi-grid-1x2" aria-hidden="true"></i>Dashboard</a>
+            <a class="ngo-nav-link" href="#available-food"><i class="bi bi-basket2" aria-hidden="true"></i>Available Food<span class="ngo-nav-count" id="available-count">0</span></a>
+            <a class="ngo-nav-link" href="#my-claims"><i class="bi bi-bag-check" aria-hidden="true"></i>My Claims<span class="ngo-nav-count" id="claims-count">0</span></a>
+            <a class="ngo-nav-link" href="#notifications"><i class="bi bi-bell" aria-hidden="true"></i>Notifications<span class="ngo-nav-count" id="notification-count" hidden>0</span></a>
+          </nav>
+        </div>
+        <div class="ngo-sidebar-profile">
+          <span class="ngo-avatar" aria-hidden="true">RT</span>
+          <span><strong>Riverside Table</strong><small>NGO partner · demo</small></span>
+          <a class="ngo-signout" href="login.html" aria-label="Return to login (demo only)" title="Return to login"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="ngo-main">
+      <header class="ngo-topbar">
+        <button class="ngo-menu-button d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#ngo-sidebar" aria-controls="ngo-sidebar" aria-label="Open dashboard navigation"><i class="bi bi-list" aria-hidden="true"></i></button>
+        <div><span class="ngo-topbar-label">NGO workspace</span><strong>Riverside Table</strong></div>
+        <a class="ngo-topbar-notifications" href="#notifications" aria-label="Go to notifications"><i class="bi bi-bell" aria-hidden="true"></i><span id="topbar-notification-dot" hidden></span></a>
+      </header>
+
+      <div class="ngo-content">
+        <section class="ngo-section ngo-dashboard-section" id="dashboard" aria-labelledby="welcome-title">
+          <div class="ngo-welcome">
+            <div>
+              <p class="ngo-eyebrow"><span class="ngo-live-dot"></span>Your community workspace</p>
+              <h1 id="welcome-title">Good <span id="greeting-time">day</span>, Riverside Table.</h1>
+              <p>Find good food nearby and make it go further.</p>
+            </div>
+            <a class="ngo-button ngo-button-light" href="#available-food">Explore available food <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+          </div>
+
+          <div class="ngo-stats" aria-label="Dashboard summary">
+            <article class="ngo-stat-card">
+              <span class="ngo-stat-icon"><i class="bi bi-heart-fill" aria-hidden="true"></i></span>
+              <div><span class="ngo-stat-label">Total meals rescued</span><strong id="meals-rescued">1,284</strong></div>
+            </article>
+            <article class="ngo-stat-card">
+              <span class="ngo-stat-icon orange"><i class="bi bi-basket2-fill" aria-hidden="true"></i></span>
+              <div><span class="ngo-stat-label">Available donations</span><strong id="available-stat">0</strong></div>
+            </article>
+            <article class="ngo-stat-card">
+              <span class="ngo-stat-icon cream"><i class="bi bi-bag-check-fill" aria-hidden="true"></i></span>
+              <div><span class="ngo-stat-label">My claimed donations</span><strong id="claimed-stat">0</strong></div>
+            </article>
+          </div>
+
+          <section class="ngo-arrival" aria-labelledby="arrival-title">
+            <div class="ngo-arrival-scene" id="arrival-scene" aria-hidden="true">
+              <span class="ngo-arrival-sparkle sparkle-one">✦</span>
+              <span class="ngo-arrival-sparkle sparkle-two">✧</span>
+              <div class="ngo-arrival-parcel"><span></span></div>
+              <div class="ngo-arrival-basket"><span></span></div>
+            </div>
+            <div class="ngo-arrival-copy">
+              <span class="ngo-arrival-kicker">COMMUNITY UPDATE</span>
+              <h2 id="arrival-title">New food donation arrived!</h2>
+              <p id="arrival-message" aria-live="polite">A fresh demo donation will appear here shortly.</p>
+            </div>
+            <button class="ngo-button ngo-button-outline ngo-preview-button" id="preview-arrival" type="button"><i class="bi bi-play-circle" aria-hidden="true"></i> Preview Food Arrival</button>
+          </section>
+        </section>
+
+        <section class="ngo-section" id="available-food" aria-labelledby="food-title">
+          <div class="ngo-section-heading">
+            <div>
+              <p class="ngo-eyebrow">Fresh opportunities nearby</p>
+              <h2 id="food-title">Available Food</h2>
+              <p>Browse local demo donations ready for pickup.</p>
+            </div>
+            <span class="ngo-results-count"><strong id="listing-count">0</strong> donations</span>
+          </div>
+          <div class="ngo-filters">
+            <label class="ngo-search">
+              <i class="bi bi-search" aria-hidden="true"></i>
+              <span class="visually-hidden">Search food donations</span>
+              <input id="food-search" type="search" placeholder="Search food or location">
+            </label>
+            <label class="ngo-category-filter" for="category-filter">
+              <span>Category</span>
+              <select id="category-filter">
+                <option value="all">All categories</option>
+                <option value="Cooked Meals">Cooked meals</option>
+                <option value="Bakery">Bakery</option>
+                <option value="Fruits">Fruits</option>
+                <option value="Vegetables">Vegetables</option>
+              </select>
+            </label>
+          </div>
+          <div class="ngo-food-grid" id="food-grid" aria-live="polite"></div>
+          <div class="ngo-empty" id="food-empty" hidden>
+            <i class="bi bi-basket2" aria-hidden="true"></i>
+            <h3>No matching donations</h3>
+            <p>Try another search or choose a different category.</p>
+          </div>
+        </section>
+
+        <section class="ngo-section" id="my-claims" aria-labelledby="claims-title">
+          <div class="ngo-section-heading">
+            <div>
+              <p class="ngo-eyebrow">Your local demo activity</p>
+              <h2 id="claims-title">My Claims</h2>
+              <p>Keep track of each claimed donation's current status.</p>
+            </div>
+          </div>
+          <div class="ngo-claims-list" id="claims-list" aria-live="polite"></div>
+          <div class="ngo-empty" id="claims-empty" hidden>
+            <i class="bi bi-bag-heart" aria-hidden="true"></i>
+            <h3>No claims yet</h3>
+            <p>Claim a demo donation and it will appear here.</p>
+            <a class="ngo-button ngo-button-outline" href="#available-food">Browse available food</a>
+          </div>
+        </section>
+
+        <section class="ngo-section" id="notifications" aria-labelledby="notifications-title">
+          <div class="ngo-section-heading">
+            <div>
+              <p class="ngo-eyebrow">A helpful heads-up</p>
+              <h2 id="notifications-title">Notifications</h2>
+              <p>New donation alerts and updates to your claims.</p>
+            </div>
+          </div>
+          <div class="ngo-notification-list" id="notification-list" aria-live="polite"></div>
+          <div class="ngo-empty" id="notifications-empty" hidden>
+            <i class="bi bi-bell-slash" aria-hidden="true"></i>
+            <h3>You're all caught up</h3>
+            <p>New donation and claim updates will show up here.</p>
+          </div>
+        </section>
+
+        <footer class="ngo-footer"><a href="index.html">RescuePlate</a><span>Good food deserves a good home.</span><span>Local demo · No real reservations</span></footer>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal fade ngo-modal" id="donation-modal" tabindex="-1" aria-labelledby="modal-food-name" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="ngo-modal-label">DONATION DETAILS · DEMO</span>
+          <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close details"></button>
+        </div>
+        <div class="modal-body">
+          <img class="ngo-modal-image" id="modal-food-image" src="" alt="">
+          <span class="ngo-category-pill" id="modal-category"></span>
+          <h2 id="modal-food-name"></h2>
+          <p id="modal-description"></p>
+          <dl class="ngo-detail-list">
+            <div><dt>Quantity</dt><dd id="modal-quantity"></dd></div>
+            <div><dt>Pickup location</dt><dd id="modal-location"></dd></div>
+            <div><dt>Safe until</dt><dd id="modal-safe-until"></dd></div>
+          </dl>
+          <p class="ngo-demo-note"><i class="bi bi-info-circle" aria-hidden="true"></i> Demo only. Claiming does not reserve real food or contact a donor.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="ngo-button ngo-button-outline" type="button" data-bs-dismiss="modal">Close</button>
+          <button class="ngo-button ngo-button-primary" id="modal-claim-button" type="button">Claim donation</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ngo-live-message" id="live-message" role="status" aria-live="polite" hidden></div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/ngo-dashboard.js"></script>
+</body>
+</html>

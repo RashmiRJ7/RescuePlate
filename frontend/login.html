@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sign in to your RescuePlate account.">
+  <title>Sign in | RescuePlate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,640&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <style>
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .login-header {
+      padding: 1.25rem 0;
+    }
+
+    .login-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: var(--mr-muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .login-home:hover {
+      color: var(--mr-green);
+    }
+
+    .login-main {
+      display: grid;
+      flex: 1;
+      place-items: center;
+      padding: 2rem 0 4rem;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 470px;
+      padding: clamp(1.5rem, 5vw, 2.75rem);
+      border: 1px solid var(--mr-line);
+      border-radius: var(--mr-radius);
+      background: var(--mr-paper);
+      box-shadow: var(--mr-shadow);
+    }
+
+    .login-heading {
+      margin: 0 0 0.65rem;
+      color: var(--mr-ink);
+      font-size: clamp(2.35rem, 6vw, 3rem);
+    }
+
+    .login-subtitle {
+      margin-bottom: 1.75rem;
+      color: var(--mr-muted);
+    }
+
+    .login-label {
+      display: block;
+      margin-bottom: 0.45rem;
+      color: var(--mr-ink);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .login-control {
+      min-height: 3.1rem;
+      border-color: rgba(20, 61, 46, 0.2);
+      background-color: #fff;
+    }
+
+    .login-control:focus {
+      border-color: var(--mr-green);
+      box-shadow: 0 0 0 0.2rem rgba(31, 107, 74, 0.14);
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap .login-control {
+      padding-right: 3.25rem;
+    }
+
+    .password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 0.35rem;
+      display: grid;
+      width: 2.75rem;
+      height: 2.75rem;
+      place-items: center;
+      padding: 0;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      color: var(--mr-muted);
+      font-size: 1.1rem;
+    }
+
+    .password-toggle:hover,
+    .password-toggle:focus-visible {
+      color: var(--mr-green-deep);
+    }
+
+    .password-toggle:focus-visible,
+    .login-home:focus-visible,
+    .login-link:focus-visible,
+    .forgot-link:focus-visible {
+      outline: 3px solid rgba(232, 106, 26, 0.55);
+      outline-offset: 3px;
+      border-radius: 0.25rem;
+    }
+
+    .role-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.55rem;
+    }
+
+    .role-option {
+      position: relative;
+    }
+
+    .role-option input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .role-option label {
+      display: block;
+      padding: 0.7rem 0.35rem;
+      border: 1px solid rgba(20, 61, 46, 0.2);
+      border-radius: var(--mr-radius-sm);
+      color: var(--mr-muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-align: center;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .role-option input:checked + label {
+      border-color: var(--mr-green);
+      background: var(--mr-green-soft);
+      color: var(--mr-green-deep);
+    }
+
+    .role-option input:focus-visible + label {
+      outline: 3px solid rgba(232, 106, 26, 0.55);
+      outline-offset: 2px;
+    }
+
+    .role-option input[aria-invalid="true"] + label {
+      border-color: #b02a37;
+    }
+
+    .login-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin: 1.1rem 0 1.35rem;
+      font-size: 0.88rem;
+    }
+
+    .login-options .form-check-label {
+      color: var(--mr-muted);
+    }
+
+    .login-options .form-check-input:checked {
+      border-color: var(--mr-green);
+      background-color: var(--mr-green);
+    }
+
+    .forgot-link,
+    .login-link {
+      color: var(--mr-green);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .forgot-link:hover,
+    .login-link:hover {
+      color: var(--mr-green-deep);
+      text-decoration: underline;
+    }
+
+    .login-submit {
+      width: 100%;
+      min-height: 3.15rem;
+    }
+
+    .login-feedback {
+      min-height: 1.5rem;
+      margin: 0.85rem 0 0;
+      font-size: 0.9rem;
+    }
+
+    .login-register {
+      margin: 1.35rem 0 0;
+      color: var(--mr-muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    .login-footer {
+      padding: 0 0 1.25rem;
+      color: var(--mr-muted);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 400px) {
+      .login-options {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .role-option label {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-page">
+    <header class="login-header">
+      <div class="container d-flex align-items-center justify-content-between">
+        <a class="mr-brand" href="index.html" aria-label="RescuePlate home">
+          <span class="mr-logo" aria-hidden="true"><i class="bi bi-basket2-fill"></i></span>
+          RescuePlate
+        </a>
+        <a class="login-home" href="index.html"><i class="bi bi-arrow-left" aria-hidden="true"></i> Home</a>
+      </div>
+    </header>
+
+    <main class="login-main">
+      <div class="container d-flex justify-content-center">
+        <section class="login-card" aria-labelledby="login-heading">
+          <p class="mr-kicker"><i class="bi bi-heart-pulse" aria-hidden="true"></i> Good to see you</p>
+          <h1 class="login-heading" id="login-heading">Welcome back</h1>
+          <p class="login-subtitle">Sign in to access your RescuePlate account and continue making a difference.</p>
+
+          <form id="login-form" novalidate>
+            <div class="mb-3">
+              <label class="login-label" for="email">Email address</label>
+              <input class="form-control login-control" id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" aria-describedby="email-error" required>
+              <div class="invalid-feedback" id="email-error"></div>
+            </div>
+
+            <div class="mb-3">
+              <label class="login-label" for="password">Password</label>
+              <div class="password-wrap">
+                <input class="form-control login-control" id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" aria-describedby="password-error" required>
+                <button class="password-toggle" id="password-toggle" type="button" aria-label="Show password" aria-pressed="false">
+                  <i class="bi bi-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+              <div class="invalid-feedback" id="password-error"></div>
+            </div>
+
+            <fieldset class="mb-3">
+              <legend class="login-label mb-2">I am signing in as</legend>
+              <div class="role-options">
+                <div class="role-option">
+                  <input id="role-donor" name="role" type="radio" value="donor" aria-describedby="role-error">
+                  <label for="role-donor">Donor</label>
+                </div>
+                <div class="role-option">
+                  <input id="role-ngo" name="role" type="radio" value="ngo" aria-describedby="role-error">
+                  <label for="role-ngo">NGO</label>
+                </div>
+                <div class="role-option">
+                  <input id="role-admin" name="role" type="radio" value="admin" aria-describedby="role-error">
+                  <label for="role-admin">Admin</label>
+                </div>
+              </div>
+              <div class="text-danger small mt-1" id="role-error"></div>
+            </fieldset>
+
+            <div class="login-options">
+              <div class="form-check">
+                <input class="form-check-input" id="remember-me" name="remember-me" type="checkbox">
+                <label class="form-check-label" for="remember-me">Remember me</label>
+              </div>
+              <a class="forgot-link" id="forgot-link" href="#">Forgot password?</a>
+            </div>
+
+            <button class="btn mr-btn mr-btn-primary login-submit" type="submit">Sign In</button>
+            <p class="login-feedback" id="form-feedback" aria-live="polite"></p>
+          </form>
+
+          <p class="login-register">New to RescuePlate? <a class="login-link" href="register.html">Create an account</a></p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="login-footer">
+      <div class="container">Surplus food, rescued in time.</div>
+    </footer>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById("login-form");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const passwordToggle = document.getElementById("password-toggle");
+    const formFeedback = document.getElementById("form-feedback");
+
+    function setFieldError(input, message) {
+      const errorElement = document.getElementById(input.id + "-error");
+      input.setAttribute("aria-invalid", message ? "true" : "false");
+      errorElement.textContent = message;
+      errorElement.classList.toggle("d-block", Boolean(message));
+    }
+
+    function clearFeedback() {
+      formFeedback.textContent = "";
+      formFeedback.className = "login-feedback";
+    }
+
+    function clearValidation() {
+      setFieldError(emailInput, "");
+      setFieldError(passwordInput, "");
+      document.querySelectorAll('input[name="role"]').forEach(function (roleInput) {
+        roleInput.removeAttribute("aria-invalid");
+      });
+      document.getElementById("role-error").textContent = "";
+      clearFeedback();
+    }
+
+    passwordToggle.addEventListener("click", function () {
+      const showingPassword = passwordInput.type === "password";
+      passwordInput.type = showingPassword ? "text" : "password";
+      passwordToggle.setAttribute("aria-pressed", String(showingPassword));
+      passwordToggle.setAttribute("aria-label", showingPassword ? "Hide password" : "Show password");
+      passwordToggle.querySelector("i").className = showingPassword ? "bi bi-eye-slash" : "bi bi-eye";
+    });
+
+    document.getElementById("forgot-link").addEventListener("click", function (event) {
+      event.preventDefault();
+      clearValidation();
+      formFeedback.textContent = "Password recovery is not available in this frontend demo.";
+      formFeedback.classList.add("text-muted");
+    });
+
+    loginForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      clearValidation();
+
+      let firstInvalidField = null;
+      const email = emailInput.value.trim();
+
+      if (!email) {
+        setFieldError(emailInput, "Please enter your email address.");
+        firstInvalidField = emailInput;
+      } else if (!emailInput.validity.valid) {
+        setFieldError(emailInput, "Please enter a valid email address, such as name@example.com.");
+        firstInvalidField = emailInput;
+      }
+
+      if (!passwordInput.value) {
+        setFieldError(passwordInput, "Please enter your password.");
+        if (!firstInvalidField) firstInvalidField = passwordInput;
+      }
+
+      const selectedRole = document.querySelector('input[name="role"]:checked');
+      if (!selectedRole) {
+        document.getElementById("role-error").textContent = "Please choose Donor, NGO, or Admin.";
+        document.querySelectorAll('input[name="role"]').forEach(function (roleInput) {
+          roleInput.setAttribute("aria-invalid", "true");
+        });
+        if (!firstInvalidField) firstInvalidField = document.getElementById("role-donor");
+      }
+
+      if (firstInvalidField) {
+        firstInvalidField.focus();
+        return;
+      }
+
+      formFeedback.textContent = "Demo sign-in is not connected. Preview the selected workspace instead:";
+      const dashboards = {
+        donor: { href: "donor-dashboard.html", label: "Donor" },
+        ngo: { href: "ngo-dashboard.html", label: "NGO" },
+        admin: { href: "admin-dashboard.html", label: "Admin" }
+      };
+      const dashboard = dashboards[selectedRole.value];
+      const previewLink = document.createElement("a");
+      previewLink.className = "login-link d-block mt-1";
+      previewLink.href = dashboard.href;
+      previewLink.textContent = "Open " + dashboard.label + " dashboard preview";
+      formFeedback.append(previewLink);
+      formFeedback.classList.add("text-success");
+    });
+
+    loginForm.addEventListener("input", function (event) {
+      if (event.target === emailInput || event.target === passwordInput) {
+        setFieldError(event.target, "");
+        clearFeedback();
+      }
+    });
+
+    loginForm.addEventListener("change", function (event) {
+      if (event.target.name === "role") {
+        document.getElementById("role-error").textContent = "";
+        document.querySelectorAll('input[name="role"]').forEach(function (roleInput) {
+          roleInput.removeAttribute("aria-invalid");
+        });
+        clearFeedback();
+      }
+    });
+  </script>
+</body>
+</html>

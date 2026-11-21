@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Join RescuePlate and help rescue surplus food before it spoils.">
+  <title>Create an account | RescuePlate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,640&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <style>
+    .register-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .register-header {
+      padding: 1.25rem 0;
+    }
+
+    .register-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: var(--mr-muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .register-home:hover {
+      color: var(--mr-green);
+    }
+
+    .register-main {
+      flex: 1;
+      padding: 1.5rem 0 3.75rem;
+    }
+
+    .register-card {
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: clamp(1.4rem, 4vw, 2.75rem);
+      border: 1px solid var(--mr-line);
+      border-radius: var(--mr-radius);
+      background: var(--mr-paper);
+      box-shadow: var(--mr-shadow);
+    }
+
+    .register-heading {
+      margin: 0 0 0.65rem;
+      color: var(--mr-ink);
+      font-size: clamp(2.2rem, 5vw, 3rem);
+    }
+
+    .register-subtitle {
+      max-width: 39rem;
+      margin-bottom: 1.75rem;
+      color: var(--mr-muted);
+    }
+
+    .register-label {
+      display: block;
+      margin-bottom: 0.45rem;
+      color: var(--mr-ink);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .register-control {
+      min-height: 3.1rem;
+      border-color: rgba(20, 61, 46, 0.2);
+      background-color: #fff;
+    }
+
+    .register-control:focus {
+      border-color: var(--mr-green);
+      box-shadow: 0 0 0 0.2rem rgba(31, 107, 74, 0.14);
+    }
+
+    .register-hint {
+      margin: 0.35rem 0 0;
+      color: var(--mr-muted);
+      font-size: 0.8rem;
+    }
+
+    .account-types {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .account-type {
+      position: relative;
+    }
+
+    .account-type input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .account-type label {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.85rem;
+      border: 1px solid rgba(20, 61, 46, 0.2);
+      border-radius: var(--mr-radius-sm);
+      color: var(--mr-muted);
+      cursor: pointer;
+      font-weight: 700;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .account-type label i {
+      color: var(--mr-green);
+      font-size: 1.25rem;
+    }
+
+    .account-type input:checked + label {
+      border-color: var(--mr-green);
+      background: var(--mr-green-soft);
+      color: var(--mr-green-deep);
+    }
+
+    .account-type input:focus-visible + label {
+      outline: 3px solid rgba(232, 106, 26, 0.55);
+      outline-offset: 2px;
+    }
+
+    .account-type input[aria-invalid="true"] + label {
+      border-color: #b02a37;
+    }
+
+    .conditional-fields {
+      margin-top: 1.4rem;
+      padding: 1.2rem;
+      border: 1px solid var(--mr-line);
+      border-radius: var(--mr-radius-sm);
+      background: rgba(231, 243, 236, 0.45);
+    }
+
+    .conditional-fields[hidden] {
+      display: none;
+    }
+
+    .conditional-heading {
+      margin-bottom: 1rem;
+      color: var(--mr-green-deep);
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap .register-control {
+      padding-right: 3.25rem;
+    }
+
+    .password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 0.35rem;
+      display: grid;
+      width: 2.75rem;
+      height: 2.75rem;
+      place-items: center;
+      padding: 0;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      color: var(--mr-muted);
+      font-size: 1.1rem;
+    }
+
+    .password-toggle:hover,
+    .password-toggle:focus-visible {
+      color: var(--mr-green-deep);
+    }
+
+    .password-toggle:focus-visible,
+    .register-home:focus-visible,
+    .register-link:focus-visible {
+      outline: 3px solid rgba(232, 106, 26, 0.55);
+      outline-offset: 3px;
+      border-radius: 0.25rem;
+    }
+
+    .register-submit {
+      width: 100%;
+      min-height: 3.15rem;
+      margin-top: 1.2rem;
+    }
+
+    .register-feedback {
+      min-height: 1.5rem;
+      margin: 0.85rem 0 0;
+      font-size: 0.9rem;
+    }
+
+    .register-login {
+      margin: 1.35rem 0 0;
+      color: var(--mr-muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    .register-link {
+      color: var(--mr-green);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .register-link:hover {
+      color: var(--mr-green-deep);
+      text-decoration: underline;
+    }
+
+    .register-footer {
+      padding: 0 0 1.25rem;
+      color: var(--mr-muted);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 575.98px) {
+      .account-types {
+        grid-template-columns: 1fr;
+      }
+
+      .conditional-fields {
+        padding: 1rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .account-type label {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="register-page">
+    <header class="register-header">
+      <div class="container d-flex align-items-center justify-content-between">
+        <a class="mr-brand" href="index.html" aria-label="RescuePlate home">
+          <span class="mr-logo" aria-hidden="true"><i class="bi bi-basket2-fill"></i></span>
+          RescuePlate
+        </a>
+        <a class="register-home" href="index.html"><i class="bi bi-arrow-left" aria-hidden="true"></i> Home</a>
+      </div>
+    </header>
+
+    <main class="register-main">
+      <div class="container">
+        <section class="register-card" aria-labelledby="register-heading">
+          <p class="mr-kicker"><i class="bi bi-heart-pulse" aria-hidden="true"></i> Make good food go further</p>
+          <h1 class="register-heading" id="register-heading">Join the RescuePlate Community</h1>
+          <p class="register-subtitle">Connect with local food rescue efforts. Share surplus or help get fresh meals to the people who need them.</p>
+
+          <form id="register-form" novalidate>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="register-label" for="full-name">Full name</label>
+                <input class="form-control register-control" id="full-name" name="fullName" type="text" autocomplete="name" placeholder="Your full name" aria-describedby="full-name-error" required>
+                <div class="invalid-feedback" id="full-name-error"></div>
+              </div>
+              <div class="col-md-6">
+                <label class="register-label" for="email">Email address</label>
+                <input class="form-control register-control" id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" aria-describedby="email-error" required>
+                <div class="invalid-feedback" id="email-error"></div>
+              </div>
+              <div class="col-md-6">
+                <label class="register-label" for="phone">Phone number</label>
+                <input class="form-control register-control" id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+1 555 123 4567" aria-describedby="phone-hint phone-error" required>
+                <p class="register-hint" id="phone-hint">Include your country code if you are outside your local area.</p>
+                <div class="invalid-feedback" id="phone-error"></div>
+              </div>
+              <div class="col-md-6">
+                <span class="register-label" id="account-type-label">Account type</span>
+                <div class="account-types" role="radiogroup" aria-labelledby="account-type-label" aria-describedby="account-type-error">
+                  <div class="account-type">
+                    <input id="type-donor" name="accountType" type="radio" value="donor">
+                    <label for="type-donor"><i class="bi bi-shop" aria-hidden="true"></i> Donor</label>
+                  </div>
+                  <div class="account-type">
+                    <input id="type-ngo" name="accountType" type="radio" value="ngo">
+                    <label for="type-ngo"><i class="bi bi-people" aria-hidden="true"></i> NGO</label>
+                  </div>
+                </div>
+                <div class="text-danger small mt-1" id="account-type-error"></div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="register-label" for="password">Password</label>
+                <div class="password-wrap">
+                  <input class="form-control register-control" id="password" name="password" type="password" autocomplete="new-password" placeholder="Create a password" aria-describedby="password-error" required>
+                  <button class="password-toggle" type="button" data-password-toggle="password" aria-label="Show password" aria-pressed="false">
+                    <i class="bi bi-eye" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <div class="invalid-feedback" id="password-error"></div>
+              </div>
+              <div class="col-md-6">
+                <label class="register-label" for="confirm-password">Confirm password</label>
+                <div class="password-wrap">
+                  <input class="form-control register-control" id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Enter your password again" aria-describedby="confirm-password-error" required>
+                  <button class="password-toggle" type="button" data-password-toggle="confirm-password" aria-label="Show password" aria-pressed="false">
+                    <i class="bi bi-eye" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <div class="invalid-feedback" id="confirm-password-error"></div>
+              </div>
+            </div>
+
+            <section class="conditional-fields" id="donor-fields" aria-labelledby="donor-fields-heading" hidden>
+              <h2 class="conditional-heading" id="donor-fields-heading">Donor details</h2>
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="register-label" for="donor-organization">Organization or restaurant name</label>
+                  <input class="form-control register-control" id="donor-organization" name="donorOrganization" type="text" autocomplete="organization" placeholder="Your business or organization" aria-describedby="donor-organization-error">
+                  <div class="invalid-feedback" id="donor-organization-error"></div>
+                </div>
+                <div class="col-12">
+                  <label class="register-label" for="donor-address">Address</label>
+                  <textarea class="form-control register-control" id="donor-address" name="donorAddress" rows="2" autocomplete="street-address" placeholder="Street, city, and postal code" aria-describedby="donor-address-error"></textarea>
+                  <div class="invalid-feedback" id="donor-address-error"></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="conditional-fields" id="ngo-fields" aria-labelledby="ngo-fields-heading" hidden>
+              <h2 class="conditional-heading" id="ngo-fields-heading">NGO details</h2>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="register-label" for="ngo-organization">NGO organization name</label>
+                  <input class="form-control register-control" id="ngo-organization" name="ngoOrganization" type="text" autocomplete="organization" placeholder="Your NGO's name" aria-describedby="ngo-organization-error">
+                  <div class="invalid-feedback" id="ngo-organization-error"></div>
+                </div>
+                <div class="col-md-6">
+                  <label class="register-label" for="ngo-registration">Registration number</label>
+                  <input class="form-control register-control" id="ngo-registration" name="ngoRegistration" type="text" placeholder="Official registration number" aria-describedby="ngo-registration-error">
+                  <div class="invalid-feedback" id="ngo-registration-error"></div>
+                </div>
+                <div class="col-12">
+                  <label class="register-label" for="ngo-address">Address</label>
+                  <textarea class="form-control register-control" id="ngo-address" name="ngoAddress" rows="2" autocomplete="street-address" placeholder="Street, city, and postal code" aria-describedby="ngo-address-error"></textarea>
+                  <div class="invalid-feedback" id="ngo-address-error"></div>
+                </div>
+              </div>
+            </section>
+
+            <button class="btn mr-btn mr-btn-primary register-submit" type="submit">Create account</button>
+            <p class="register-feedback" id="form-feedback" aria-live="polite"></p>
+          </form>
+
+          <p class="register-login">Already part of the community? <a class="register-link" href="login.html">Sign in</a></p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="register-footer">
+      <div class="container">Surplus food, rescued in time.</div>
+    </footer>
+  </div>
+
+  <script>
+    const registrationForm = document.getElementById("register-form");
+    const accountTypeInputs = document.querySelectorAll('input[name="accountType"]');
+    const donorFields = document.getElementById("donor-fields");
+    const ngoFields = document.getElementById("ngo-fields");
+    const formFeedback = document.getElementById("form-feedback");
+
+    function setFieldError(field, message) {
+      const errorElement = document.getElementById(field.id + "-error");
+      field.setAttribute("aria-invalid", message ? "true" : "false");
+      errorElement.textContent = message;
+      errorElement.classList.toggle("d-block", Boolean(message));
+    }
+
+    function clearFieldError(field) {
+      setFieldError(field, "");
+    }
+
+    function clearFeedback() {
+      formFeedback.textContent = "";
+      formFeedback.className = "register-feedback";
+    }
+
+    function clearConditionalFields(container) {
+      container.querySelectorAll("input, textarea").forEach(function (field) {
+        field.value = "";
+        field.required = false;
+        clearFieldError(field);
+      });
+    }
+
+    function updateAccountFields() {
+      const selectedType = document.querySelector('input[name="accountType"]:checked');
+      const accountTypeError = document.getElementById("account-type-error");
+      accountTypeError.textContent = "";
+      accountTypeInputs.forEach(function (input) {
+        input.removeAttribute("aria-invalid");
+      });
+
+      donorFields.hidden = !selectedType || selectedType.value !== "donor";
+      ngoFields.hidden = !selectedType || selectedType.value !== "ngo";
+
+      if (donorFields.hidden) {
+        clearConditionalFields(donorFields);
+      } else {
+        donorFields.querySelectorAll("input, textarea").forEach(function (field) {
+          field.required = true;
+        });
+      }
+
+      if (ngoFields.hidden) {
+        clearConditionalFields(ngoFields);
+      } else {
+        ngoFields.querySelectorAll("input, textarea").forEach(function (field) {
+          field.required = true;
+        });
+      }
+
+      clearFeedback();
+    }
+
+    document.querySelectorAll("[data-password-toggle]").forEach(function (toggle) {
+      toggle.addEventListener("click", function () {
+        const passwordField = document.getElementById(toggle.dataset.passwordToggle);
+        const showingPassword = passwordField.type === "password";
+        passwordField.type = showingPassword ? "text" : "password";
+        toggle.setAttribute("aria-pressed", String(showingPassword));
+        toggle.setAttribute("aria-label", showingPassword ? "Hide password" : "Show password");
+        toggle.querySelector("i").className = showingPassword ? "bi bi-eye-slash" : "bi bi-eye";
+      });
+    });
+
+    accountTypeInputs.forEach(function (input) {
+      input.addEventListener("change", updateAccountFields);
+    });
+
+    registrationForm.addEventListener("input", function (event) {
+      if (event.target.matches("input:not([name='accountType']), textarea")) {
+        clearFieldError(event.target);
+      }
+      clearFeedback();
+    });
+
+    registrationForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      clearFeedback();
+
+      let firstInvalidField = null;
+      const requiredFieldIds = ["full-name", "email", "phone", "password", "confirm-password"];
+      const selectedType = document.querySelector('input[name="accountType"]:checked');
+
+      requiredFieldIds.forEach(function (fieldId) {
+        const field = document.getElementById(fieldId);
+        const value = field.value.trim();
+
+        if (!value) {
+          setFieldError(field, "This field is required.");
+          if (!firstInvalidField) firstInvalidField = field;
+        } else if (field.type === "email" && !field.validity.valid) {
+          setFieldError(field, "Please enter a valid email address, such as name@example.com.");
+          if (!firstInvalidField) firstInvalidField = field;
+        }
+      });
+
+      const phoneField = document.getElementById("phone");
+      const phoneValue = phoneField.value.trim();
+      const phoneDigits = phoneValue.replace(/\D/g, "");
+      const phoneHasInvalidCharacters = !/^\+?[0-9\s().-]+$/.test(phoneValue);
+      if (phoneValue && (phoneHasInvalidCharacters || phoneDigits.length < 7 || phoneDigits.length > 15)) {
+        setFieldError(phoneField, "Use a valid phone number with 7 to 15 digits.");
+        if (!firstInvalidField) firstInvalidField = phoneField;
+      }
+
+      const passwordField = document.getElementById("password");
+      const confirmPasswordField = document.getElementById("confirm-password");
+      if (passwordField.value && confirmPasswordField.value && passwordField.value !== confirmPasswordField.value) {
+        setFieldError(confirmPasswordField, "Your passwords do not match.");
+        if (!firstInvalidField) firstInvalidField = confirmPasswordField;
+      }
+
+      if (!selectedType) {
+        document.getElementById("account-type-error").textContent = "Please choose Donor or NGO.";
+        accountTypeInputs.forEach(function (input) {
+          input.setAttribute("aria-invalid", "true");
+        });
+        if (!firstInvalidField) firstInvalidField = document.getElementById("type-donor");
+      } else {
+        const activeFields = selectedType.value === "donor" ? donorFields : ngoFields;
+        activeFields.querySelectorAll("input, textarea").forEach(function (field) {
+          if (!field.value.trim()) {
+            setFieldError(field, "This field is required.");
+            if (!firstInvalidField) firstInvalidField = field;
+          }
+        });
+      }
+
+      if (firstInvalidField) {
+        firstInvalidField.focus();
+        return;
+      }
+
+      formFeedback.textContent = "Your details are valid. Account creation is not connected yet.";
+      formFeedback.classList.add("text-success");
+    });
+  </script>
+</body>
+</html>
