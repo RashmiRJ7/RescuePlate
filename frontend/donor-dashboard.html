@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -749,7 +749,7 @@
             <i class="bi bi-grid-1x2" aria-hidden="true"></i> Overview
           </a>
           <a class="sidebar-link" href="#new-donation" data-section-link>
-            <i class="bi bi-plus-circle" aria-hidden="true"></i> Post a donation
+            <i class="bi bi-plus-circle" aria-hidden="true"></i> Donate surplus food
           </a>
           <a class="sidebar-link" href="#my-donations" data-section-link>
             <i class="bi bi-basket2" aria-hidden="true"></i> My donations
@@ -762,9 +762,9 @@
 
       <div class="sidebar-spacer"></div>
       <div class="profile-card" aria-label="Demo donor profile">
-        <span class="profile-avatar" aria-hidden="true">SK</span>
+        <span class="profile-avatar" aria-hidden="true">SC</span>
         <div class="min-w-0">
-          <span class="profile-name">Samantha Kitchen</span>
+          <span class="profile-name">Shivaji College Hostel Mess</span>
           <span class="profile-role">Donor · demo profile</span>
         </div>
         <a class="profile-signout" href="login.html" aria-label="Return to login (demo only)" title="Return to login">
@@ -782,7 +782,7 @@
         </button>
         <div>
           <h1 class="topbar-title">Welcome back, Donor!</h1>
-          <p class="topbar-subtitle">Here’s a look at your food rescue activity.</p>
+          <p class="topbar-subtitle">Here is your food rescue activity.</p>
         </div>
       </div>
       <span class="preview-pill"><i class="bi bi-info-circle" aria-hidden="true"></i> Preview data</span>
@@ -792,7 +792,7 @@
       <section class="dashboard-section" id="overview" aria-labelledby="overview-title">
         <div class="section-heading">
           <p class="mr-kicker mb-2">Your impact</p>
-          <h2 id="overview-title">Donation overview</h2>
+          <h2 id="overview-title">Food donation overview</h2>
           <p>Illustrative totals for this donor dashboard preview.</p>
         </div>
         <div class="sample-note" role="note">
@@ -804,7 +804,7 @@
             <article class="dashboard-card stat-card">
               <div>
                 <p class="stat-label">Total Donations</p>
-                <strong class="stat-value">24</strong>
+                <strong class="stat-value">5</strong>
                 <span class="stat-caption">Sample donations posted</span>
               </div>
               <span class="stat-icon"><i class="bi bi-basket2" aria-hidden="true"></i></span>
@@ -813,8 +813,8 @@
           <div class="col-12 col-sm-6 col-xxl-3">
             <article class="dashboard-card stat-card">
               <div>
-                <p class="stat-label">Available Donations</p>
-                <strong class="stat-value">6</strong>
+                <p class="stat-label">Available Meals</p>
+                <strong class="stat-value">2</strong>
                 <span class="stat-caption">Sample listings open to claim</span>
               </div>
               <span class="stat-icon orange"><i class="bi bi-clock-history" aria-hidden="true"></i></span>
@@ -823,8 +823,8 @@
           <div class="col-12 col-sm-6 col-xxl-3">
             <article class="dashboard-card stat-card">
               <div>
-                <p class="stat-label">Food Successfully Rescued</p>
-                <strong class="stat-value">1,280</strong>
+                <p class="stat-label">Meals Rescued</p>
+                <strong class="stat-value">35</strong>
                 <span class="stat-caption">Sample meals rescued</span>
               </div>
               <span class="stat-icon"><i class="bi bi-heart-pulse" aria-hidden="true"></i></span>
@@ -846,15 +846,15 @@
       <section class="dashboard-section" id="new-donation" aria-labelledby="new-donation-title">
         <div class="section-heading">
           <p class="mr-kicker mb-2">Share surplus</p>
-          <h2 id="new-donation-title">Post a new donation</h2>
-          <p>Enter the details so a nearby organization can plan a timely pickup.</p>
+          <h2 id="new-donation-title">Donate Surplus Food</h2>
+          <p>Share what food is available, how much there is, when it is safe until, and where to collect it.</p>
         </div>
         <div class="dashboard-card form-card">
           <form id="donation-form" novalidate>
             <div class="row g-3">
               <div class="col-md-6">
                 <label class="form-label" for="food-name">Food name</label>
-                <input class="form-control donor-control" id="food-name" name="foodName" type="text" placeholder="e.g. Vegetable lunch bowls" aria-describedby="food-name-error" required>
+                <input class="form-control donor-control" id="food-name" name="foodName" type="text" placeholder="e.g. Rice, dal, roti and sabzi" aria-describedby="food-name-error" required>
                 <div class="invalid-feedback" id="food-name-error"></div>
               </div>
               <div class="col-md-6">
@@ -863,9 +863,12 @@
                   <option value="">Choose a category</option>
                   <option>Cooked Meals</option>
                   <option>Bakery</option>
+                  <option>Bakery &amp; Sweets</option>
                   <option>Fruits</option>
                   <option>Vegetables</option>
                   <option>Packaged Food</option>
+                  <option>Packaged Snacks</option>
+                  <option>Event Meals</option>
                   <option>Other</option>
                 </select>
                 <div class="invalid-feedback" id="food-category-error"></div>
@@ -876,12 +879,15 @@
                 <div class="invalid-feedback" id="quantity-error"></div>
               </div>
               <div class="col-md-6">
-                <label class="form-label" for="quantity-unit">Quantity unit</label>
+                <label class="form-label" for="quantity-unit">Unit</label>
                 <select class="form-select donor-control" id="quantity-unit" name="quantityUnit" aria-describedby="quantity-unit-error" required>
                   <option value="">Choose a unit</option>
+                  <option>Plates</option>
                   <option>Meals</option>
-                  <option>Kg</option>
+                  <option>Portions</option>
                   <option>Packets</option>
+                  <option>Boxes</option>
+                  <option value="Kg">Kilograms (kg)</option>
                 </select>
                 <div class="invalid-feedback" id="quantity-unit-error"></div>
               </div>
@@ -896,20 +902,20 @@
                 <div class="invalid-feedback" id="prepared-at-error"></div>
               </div>
               <div class="col-md-6">
-                <label class="form-label" for="safe-until">Safe-to-consume until</label>
+                <label class="form-label" for="safe-until">Safe Until</label>
                 <input class="form-control donor-control" id="safe-until" name="safeUntil" type="datetime-local" aria-describedby="safe-until-error" required>
                 <div class="form-hint">Choose a deadline that gives the pickup team enough time.</div>
                 <div class="invalid-feedback" id="safe-until-error"></div>
               </div>
               <div class="col-12">
-                <label class="form-label" for="pickup-address">Pickup address</label>
-                <textarea class="form-control donor-control" id="pickup-address" name="pickupAddress" autocomplete="street-address" placeholder="Street address, city, and any pickup instructions" aria-describedby="pickup-address-error" required></textarea>
+                <label class="form-label" for="pickup-address">Pickup Location</label>
+                <textarea class="form-control donor-control" id="pickup-address" name="pickupAddress" autocomplete="street-address" placeholder="Area, street, city, PIN code and pickup instructions" aria-describedby="pickup-address-error" required></textarea>
                 <div class="invalid-feedback" id="pickup-address-error"></div>
               </div>
               <div class="col-md-6">
                 <label class="form-label" for="contact-number">Contact number</label>
-                <input class="form-control donor-control" id="contact-number" name="contactNumber" type="tel" inputmode="tel" autocomplete="tel" placeholder="+1 555 123 4567" aria-describedby="contact-number-hint contact-number-error" required>
-                <div class="form-hint" id="contact-number-hint">Enter a number where the pickup team can reach you.</div>
+                <input class="form-control donor-control" id="contact-number" name="contactNumber" type="tel" inputmode="tel" autocomplete="tel" placeholder="+91 98765 43210" aria-describedby="contact-number-hint contact-number-error" required>
+                <div class="form-hint" id="contact-number-hint">Enter an Indian number where the pickup team can reach you.</div>
                 <div class="invalid-feedback" id="contact-number-error"></div>
               </div>
               <div class="col-md-6">
@@ -920,7 +926,7 @@
             </div>
             <div class="form-actions">
               <button class="btn mr-btn mr-btn-primary" type="submit"><i class="bi bi-eye" aria-hidden="true"></i> Preview donation</button>
-              <span class="text-secondary small">Preview only — no backend connection.</span>
+              <span class="text-secondary small">Demo preview only. Nothing is submitted.</span>
             </div>
             <p class="donation-feedback" id="donation-feedback" aria-live="polite"></p>
             <section class="preview-result" id="donation-preview" aria-live="polite" hidden>
@@ -930,7 +936,7 @@
                 <div><dt>Food</dt><dd id="preview-food"></dd></div>
                 <div><dt>Quantity</dt><dd id="preview-quantity"></dd></div>
                 <div><dt>Safe until</dt><dd id="preview-safe-until"></dd></div>
-                <div><dt>Pickup address</dt><dd id="preview-address"></dd></div>
+                <div><dt>Pickup Location</dt><dd id="preview-address"></dd></div>
               </dl>
             </section>
           </form>
@@ -941,7 +947,7 @@
         <div class="section-heading">
           <p class="mr-kicker mb-2">Track your listings</p>
           <h2 id="my-donations-title">My donations</h2>
-          <p>Search and filter this illustrative donation list by status.</p>
+          <p>Search and filter your sample food listings by status.</p>
         </div>
         <div class="dashboard-card table-card">
           <div class="table-toolbar">
@@ -999,7 +1005,7 @@
             <span class="notification-icon"><i class="bi bi-hand-thumbs-up" aria-hidden="true"></i></span>
             <div>
               <strong>Sample: A pickup was reserved</strong>
-              <p>“Vegetable lunch bowls” has a demo reservation from Community Table NGO.</p>
+              <p>“Rice, dal, roti and sabzi” has a sample pickup from Sahyog Food Collective, Pune.</p>
               <span class="notification-time">Example update · 18 minutes ago</span>
             </div>
           </article>
@@ -1007,7 +1013,7 @@
             <span class="notification-icon"><i class="bi bi-check2-circle" aria-hidden="true"></i></span>
             <div>
               <strong>Sample: A rescue was completed</strong>
-              <p>“Fresh bakery bundle” was marked delivered in this sample activity feed.</p>
+              <p>“Bread and buns” was marked collected in this sample activity feed.</p>
               <span class="notification-time">Example update · Yesterday</span>
             </div>
           </article>
@@ -1015,7 +1021,7 @@
             <span class="notification-icon"><i class="bi bi-clock" aria-hidden="true"></i></span>
             <div>
               <strong>Sample: Pickup window reminder</strong>
-              <p>“Seasonal fruit boxes” has a demo pickup window ending soon.</p>
+              <p>“Veg pulao portions” has a sample pickup window ending soon.</p>
               <span class="notification-time">Example update · Yesterday</span>
             </div>
           </article>
@@ -1048,7 +1054,7 @@
             <div><dt>Posted</dt><dd id="detail-posted"></dd></div>
             <div><dt>Safe until</dt><dd id="detail-safe-until"></dd></div>
             <div class="detail-wide"><dt>Description</dt><dd id="detail-description"></dd></div>
-            <div class="detail-wide"><dt>Pickup address</dt><dd id="detail-address"></dd></div>
+            <div class="detail-wide"><dt>Pickup Location</dt><dd id="detail-address"></dd></div>
             <div class="detail-wide"><dt>Contact</dt><dd id="detail-contact"></dd></div>
           </dl>
           <h3 class="h6 fw-bold mt-4 mb-3">Status history <span class="text-secondary fw-normal">(sample)</span></h3>
@@ -1071,11 +1077,12 @@
     }
 
     function formatDate(date) {
-      return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+      return date.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", month: "short", day: "numeric", year: "numeric" });
     }
 
     function formatDateTime(date) {
-      return date.toLocaleString(undefined, {
+      return date.toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
         month: "short",
         day: "numeric",
         hour: "numeric",
@@ -1086,81 +1093,68 @@
     const demoDonations = [
       {
         id: "demo-1",
-        name: "Vegetable lunch bowls",
+        name: "Rice, dal, roti and seasonal sabzi",
         category: "Cooked Meals",
-        quantity: "18 Meals",
+        quantity: "40 plates",
         postedAt: dateFromNow(-1, -3),
         safeUntil: dateFromNow(0, 5),
         status: "AVAILABLE",
-        description: "Vegetable and grain lunch bowls, packed in sealed containers.",
-        address: "24 Garden Lane, Riverside",
-        contact: "+1 555 010 2400",
+        description: "Fresh hostel mess lunch, packed safely and ready for same-day collection.",
+        address: "Shivaji College Hostel Mess, Deccan, Pune 411004",
+        contact: "+91 98765 43210",
         history: ["Demo listing created · " + formatDateTime(dateFromNow(-1, -3)), "Sample status: available for pickup"]
       },
       {
         id: "demo-2",
-        name: "Fresh bakery bundle",
+        name: "Fresh bread and buns",
         category: "Bakery",
-        quantity: "12 Packets",
+        quantity: "25 packets",
         postedAt: dateFromNow(-2, -4),
         safeUntil: dateFromNow(0, 3),
         status: "RESERVED",
-        description: "Assorted rolls and pastries from the morning bake.",
-        address: "8 Market Street, Riverside",
-        contact: "+1 555 010 2400",
+        description: "Today's unsold bread and buns, packed in clean food-safe bags.",
+        address: "Asha Bakery & Sweets, Kothrud, Pune 411038",
+        contact: "+91 98765 43210",
         history: ["Demo listing created · " + formatDateTime(dateFromNow(-2, -4)), "Sample status changed to reserved"]
       },
       {
         id: "demo-3",
-        name: "Seasonal fruit boxes",
-        category: "Fruits",
-        quantity: "9 Kg",
+        name: "Wedding buffet meal portions",
+        category: "Cooked Meals",
+        quantity: "120 portions",
         postedAt: dateFromNow(-3, -6),
         safeUntil: dateFromNow(-2, 0),
         status: "PICKED_UP",
-        description: "Mixed seasonal fruit, sorted into reusable boxes.",
-        address: "24 Garden Lane, Riverside",
-        contact: "+1 555 010 2400",
+        description: "A freshly prepared wedding buffet surplus, kept covered and ready for prompt collection.",
+        address: "Saanvi Wedding Hall, Baner, Pune 411045",
+        contact: "+91 98765 43210",
         history: ["Demo listing created · " + formatDateTime(dateFromNow(-3, -6)), "Sample pickup confirmed"]
       },
       {
         id: "demo-4",
-        name: "Packaged pantry meals",
-        category: "Packaged Food",
-        quantity: "25 Packets",
+        name: "Vegetable pulao",
+        category: "Cooked Meals",
+        quantity: "35 portions",
         postedAt: dateFromNow(-5, -2),
         safeUntil: dateFromNow(4, 0),
         status: "DELIVERED",
-        description: "Shelf-stable pantry meal packs with labels intact.",
-        address: "8 Market Street, Riverside",
-        contact: "+1 555 010 2400",
+        description: "Hotel kitchen surplus prepared today and packed for a community meal.",
+        address: "Deccan Heritage Hotel, Shivajinagar, Pune 411005",
+        contact: "+91 98765 43210",
         history: ["Demo listing created · " + formatDateTime(dateFromNow(-5, -2)), "Sample pickup confirmed", "Sample delivery completed"]
       },
       {
         id: "demo-5",
-        name: "Garden vegetable mix",
-        category: "Vegetables",
-        quantity: "6 Kg",
+        name: "College event snack boxes",
+        category: "Packaged Food",
+        quantity: "50 boxes",
         postedAt: dateFromNow(-6, -8),
         safeUntil: dateFromNow(-4, 0),
-        status: "EXPIRED",
-        description: "Washed mixed vegetables for prompt preparation.",
-        address: "24 Garden Lane, Riverside",
-        contact: "+1 555 010 2400",
+        status: "AVAILABLE",
+        description: "Sealed snack boxes from a college event, available within the stated safe-until time.",
+        address: "Campus Utsav, Fergusson College Road, Pune 411004",
+        contact: "+91 98765 43210",
         history: ["Demo listing created · " + formatDateTime(dateFromNow(-6, -8)), "Sample listing expired after its pickup window"]
-      },
-      {
-        id: "demo-6",
-        name: "Prepared soup portions",
-        category: "Cooked Meals",
-        quantity: "10 Meals",
-        postedAt: dateFromNow(-7, -4),
-        safeUntil: dateFromNow(-6, 0),
-        status: "CANCELLED",
-        description: "Chilled soup portions packed for a community meal.",
-        address: "8 Market Street, Riverside",
-        contact: "+1 555 010 2400",
-        history: ["Demo listing created · " + formatDateTime(dateFromNow(-7, -4)), "Sample listing cancelled by donor"]
       }
     ];
 
@@ -1243,7 +1237,8 @@
     }
 
     function readableDate(value) {
-      return new Date(value).toLocaleString(undefined, {
+      return new Date(value).toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
         month: "short",
         day: "numeric",
         year: "numeric",

@@ -6,21 +6,20 @@
   }
 
   const users = [
-    { id: "user-101", name: "Samantha Kitchen", email: "hello@samanthaskitchen.example", role: "Donor", status: "Active", organization: "Samantha's Kitchen", location: "Riverside", joined: "Jan 12, 2026" },
-    { id: "user-102", name: "Riverbend Market", email: "team@riverbend.example", role: "Donor", status: "Active", organization: "Riverbend Market", location: "Riverside Market District", joined: "Feb 03, 2026" },
-    { id: "user-103", name: "Morningside Bakery", email: "contact@morningside.example", role: "Donor", status: "Inactive", organization: "Morningside Bakery", location: "Old Town", joined: "Mar 18, 2026" },
-    { id: "user-104", name: "Riverside Table", email: "hello@riversidetable.example", role: "NGO", status: "Active", organization: "Riverside Table Community NGO", location: "Riverside", joined: "Jan 20, 2026" },
-    { id: "user-105", name: "Eastside Community Pantry", email: "team@eastsidepantry.example", role: "NGO", status: "Active", organization: "Eastside Community Pantry", location: "East Riverside", joined: "Feb 11, 2026" },
-    { id: "user-106", name: "Willow Street Outreach", email: "contact@willowoutreach.example", role: "NGO", status: "Inactive", organization: "Willow Street Outreach", location: "West Riverside", joined: "Apr 06, 2026" }
+    { id: "user-101", name: "Shivaji College Hostel Mess", email: "mess@shivajicollege.example", role: "Donor", status: "Active", organization: "Shivaji College Hostel Mess", location: "Deccan, Pune", joined: "Jan 12, 2026" },
+    { id: "user-102", name: "Deccan Heritage Hotel", email: "kitchen@deccanheritage.example", role: "Donor", status: "Active", organization: "Deccan Heritage Hotel", location: "Shivajinagar, Pune", joined: "Feb 03, 2026" },
+    { id: "user-103", name: "Asha Bakery & Sweets", email: "contact@ashabakery.example", role: "Donor", status: "Inactive", organization: "Asha Bakery & Sweets", location: "Kothrud, Pune", joined: "Mar 18, 2026" },
+    { id: "user-104", name: "Sahyog Food Collective", email: "hello@sahyogfood.example", role: "NGO", status: "Active", organization: "Sahyog Food Collective", location: "Deccan, Pune", joined: "Jan 20, 2026" },
+    { id: "user-105", name: "Annadaan Community Trust", email: "team@annadaantrust.example", role: "NGO", status: "Active", organization: "Annadaan Community Trust", location: "Aundh, Pune", joined: "Feb 11, 2026" },
+    { id: "user-106", name: "Seva Meals Network", email: "contact@sevameals.example", role: "NGO", status: "Inactive", organization: "Seva Meals Network", location: "Baner, Pune", joined: "Apr 06, 2026" }
   ];
 
   const donations = [
-    { name: "Seasonal citrus & apples", donor: "Riverbend Market", quantity: "18 kg", ngo: "", status: "Available", expiry: hoursFromNow(2) },
-    { name: "Bakery breakfast packs", donor: "Morningside Bakery", quantity: "24 packets", ngo: "Riverside Table", status: "Reserved", expiry: hoursFromNow(5) },
-    { name: "Community lunch bowls", donor: "Green Spoon Kitchen", quantity: "32 meals", ngo: "Eastside Community Pantry", status: "Picked Up", expiry: hoursFromNow(1) },
-    { name: "Vegetable curry portions", donor: "Green Spoon Kitchen", quantity: "28 meals", ngo: "Riverside Table", status: "Delivered", expiry: hoursFromNow(-22) },
-    { name: "Fresh garden vegetables", donor: "Maple Street Growers", quantity: "12 kg", ngo: "", status: "Available", expiry: hoursFromNow(18) },
-    { name: "Garden herb boxes", donor: "Maple Street Growers", quantity: "8 boxes", ngo: "Willow Street Outreach", status: "Expired", expiry: hoursFromNow(-4) }
+    { name: "Rice, dal, roti and seasonal sabzi", donor: "Shivaji College Hostel Mess", quantity: "40 plates", ngo: "", status: "Available", expiry: hoursFromNow(3) },
+    { name: "Fresh bread and buns", donor: "Asha Bakery & Sweets", quantity: "25 packets", ngo: "", status: "Available", expiry: hoursFromNow(6) },
+    { name: "Wedding buffet meal portions", donor: "Saanvi Wedding Caterers", quantity: "120 portions", ngo: "Sahyog Food Collective", status: "Reserved", expiry: hoursFromNow(2) },
+    { name: "Vegetable pulao", donor: "Deccan Heritage Hotel", quantity: "35 portions", ngo: "Annadaan Community Trust", status: "Picked Up", expiry: hoursFromNow(-1) },
+    { name: "College event snack boxes", donor: "Campus Utsav Team", quantity: "50 boxes", ngo: "Seva Meals Network", status: "Delivered", expiry: hoursFromNow(-2) }
   ];
 
   const userSearch = document.getElementById("user-search");
@@ -35,7 +34,12 @@
   let toastTimer;
 
   function formatDate(date) {
-    return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+    return date.toLocaleDateString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    });
   }
 
   function statusClass(status) {

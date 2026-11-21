@@ -2,9 +2,10 @@
   "use strict";
 
   const imageUrls = {
-    produce: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=82",
-    bakery: "https://images.unsplash.com/photo-1466637574441-749b8f19452f?auto=format&fit=crop&w=900&q=82",
-    meals: "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=900&q=82"
+    thali: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=900&q=82",
+    bakery: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=82",
+    biryani: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=900&q=82",
+    snacks: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=900&q=82"
   };
 
   function hoursFromNow(hours) {
@@ -14,84 +15,101 @@
   const donations = [
     {
       id: "food-101",
-      name: "Seasonal citrus & apples",
-      category: "Fruits",
-      quantity: "18 kg",
-      location: "Riverside Market District",
-      safeUntil: hoursFromNow(2),
-      description: "A colorful mix of apples, pears, and citrus, sorted and ready for a quick handoff.",
-      image: imageUrls.produce,
-      alt: "Fresh fruit and vegetables ready to share",
-      donor: "Riverbend Market"
+      name: "Rice, dal, roti and seasonal sabzi",
+      category: "Cooked Meals",
+      quantity: "40 plates",
+      location: "Shivaji College Hostel Mess, Deccan, Pune 411004",
+      safeUntil: hoursFromNow(3),
+      description: "Fresh hostel mess food, packed safely and ready for same-day collection.",
+      image: imageUrls.thali,
+      alt: "An Indian thali with rice, dal, roti and vegetable dishes",
+      donor: "Shivaji College Hostel Mess",
+      meals: 40
     },
     {
       id: "food-102",
-      name: "Bakery breakfast packs",
+      name: "Bread and buns",
       category: "Bakery",
-      quantity: "24 packets",
-      location: "Old Town, near the library",
-      safeUntil: hoursFromNow(7),
-      description: "Assorted rolls and muffins from this morning's bake, packed and ready for collection.",
+      quantity: "25 packets",
+      location: "Asha Bakery & Sweets, Kothrud, Pune 411038",
+      safeUntil: hoursFromNow(6),
+      description: "Fresh bread and buns from today's bake, packed in clean food-safe bags.",
       image: imageUrls.bakery,
-      alt: "Fresh bakery items prepared for sharing",
-      donor: "Morningside Bakery"
+      alt: "Fresh bread and buns from a local bakery",
+      donor: "Asha Bakery & Sweets",
+      meals: 0
     },
     {
       id: "food-103",
-      name: "Vegetable curry portions",
+      name: "Wedding buffet meals",
       category: "Cooked Meals",
-      quantity: "32 meals",
-      location: "West Riverside",
-      safeUntil: hoursFromNow(10),
-      description: "Mild vegetable curry with rice, chilled and sealed in individual containers.",
-      image: imageUrls.meals,
-      alt: "Prepared meals packed for a community handoff",
-      donor: "Green Spoon Kitchen"
+      quantity: "120 portions",
+      location: "Saanvi Wedding Hall, Baner, Pune 411045",
+      safeUntil: hoursFromNow(2),
+      description: "Fresh surplus from a wedding buffet, covered and ready for prompt collection.",
+      image: imageUrls.biryani,
+      alt: "A freshly prepared Indian rice meal for a community pickup",
+      donor: "Saanvi Wedding Caterers",
+      meals: 120
     },
     {
       id: "food-104",
-      name: "Fresh garden vegetables",
-      category: "Vegetables",
-      quantity: "12 kg",
-      location: "Maple Street Community Market",
-      safeUntil: hoursFromNow(23),
-      description: "Washed carrots, leafy greens, and squash, ready for a same-day community kitchen.",
-      image: imageUrls.produce,
-      alt: "Fresh market vegetables packed for sharing",
-      donor: "Maple Street Growers"
+      name: "Vegetable pulao",
+      category: "Cooked Meals",
+      quantity: "35 portions",
+      location: "Deccan Heritage Hotel, Shivajinagar, Pune 411005",
+      safeUntil: hoursFromNow(5),
+      description: "Hotel kitchen surplus prepared today and packed for a community meal.",
+      image: imageUrls.thali,
+      alt: "A prepared Indian rice and vegetable meal",
+      donor: "Deccan Heritage Hotel",
+      meals: 35
+    },
+    {
+      id: "food-105",
+      name: "College event snack boxes",
+      category: "Packaged Snacks",
+      quantity: "50 boxes",
+      location: "Campus Utsav, Fergusson College Road, Pune 411004",
+      safeUntil: hoursFromNow(4),
+      description: "Sealed snack boxes from a college event, ready for local pickup.",
+      image: imageUrls.snacks,
+      alt: "Indian savoury snacks packed for collection",
+      donor: "Campus Utsav Team",
+      meals: 0
     }
   ];
 
   const claims = [
     {
       id: "claim-201",
-      name: "Bakery breakfast packs",
+      name: "Bread and buns",
       quantity: "10 packets",
-      location: "7 Mill Street, Old Town",
-      donor: "Morningside Bakery",
+      location: "Asha Bakery & Sweets, Kothrud, Pune 411038",
+      donor: "Asha Bakery & Sweets",
       status: "Reserved",
       image: imageUrls.bakery,
       meals: 0
     },
     {
       id: "claim-202",
-      name: "Community lunch bowls",
-      quantity: "20 meals",
-      location: "18 Willow Avenue, Riverside",
-      donor: "Green Spoon Kitchen",
+      name: "Rice, dal, roti and seasonal sabzi",
+      quantity: "20 plates",
+      location: "Shivaji College Hostel Mess, Deccan, Pune 411004",
+      donor: "Shivaji College Hostel Mess",
       status: "Picked Up",
-      image: imageUrls.meals,
+      image: imageUrls.thali,
       meals: 20
     },
     {
       id: "claim-203",
-      name: "Harvest vegetable soup",
-      quantity: "32 meals",
-      location: "3 Willow Street, Riverside",
-      donor: "Willow Street Cafe",
+      name: "Vegetable pulao",
+      quantity: "35 portions",
+      location: "Deccan Heritage Hotel, Shivajinagar, Pune 411005",
+      donor: "Deccan Heritage Hotel",
       status: "Delivered",
-      image: imageUrls.produce,
-      meals: 32
+      image: imageUrls.thali,
+      meals: 35
     }
   ];
 
@@ -101,7 +119,7 @@
       kind: "claim",
       icon: "bi-bag-check",
       title: "Pickup reminder",
-      message: "Bakery breakfast packs is reserved in this local demo.",
+      message: "Bread and buns is reserved in this local demo.",
       createdAt: new Date(Date.now() - 60 * 60 * 1000)
     },
     {
@@ -137,7 +155,8 @@
   let mealsRescued = 1284;
 
   function formatDate(date) {
-    return date.toLocaleString(undefined, {
+    return date.toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
       month: "short",
       day: "numeric",
       hour: "numeric",
@@ -233,7 +252,7 @@
       claimButton.className = "ngo-button ngo-button-primary";
       claimButton.type = "button";
       claimButton.dataset.claimDonation = donation.id;
-      claimButton.textContent = "Claim";
+      claimButton.textContent = "Claim Food";
       actions.append(detailsButton, claimButton);
       content.append(titleRow, meta, safeUntil, actions);
       card.append(photo, content);
@@ -258,7 +277,7 @@
     } else if (claim.status === "Picked Up") {
       claim.status = "Delivered";
       mealsRescued += claim.meals;
-      document.getElementById("meals-rescued").textContent = mealsRescued.toLocaleString();
+      document.getElementById("meals-rescued").textContent = mealsRescued.toLocaleString("en-IN");
       addNotification("Claim delivered", claim.name + " was marked as delivered in this local demo.", "claim");
     }
     renderClaims();
@@ -337,7 +356,13 @@
       message.textContent = notification.message;
       const time = document.createElement("time");
       time.dateTime = notification.createdAt.toISOString();
-      time.textContent = notification.createdAt.toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) + " · demo";
+      time.textContent = notification.createdAt.toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
+      }) + " · demo";
       copy.append(title, message, time);
       item.append(icon, copy);
       els.notificationList.append(item);
@@ -364,7 +389,7 @@
       donor: donation.donor,
       status: "Reserved",
       image: donation.image,
-      meals: donation.quantity.indexOf("meals") !== -1 ? Number.parseInt(donation.quantity, 10) : 0
+      meals: donation.meals || 0
     });
     donations.splice(index, 1);
     renderDonations();
@@ -406,22 +431,23 @@
       arrivalAdded = true;
       const newDonation = {
         id: "food-arrival-105",
-        name: "Warm lentil & rice bowls",
+        name: "Idli and chutney breakfast plates",
         category: "Cooked Meals",
-        quantity: "24 meals",
-        location: "East Riverside",
+        quantity: "30 plates",
+        location: "Prerna Student Residence, Aundh, Pune 411007",
         safeUntil: hoursFromNow(5),
-        description: "Fresh lentil and rice bowls packed in compostable containers and ready for local pickup.",
-        image: imageUrls.meals,
-        alt: "A warm meal ready for a community pickup",
-        donor: "Little Grove Community Kitchen"
+        description: "Fresh idli and chutney from the hostel breakfast service, packed for prompt pickup.",
+        image: imageUrls.thali,
+        alt: "A freshly prepared Indian breakfast for collection",
+        donor: "Prerna Student Residence",
+        meals: 30
       };
       donations.unshift(newDonation);
       renderDonations();
       addNotification("New food donation arrived!", newDonation.name + " is a simulated listing for this demo.", "new");
       els.arrivalMessage.textContent = newDonation.name + " is now available in the local demo listings.";
     } else {
-      els.arrivalMessage.textContent = "The demo donation is already waiting in Available Food.";
+      els.arrivalMessage.textContent = "The demo donation is already waiting in Available Meals.";
     }
     playArrivalAnimation();
   }
@@ -441,7 +467,7 @@
   renderClaims();
   renderNotifications();
 
-  document.getElementById("meals-rescued").textContent = mealsRescued.toLocaleString();
+  document.getElementById("meals-rescued").textContent = mealsRescued.toLocaleString("en-IN");
 
   els.search.addEventListener("input", renderDonations);
   els.category.addEventListener("change", renderDonations);

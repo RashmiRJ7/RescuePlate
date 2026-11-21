@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,14 +26,14 @@
           <p class="ngo-sidebar-label" id="ngo-sidebar-title">NGO workspace</p>
           <nav class="ngo-nav" aria-label="Dashboard sections">
             <a class="ngo-nav-link active" href="#dashboard" aria-current="page"><i class="bi bi-grid-1x2" aria-hidden="true"></i>Dashboard</a>
-            <a class="ngo-nav-link" href="#available-food"><i class="bi bi-basket2" aria-hidden="true"></i>Available Food<span class="ngo-nav-count" id="available-count">0</span></a>
+            <a class="ngo-nav-link" href="#available-food"><i class="bi bi-basket2" aria-hidden="true"></i>Available Meals<span class="ngo-nav-count" id="available-count">0</span></a>
             <a class="ngo-nav-link" href="#my-claims"><i class="bi bi-bag-check" aria-hidden="true"></i>My Claims<span class="ngo-nav-count" id="claims-count">0</span></a>
             <a class="ngo-nav-link" href="#notifications"><i class="bi bi-bell" aria-hidden="true"></i>Notifications<span class="ngo-nav-count" id="notification-count" hidden>0</span></a>
           </nav>
         </div>
         <div class="ngo-sidebar-profile">
           <span class="ngo-avatar" aria-hidden="true">RT</span>
-          <span><strong>Riverside Table</strong><small>NGO partner · demo</small></span>
+          <span><strong>Sahyog Food Collective</strong><small>NGO partner · demo</small></span>
           <a class="ngo-signout" href="login.html" aria-label="Return to login (demo only)" title="Return to login"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></a>
         </div>
       </div>
@@ -42,7 +42,7 @@
     <main class="ngo-main">
       <header class="ngo-topbar">
         <button class="ngo-menu-button d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#ngo-sidebar" aria-controls="ngo-sidebar" aria-label="Open dashboard navigation"><i class="bi bi-list" aria-hidden="true"></i></button>
-        <div><span class="ngo-topbar-label">NGO workspace</span><strong>Riverside Table</strong></div>
+        <div><span class="ngo-topbar-label">NGO workspace</span><strong>Sahyog Food Collective</strong></div>
         <a class="ngo-topbar-notifications" href="#notifications" aria-label="Go to notifications"><i class="bi bi-bell" aria-hidden="true"></i><span id="topbar-notification-dot" hidden></span></a>
       </header>
 
@@ -51,10 +51,10 @@
           <div class="ngo-welcome">
             <div>
               <p class="ngo-eyebrow"><span class="ngo-live-dot"></span>Your community workspace</p>
-              <h1 id="welcome-title">Good <span id="greeting-time">day</span>, Riverside Table.</h1>
-              <p>Find good food nearby and make it go further.</p>
+              <h1 id="welcome-title">Good <span id="greeting-time">day</span>, Sahyog Food Collective.</h1>
+              <p>Find available meals nearby and plan a safe pickup.</p>
             </div>
-            <a class="ngo-button ngo-button-light" href="#available-food">Explore available food <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+            <a class="ngo-button ngo-button-light" href="#available-food">Find Available Meals <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
           </div>
 
           <div class="ngo-stats" aria-label="Dashboard summary">
@@ -64,7 +64,7 @@
             </article>
             <article class="ngo-stat-card">
               <span class="ngo-stat-icon orange"><i class="bi bi-basket2-fill" aria-hidden="true"></i></span>
-              <div><span class="ngo-stat-label">Available donations</span><strong id="available-stat">0</strong></div>
+              <div><span class="ngo-stat-label">Available Meals</span><strong id="available-stat">0</strong></div>
             </article>
             <article class="ngo-stat-card">
               <span class="ngo-stat-icon cream"><i class="bi bi-bag-check-fill" aria-hidden="true"></i></span>
@@ -92,8 +92,8 @@
           <div class="ngo-section-heading">
             <div>
               <p class="ngo-eyebrow">Fresh opportunities nearby</p>
-              <h2 id="food-title">Available Food</h2>
-              <p>Browse local demo donations ready for pickup.</p>
+              <h2 id="food-title">Available Meals</h2>
+              <p>Browse sample food listings ready for pickup.</p>
             </div>
             <span class="ngo-results-count"><strong id="listing-count">0</strong> donations</span>
           </div>
@@ -108,16 +108,15 @@
               <select id="category-filter">
                 <option value="all">All categories</option>
                 <option value="Cooked Meals">Cooked meals</option>
-                <option value="Bakery">Bakery</option>
-                <option value="Fruits">Fruits</option>
-                <option value="Vegetables">Vegetables</option>
+                <option value="Bakery">Bakery &amp; sweets</option>
+                <option value="Packaged Snacks">Packaged snacks</option>
               </select>
             </label>
           </div>
           <div class="ngo-food-grid" id="food-grid" aria-live="polite"></div>
           <div class="ngo-empty" id="food-empty" hidden>
             <i class="bi bi-basket2" aria-hidden="true"></i>
-            <h3>No matching donations</h3>
+            <h3>No matching meals</h3>
             <p>Try another search or choose a different category.</p>
           </div>
         </section>
@@ -181,7 +180,7 @@
         </div>
         <div class="modal-footer">
           <button class="ngo-button ngo-button-outline" type="button" data-bs-dismiss="modal">Close</button>
-          <button class="ngo-button ngo-button-primary" id="modal-claim-button" type="button">Claim donation</button>
+          <button class="ngo-button ngo-button-primary" id="modal-claim-button" type="button">Claim Food</button>
         </div>
       </div>
     </div>

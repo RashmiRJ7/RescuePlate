@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,15 +32,16 @@
           <p class="admin-sidebar-label" id="admin-sidebar-title">Admin workspace</p>
           <nav class="admin-nav" aria-label="Admin dashboard sections">
             <a class="admin-nav-link active" href="#overview" aria-current="page"><i class="bi bi-grid-1x2" aria-hidden="true"></i>Overview</a>
+            <a class="admin-nav-link" href="#analytics"><i class="bi bi-bar-chart-line" aria-hidden="true"></i>Analytics</a>
             <a class="admin-nav-link" href="#users"><i class="bi bi-people" aria-hidden="true"></i>User Management</a>
-            <a class="admin-nav-link" href="#donations"><i class="bi bi-basket2" aria-hidden="true"></i>Donation Management</a>
+            <a class="admin-nav-link" href="#donations"><i class="bi bi-basket2" aria-hidden="true"></i>Food Collection</a>
             <a class="admin-nav-link" href="#reports"><i class="bi bi-bar-chart-line" aria-hidden="true"></i>Reports</a>
           </nav>
         </div>
         <div class="admin-profile">
           <span class="admin-avatar" aria-hidden="true">AD</span>
           <span><strong>Platform Admin</strong><small>Demo account</small></span>
-          <a class="admin-signout" href="login.html" aria-label="Return to login (demo only)" title="Return to login"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></a>
+          <a class="admin-signout" href="login.html" data-demo-logout aria-label="Log out of demo and return to login" title="Log out of demo"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></a>
         </div>
       </div>
     </aside>
@@ -54,7 +55,7 @@
           <span class="admin-topbar-kicker">Platform administration</span>
           <strong>RescuePlate</strong>
         </div>
-        <span class="admin-demo-pill"><i class="bi bi-info-circle" aria-hidden="true"></i> Demo data</span>
+        <span class="admin-demo-pill"><i class="bi bi-info-circle" aria-hidden="true"></i> DEMO MODE</span>
       </header>
 
       <div class="admin-content">
@@ -84,12 +85,147 @@
             </article>
             <article class="admin-stat-card">
               <span class="admin-stat-icon cream"><i class="bi bi-heart-pulse" aria-hidden="true"></i></span>
-              <div><span class="admin-stat-label">Registered NGOs</span><strong>86</strong><small>Demo accounts</small></div>
+              <div><span class="admin-stat-label">NGO Partners</span><strong>86</strong><small>Demo accounts</small></div>
             </article>
             <article class="admin-stat-card">
-              <span class="admin-stat-icon blue"><i class="bi bi-basket2-fill" aria-hidden="true"></i></span>
+              <span class="admin-stat-icon turmeric"><i class="bi bi-basket2-fill" aria-hidden="true"></i></span>
               <div><span class="admin-stat-label">Total Donations</span><strong>324</strong><small>Demo listings</small></div>
             </article>
+          </div>
+        </section>
+
+        <section class="admin-section" id="analytics" aria-labelledby="analytics-title">
+          <div class="admin-section-heading">
+            <div>
+              <p class="admin-eyebrow">Food rescue activity · DEMO DATA</p>
+              <h2 id="analytics-title">Rescue network analytics</h2>
+              <p>Explore sample food-rescue activity across time, donor types and collection status.</p>
+            </div>
+            <span class="admin-analytics-demo-label"><i class="bi bi-info-circle" aria-hidden="true"></i> DEMO DATA</span>
+          </div>
+
+          <div class="admin-sample-note admin-analytics-note" role="note">
+            <i class="bi bi-info-circle" aria-hidden="true"></i>
+            <span>Analytics uses its own illustrative local dataset. Filters, KPIs, charts and insights share it; no live platform statistics are shown.</span>
+          </div>
+
+          <div class="admin-analytics-toolbar" aria-label="Analytics filters">
+            <label class="admin-analytics-filter" for="analytics-date-range">
+              <span>Date range</span>
+              <select class="form-select" id="analytics-date-range">
+                <option value="7">Last 7 days</option>
+                <option value="30">Last 30 days</option>
+                <option value="180" selected>Last 6 months</option>
+                <option value="365">Last 1 year</option>
+              </select>
+            </label>
+            <label class="admin-analytics-filter" for="analytics-donor-type">
+              <span>Donor type</span>
+              <select class="form-select" id="analytics-donor-type">
+                <option value="all">All</option>
+                <option value="Hostel/Mess">Hostel/Mess</option>
+                <option value="Hotel">Hotel</option>
+                <option value="Restaurant">Restaurant</option>
+                <option value="Bakery">Bakery</option>
+                <option value="Events/Catering">Events/Catering</option>
+              </select>
+            </label>
+            <label class="admin-analytics-filter" for="analytics-status">
+              <span>Donation status</span>
+              <select class="form-select" id="analytics-status">
+                <option value="all">All statuses</option>
+                <option value="Available">Available</option>
+                <option value="Reserved">Reserved</option>
+                <option value="Picked Up">Picked Up</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Expired">Expired</option>
+              </select>
+            </label>
+            <button class="admin-analytics-reset" id="analytics-reset" type="button">
+              <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reset filters
+            </button>
+          </div>
+
+          <div class="admin-analytics-summary" aria-live="polite">
+            <strong><span id="analytics-record-count">0</span> demo donations</strong>
+            <span id="analytics-date-summary">Filtered date range</span>
+          </div>
+
+          <div class="admin-analytics-kpis" aria-label="Filtered analytics summary">
+            <article class="admin-analytics-kpi">
+              <span class="admin-analytics-kpi-icon"><i class="bi bi-basket2-fill" aria-hidden="true"></i></span>
+              <div><span>Total Donations</span><strong id="analytics-total-donations">0</strong><small>Filtered demo records</small></div>
+            </article>
+            <article class="admin-analytics-kpi">
+              <span class="admin-analytics-kpi-icon orange"><i class="bi bi-heart-pulse-fill" aria-hidden="true"></i></span>
+              <div><span>Total Meals Rescued</span><strong id="analytics-total-meals">0</strong><small>Delivered sample meals</small></div>
+            </article>
+            <article class="admin-analytics-kpi">
+              <span class="admin-analytics-kpi-icon cream"><i class="bi bi-shop-window" aria-hidden="true"></i></span>
+              <div><span>Active Donors</span><strong id="analytics-active-donors">0</strong><small>With filtered activity</small></div>
+            </article>
+            <article class="admin-analytics-kpi">
+              <span class="admin-analytics-kpi-icon turmeric"><i class="bi bi-people-fill" aria-hidden="true"></i></span>
+              <div><span>Registered NGOs</span><strong id="analytics-registered-ngos">0</strong><small>With filtered activity</small></div>
+            </article>
+          </div>
+
+          <div class="admin-analytics-error" id="analytics-chart-error" role="alert" hidden></div>
+
+          <div class="admin-analytics-grid">
+            <article class="admin-analytics-card">
+              <div class="admin-analytics-card-heading">
+                <div><span>DONATION VOLUME</span><h3>Monthly Donations</h3></div>
+                <i class="bi bi-bar-chart-fill" aria-hidden="true"></i>
+              </div>
+              <p class="admin-analytics-card-copy">Number of sample listings created each month.</p>
+              <div class="admin-analytics-chart-wrap"><canvas id="monthly-donations-chart" role="img" aria-label="Bar chart of monthly donations"></canvas></div>
+            </article>
+            <article class="admin-analytics-card">
+              <div class="admin-analytics-card-heading">
+                <div><span>RESCUE PROGRESS</span><h3>Meals Rescued Trend</h3></div>
+                <i class="bi bi-graph-up" aria-hidden="true"></i>
+              </div>
+              <p class="admin-analytics-card-copy">Meals recorded as delivered in the selected range.</p>
+              <div class="admin-analytics-chart-wrap"><canvas id="meals-trend-chart" role="img" aria-label="Line chart of meals rescued by month"></canvas></div>
+            </article>
+            <article class="admin-analytics-card">
+              <div class="admin-analytics-card-heading">
+                <div><span>DONOR MIX</span><h3>Donations by Donor Type</h3></div>
+                <i class="bi bi-pie-chart-fill" aria-hidden="true"></i>
+              </div>
+              <p class="admin-analytics-card-copy">Share of listings by donor category.</p>
+              <div class="admin-analytics-chart-wrap"><canvas id="donor-type-chart" role="img" aria-label="Doughnut chart of donations by donor type"></canvas></div>
+            </article>
+            <article class="admin-analytics-card">
+              <div class="admin-analytics-card-heading">
+                <div><span>COLLECTION PIPELINE</span><h3>Donation Status</h3></div>
+                <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
+              </div>
+              <p class="admin-analytics-card-copy">Current status counts from the filtered sample.</p>
+              <div class="admin-analytics-chart-wrap"><canvas id="donation-status-chart" role="img" aria-label="Bar chart of donations by status"></canvas></div>
+            </article>
+            <article class="admin-analytics-card admin-analytics-card-wide">
+              <div class="admin-analytics-card-heading">
+                <div><span>FOOD MIX</span><h3>Food Category Analysis</h3></div>
+                <i class="bi bi-grid-3x3-gap-fill" aria-hidden="true"></i>
+              </div>
+              <p class="admin-analytics-card-copy">Donation counts by the food category in each listing.</p>
+              <div class="admin-analytics-chart-wrap"><canvas id="food-category-chart" role="img" aria-label="Horizontal bar chart of donations by food category"></canvas></div>
+            </article>
+          </div>
+
+          <div class="admin-analytics-insights">
+            <div class="admin-analytics-insights-heading">
+              <div><span>FILTERED DATA SUMMARY</span><h3>Key Insights</h3></div>
+              <span class="admin-analytics-insight-mark"><i class="bi bi-lightbulb" aria-hidden="true"></i> DEMO</span>
+            </div>
+            <div class="admin-analytics-insight-grid" aria-live="polite">
+              <article><span>Leading donor category</span><strong id="insight-top-donor">—</strong><small id="insight-top-donor-count">Based on filtered donations</small></article>
+              <article><span>Top donation month</span><strong id="insight-top-month">—</strong><small id="insight-top-month-count">Based on filtered donations</small></article>
+              <article><span>Meals successfully rescued</span><strong id="insight-rescued-meals">0</strong><small>Delivered sample meals in this selection</small></article>
+              <article><span>Most common status</span><strong id="insight-top-status">—</strong><small id="insight-top-status-count">Based on filtered donations</small></article>
+            </div>
           </div>
         </section>
 
@@ -138,7 +274,7 @@
           <div class="admin-section-heading">
             <div>
               <p class="admin-eyebrow">Food handoffs</p>
-              <h2 id="donations-title">Donation Management</h2>
+              <h2 id="donations-title">Food Collection</h2>
               <p>Sample listings and their current rescue status.</p>
             </div>
             <span class="admin-section-count"><strong id="donation-result-count">0</strong> listings</span>
@@ -169,7 +305,7 @@
             <div class="admin-table-scroll">
               <table class="table admin-table donation-table">
                 <thead>
-                  <tr><th scope="col">Food</th><th scope="col">Donor</th><th scope="col">Quantity</th><th scope="col">NGO</th><th scope="col">Status</th><th scope="col">Expiry</th></tr>
+                  <tr><th scope="col">Food</th><th scope="col">Donor</th><th scope="col">Quantity</th><th scope="col">NGO</th><th scope="col">Status</th><th scope="col">Safe Until</th></tr>
                 </thead>
                 <tbody id="donations-table-body" aria-live="polite"></tbody>
               </table>
@@ -197,7 +333,7 @@
             </article>
             <article class="admin-report-card">
               <span class="admin-report-icon orange"><i class="bi bi-heart-pulse" aria-hidden="true"></i></span>
-              <p>Meals rescued</p>
+              <p>Meals Rescued</p>
               <strong>1,284</strong>
               <small>Illustrative sample total</small>
             </article>
@@ -243,6 +379,10 @@
 
   <div class="admin-toast" id="admin-toast" role="status" aria-live="polite" hidden></div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="js/demo-session.js"></script>
+  <script src="js/admin-analytics-data.js"></script>
   <script src="js/admin-dashboard.js"></script>
+  <script src="js/admin-analytics.js"></script>
 </body>
 </html>

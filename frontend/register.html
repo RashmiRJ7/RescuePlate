@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Join RescuePlate and help rescue surplus food before it spoils.">
+  <meta name="description" content="Join RescuePlate and help rescue surplus food across your Indian community.">
   <title>Create an account | RescuePlate</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -267,7 +267,7 @@
         <section class="register-card" aria-labelledby="register-heading">
           <p class="mr-kicker"><i class="bi bi-heart-pulse" aria-hidden="true"></i> Make good food go further</p>
           <h1 class="register-heading" id="register-heading">Join the RescuePlate Community</h1>
-          <p class="register-subtitle">Connect with local food rescue efforts. Share surplus or help get fresh meals to the people who need them.</p>
+          <p class="register-subtitle">Join local food rescue efforts. Donate surplus food or help collect meals for your community.</p>
 
           <form id="register-form" novalidate>
             <div class="row g-3">
@@ -283,8 +283,8 @@
               </div>
               <div class="col-md-6">
                 <label class="register-label" for="phone">Phone number</label>
-                <input class="form-control register-control" id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+1 555 123 4567" aria-describedby="phone-hint phone-error" required>
-                <p class="register-hint" id="phone-hint">Include your country code if you are outside your local area.</p>
+                <input class="form-control register-control" id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+91 98765 43210" aria-describedby="phone-hint phone-error" required>
+                <p class="register-hint" id="phone-hint">Use a reachable Indian mobile number, including +91 if helpful.</p>
                 <div class="invalid-feedback" id="phone-error"></div>
               </div>
               <div class="col-md-6">
@@ -328,13 +328,26 @@
               <h2 class="conditional-heading" id="donor-fields-heading">Donor details</h2>
               <div class="row g-3">
                 <div class="col-12">
-                  <label class="register-label" for="donor-organization">Organization or restaurant name</label>
-                  <input class="form-control register-control" id="donor-organization" name="donorOrganization" type="text" autocomplete="organization" placeholder="Your business or organization" aria-describedby="donor-organization-error">
+                  <label class="register-label" for="donor-type">Donor type</label>
+                  <select class="form-select register-control" id="donor-type" name="donorType" aria-describedby="donor-type-hint donor-type-error">
+                    <option value="">Choose your donor type</option>
+                    <option value="Hostel/Mess">Hostel / Mess</option>
+                    <option value="Hotel">Hotel / Restaurant</option>
+                    <option value="Bakery">Bakery / Sweet Shop</option>
+                    <option value="Events/Catering">Event / Catering</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <p class="register-hint" id="donor-type-hint">Choose the kind of kitchen or event sharing food.</p>
+                  <div class="invalid-feedback" id="donor-type-error"></div>
+                </div>
+                <div class="col-12">
+                  <label class="register-label" for="donor-organization">Business or organization name</label>
+                  <input class="form-control register-control" id="donor-organization" name="donorOrganization" type="text" autocomplete="organization" placeholder="e.g. Pune hostel mess or neighbourhood bakery" aria-describedby="donor-organization-error">
                   <div class="invalid-feedback" id="donor-organization-error"></div>
                 </div>
                 <div class="col-12">
                   <label class="register-label" for="donor-address">Address</label>
-                  <textarea class="form-control register-control" id="donor-address" name="donorAddress" rows="2" autocomplete="street-address" placeholder="Street, city, and postal code" aria-describedby="donor-address-error"></textarea>
+                  <textarea class="form-control register-control" id="donor-address" name="donorAddress" rows="2" autocomplete="street-address" placeholder="Street, area, city, and PIN code" aria-describedby="donor-address-error"></textarea>
                   <div class="invalid-feedback" id="donor-address-error"></div>
                 </div>
               </div>
@@ -355,7 +368,7 @@
                 </div>
                 <div class="col-12">
                   <label class="register-label" for="ngo-address">Address</label>
-                  <textarea class="form-control register-control" id="ngo-address" name="ngoAddress" rows="2" autocomplete="street-address" placeholder="Street, city, and postal code" aria-describedby="ngo-address-error"></textarea>
+                  <textarea class="form-control register-control" id="ngo-address" name="ngoAddress" rows="2" autocomplete="street-address" placeholder="Street, area, city, and PIN code" aria-describedby="ngo-address-error"></textarea>
                   <div class="invalid-feedback" id="ngo-address-error"></div>
                 </div>
               </div>
@@ -399,7 +412,7 @@
     }
 
     function clearConditionalFields(container) {
-      container.querySelectorAll("input, textarea").forEach(function (field) {
+      container.querySelectorAll("input, select, textarea").forEach(function (field) {
         field.value = "";
         field.required = false;
         clearFieldError(field);
@@ -420,7 +433,7 @@
       if (donorFields.hidden) {
         clearConditionalFields(donorFields);
       } else {
-        donorFields.querySelectorAll("input, textarea").forEach(function (field) {
+        donorFields.querySelectorAll("input, select, textarea").forEach(function (field) {
           field.required = true;
         });
       }
@@ -428,7 +441,7 @@
       if (ngoFields.hidden) {
         clearConditionalFields(ngoFields);
       } else {
-        ngoFields.querySelectorAll("input, textarea").forEach(function (field) {
+        ngoFields.querySelectorAll("input, select, textarea").forEach(function (field) {
           field.required = true;
         });
       }
@@ -452,7 +465,7 @@
     });
 
     registrationForm.addEventListener("input", function (event) {
-      if (event.target.matches("input:not([name='accountType']), textarea")) {
+      if (event.target.matches("input:not([name='accountType']), select, textarea")) {
         clearFieldError(event.target);
       }
       clearFeedback();
@@ -503,7 +516,7 @@
         if (!firstInvalidField) firstInvalidField = document.getElementById("type-donor");
       } else {
         const activeFields = selectedType.value === "donor" ? donorFields : ngoFields;
-        activeFields.querySelectorAll("input, textarea").forEach(function (field) {
+        activeFields.querySelectorAll("input, select, textarea").forEach(function (field) {
           if (!field.value.trim()) {
             setFieldError(field, "This field is required.");
             if (!firstInvalidField) firstInvalidField = field;
