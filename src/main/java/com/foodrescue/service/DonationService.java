@@ -297,4 +297,44 @@ public class DonationService {
                 .map(DonationHistoryResponse::from)
                 .toList();
     }
+
+    /**
+     * Finds and transitions all overdue claimable/reserved donations to EXPIRED (Task S1).
+     * <p>
+     * Searches for donations with status AVAILABLE, DISPATCHING, or RESERVED where safeUntil &lt; now.
+     * Transitions each to EXPIRED with actor = null (representing System), which automatically closes
+     * any active claim and records audit history.
+     * </p>
+     *
+     * @return count of newly expired donations
+     */
+    @Transactional
+    public int expireOverdueDonations() {
+        return expireOverdueDonations(Instant.now());
+    }
+
+    /**
+     * Overloaded method with explicit timestamp for deterministic testing.
+     *
+     * @param now the timestamp to compare against safeUntil
+     * @return count of newly expired donations
+     */
+    @Transactional
+    public int expireOverdueDonations(Instant now) {
+        Objects.requireNonNull(now, "Timestamp must not be null");
+
+        List<DonationStatus> activeStatuses = List.of(
+                DonationStatus.AVAILABLE,
+                DonationStatus.DISPATCHING,
+                DonationStatus.RESERVED
+        );
+
+        List<Donation> overdue = donationRepository.findByStatusInAndSafeUntilBefore(activeStatuses, now);
+        int count = 0;
+        for (Donation donation : overdue) {
+            changeStatus(donation, DonationStatus.EXPIRED, null, "Food expired past safeUntil");
+            count++;
+        }
+        return count;
+    }
 }

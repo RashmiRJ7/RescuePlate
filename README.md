@@ -4,7 +4,7 @@ A food-donation platform that connects **donors with surplus food** (restaurants
 
 > Advanced Java course project · Phase 1 (25 marks) · Phase 2 (25 marks) · Report (10 marks)
 >
-> **Status:** Project scaffold in place (Spring Boot app, static frontend, health check). Phase 1 features have not been started; see [`docs/TASKS.md`](docs/TASKS.md).
+> **Status:** Phase 1 Backend Complete (`[core]` services, APIs, schedulers, and 204 passing unit/integration tests). See [`docs/TASKS.md`](docs/TASKS.md) and [`docs/BACKEND_ROADMAP.md`](docs/BACKEND_ROADMAP.md).
 
 ---
 
@@ -85,19 +85,24 @@ cp .env.example .env          # Windows: copy .env.example .env
 #    DB_USERNAME=<your-user>
 #    DB_PASSWORD=<your-password>
 
-# 4. Run (from the repository root, so .env is found)
-./mvnw spring-boot:run        # Windows: mvnw.cmd spring-boot:run
+# 4. Run standard or with demo seed data (from repository root)
+./mvnw spring-boot:run                                  # Standard run
+./mvnw spring-boot:run -Dspring-boot.run.profiles=demo  # Seeded demo data (1 admin, 3 donors, 3 NGOs, 10 donations)
+# Windows:
+# mvnw.cmd spring-boot:run
+# mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=demo
 
 # 5. Open
 #    http://localhost:8080             landing page
 #    http://localhost:8080/api/health  {"status":"UP",...}
 ```
 
-Build and run the tests: `./mvnw verify` (Windows: `mvnw.cmd verify`).
+Build and run all 204 automated tests:
+```bash
+./mvnw test               # Windows: mvnw.cmd test
+```
 
-Configuration is read from environment variables, or from a git-ignored `.env` file in the working directory; real environment variables take precedence. See `.env.example` for the variable names. The app needs a reachable MySQL database to start.
-
-A default **Admin** account will be seeded on first start once task F4 is done (credentials from configuration; change them).
+A default **Admin** account is seeded on first start (`admin@rescueplate.com` / `Admin@12345`). When the `demo` profile is activated, realistic donor, NGO, and urgency-ranked donation records in Belagavi are automatically seeded.
 
 > Never commit real passwords or API keys. Keep them in `.env` or environment variables (`.env` and `application-local.properties` are listed in `.gitignore`).
 

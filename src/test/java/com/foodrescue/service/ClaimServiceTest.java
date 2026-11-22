@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.security.access.AccessDeniedException;
 
 import com.foodrescue.dto.ClaimResponse;
 import com.foodrescue.entity.Claim;
@@ -30,6 +32,7 @@ import com.foodrescue.enums.DonationStatus;
 import com.foodrescue.enums.FoodCategory;
 import com.foodrescue.enums.Role;
 import com.foodrescue.exception.DonationNotClaimableException;
+import com.foodrescue.exception.InvalidStatusTransitionException;
 import com.foodrescue.exception.NgoNotEligibleException;
 import com.foodrescue.exception.ResourceNotFoundException;
 import com.foodrescue.repository.ClaimRepository;
@@ -261,5 +264,223 @@ class ClaimServiceTest {
 
         assertThatThrownBy(() -> claimService.claim(1L, "ngo@example.com", testNow))
                 .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    // --- C2: cancelClaim tests ---
+
+    @Test
+    @DisplayName("cancelClaim: active claim is cancelled and donation reopens to AVAILABLE")
+    void cancelClaim_success() {
+        Claim activeClaim = new Claim(testDonation, testNgoUser);
+        activeClaim.setId(50L);
+        activeClaim.setStatus(ClaimStatus.ACTIVE);
+        activeClaim.setActiveDonationId(1L);
+        testDonation.setStatus(DonationStatus.RESERVED);
+
+        when(claimRepository.findById(50L)).thenReturn(Optional.of(activeClaim));
+        when(userRepository.findByEmail("ngo@example.com")).thenReturn(Optional.of(testNgoUser));
+        when(claimRepository.save(any(Claim.class))).thenAnswer(i -> i.getArgument(0));
+
+        ClaimResponse response = claimService.cancelClaim(50L, "ngo@example.com", "Vehicle breakdown", testNow);
+
+        assertThat(response).isNotNull();
+        assertThat(response.id()).isEqualTo(50L);
+        assertThat(response.status()).isEqualTo(ClaimStatus.CANCELLED);
+        assertThat(response.cancelReason()).isEqualTo("Vehicle breakdown");
+        assertThat(activeClaim.getActiveDonationId()).isNull();
+
+        verify(donationService).changeStatus(eq(testDonation), eq(DonationStatus.AVAILABLE), eq(testNgoUser), any());
+        verify(claimRepository).save(activeClaim);
+    }
+
+    @Test
+    @DisplayName("cancelClaim: 403 when user is not the owning NGO")
+    void cancelClaim_notOwner_throws403() {
+        Claim activeClaim = new Claim(testDonation, testNgoUser);
+        activeClaim.setId(50L);
+
+        User otherNgo = new User("Other NGO", "other@example.com", "hash", Role.NGO);
+        otherNgo.setId(99L);
+
+        when(claimRepository.findById(50L)).thenReturn(Optional.of(activeClaim));
+        when(userRepository.findByEmail("other@example.com")).thenReturn(Optional.of(otherNgo));
+
+        assertThatThrownBy(() -> claimService.cancelClaim(50L, "other@example.com", "Reason", testNow))
+                .isInstanceOf(AccessDeniedException.class)
+                .hasMessageContaining("Access denied.");
+    }
+
+    @Test
+    @DisplayName("cancelClaim: 400 when claim is not ACTIVE (e.g. already PICKED_UP or COMPLETED)")
+    void cancelClaim_notActive_throws400() {
+        Claim claim = new Claim(testDonation, testNgoUser);
+        claim.setId(50L);
+        claim.setStatus(ClaimStatus.PICKED_UP);
+
+        when(claimRepository.findById(50L)).thenReturn(Optional.of(claim));
+        when(userRepository.findByEmail("ngo@example.com")).thenReturn(Optional.of(testNgoUser));
+
+        assertThatThrownBy(() -> claimService.cancelClaim(50L, "ngo@example.com", "Reason", testNow))
+                .isInstanceOf(InvalidStatusTransitionException.class)
+                .hasMessageContaining("cannot be cancelled");
+    }
+
+    @Test
+    @DisplayName("cancelClaim: 404 when claim is not found")
+    void cancelClaim_notFound_throws404() {
+        when(claimRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> claimService.cancelClaim(999L, "ngo@example.com", "Reason", testNow))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Claim not found with id: 999");
+    }
+
+    // --- C3: pickupClaim & deliverClaim tests ---
+
+    @Test
+    @DisplayName("pickupClaim: active claim transitions to PICKED_UP and donation to PICKED_UP")
+    void pickupClaim_success() {
+        Claim activeClaim = new Claim(testDonation, testNgoUser);
+        activeClaim.setId(50L);
+        activeClaim.setStatus(ClaimStatus.ACTIVE);
+        testDonation.setStatus(DonationStatus.RESERVED);
+
+        when(claimRepository.findById(50L)).thenReturn(Optional.of(activeClaim));
+        when(userRepository.findByEmail("ngo@example.com")).thenReturn(Optional.of(testNgoUser));
+        when(claimRepository.save(any(Claim.class))).thenAnswer(i -> i.getArgument(0));
+
+        ClaimResponse response = claimService.pickupClaim(50L, "ngo@example.com", testNow);
+
+        assertThat(response).isNotNull();
+        assertThat(response.id()).isEqualTo(50L);
+        assertThat(response.status()).isEqualTo(ClaimStatus.PICKED_UP);
+        assertThat(response.pickedUpAt()).isEqualTo(testNow);
+
+        verify(donationService).changeStatus(eq(testDonation), eq(DonationStatus.PICKED_UP), eq(testNgoUser), any());
+        verify(claimRepository).save(activeClaim);
+    }
+
+    @Test
+    @DisplayName("pickupClaim: 403 when user is not the owning NGO")
+    void pickupClaim_notOwner_throws403() {
+        Claim activeClaim = new Claim(testDonation, testNgoUser);
+        activeClaim.setId(50L);
+
+        User otherNgo = new User("Other NGO", "other@example.com", "hash", Role.NGO);
+        otherNgo.setId(99L);
+
+        when(claimRepository.findById(50L)).thenReturn(Optional.of(activeClaim));
+        when(userRepository.findByEmail("other@example.com")).thenReturn(Optional.of(otherNgo));
+
+        assertThatThrownBy(() -> claimService.pickupClaim(50L, "other@example.com", testNow))
+                .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    @DisplayName("pickupClaim: 400 when claim is not ACTIVE")
+    void pickupClaim_notActive_throws400() {
+        Claim claim = new Claim(testDonation, testNgoUser);
+        claim.setId(50L);
+        claim.setStatus(ClaimStatus.COMPLETED);
+
+        when(claimRepository.findById(50L)).thenReturn(Optional.of(claim));
+        when(userRepository.findByEmail("ngo@example.com")).thenReturn(Optional.of(testNgoUser));
+
+        assertThatThrownBy(() -> claimService.pickupClaim(50L, "ngo@example.com", testNow))
+                .isInstanceOf(InvalidStatusTransitionException.class)
+                .hasMessageContaining("cannot be picked up");
+    }
+
+    @Test
+    @DisplayName("deliverClaim: picked-up claim transitions to COMPLETED and donation to DELIVERED")
+    void deliverClaim_success() {
+        Claim pickedUpClaim = new Claim(testDonation, testNgoUser);
+        pickedUpClaim.setId(50L);
+        pickedUpClaim.setStatus(ClaimStatus.PICKED_UP);
+        testDonation.setStatus(DonationStatus.PICKED_UP);
+
+        when(claimRepository.findById(50L)).thenReturn(Optional.of(pickedUpClaim));
+        when(userRepository.findByEmail("ngo@example.com")).thenReturn(Optional.of(testNgoUser));
+        when(claimRepository.save(any(Claim.class))).thenAnswer(i -> i.getArgument(0));
+
+        ClaimResponse response = claimService.deliverClaim(50L, "ngo@example.com", testNow);
+
+        assertThat(response).isNotNull();
+        assertThat(response.id()).isEqualTo(50L);
+        assertThat(response.status()).isEqualTo(ClaimStatus.COMPLETED);
+        assertThat(response.deliveredAt()).isEqualTo(testNow);
+
+        verify(donationService).changeStatus(eq(testDonation), eq(DonationStatus.DELIVERED), eq(testNgoUser), any());
+        verify(claimRepository).save(pickedUpClaim);
+    }
+
+    @Test
+    @DisplayName("deliverClaim: 400 when deliver before pickup (claim is still ACTIVE)")
+    void deliverClaim_beforePickup_throws400() {
+        Claim activeClaim = new Claim(testDonation, testNgoUser);
+        activeClaim.setId(50L);
+        activeClaim.setStatus(ClaimStatus.ACTIVE);
+
+        when(claimRepository.findById(50L)).thenReturn(Optional.of(activeClaim));
+        when(userRepository.findByEmail("ngo@example.com")).thenReturn(Optional.of(testNgoUser));
+
+        assertThatThrownBy(() -> claimService.deliverClaim(50L, "ngo@example.com", testNow))
+                .isInstanceOf(InvalidStatusTransitionException.class)
+                .hasMessageContaining("must be picked up before delivery");
+    }
+
+    @Test
+    @DisplayName("deliverClaim: 403 when user is not the owning NGO")
+    void deliverClaim_notOwner_throws403() {
+        Claim pickedUpClaim = new Claim(testDonation, testNgoUser);
+        pickedUpClaim.setId(50L);
+        pickedUpClaim.setStatus(ClaimStatus.PICKED_UP);
+
+        User otherNgo = new User("Other NGO", "other@example.com", "hash", Role.NGO);
+        otherNgo.setId(99L);
+
+        when(claimRepository.findById(50L)).thenReturn(Optional.of(pickedUpClaim));
+        when(userRepository.findByEmail("other@example.com")).thenReturn(Optional.of(otherNgo));
+
+        assertThatThrownBy(() -> claimService.deliverClaim(50L, "other@example.com", testNow))
+                .isInstanceOf(AccessDeniedException.class);
+    }
+
+    // --- C4: getMyClaims tests ---
+
+    @Test
+    @DisplayName("getMyClaims: retrieves all claims for the NGO ordered newest first")
+    void getMyClaims_all_returnsList() {
+        Claim c1 = new Claim(testDonation, testNgoUser);
+        c1.setId(101L);
+        Claim c2 = new Claim(testDonation, testNgoUser);
+        c2.setId(102L);
+
+        when(userRepository.findByEmail("ngo@example.com")).thenReturn(Optional.of(testNgoUser));
+        when(claimRepository.findByNgoIdOrderByClaimedAtDesc(20L)).thenReturn(List.of(c1, c2));
+
+        List<ClaimResponse> result = claimService.getMyClaims("ngo@example.com", null);
+
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).id()).isEqualTo(101L);
+        assertThat(result.get(1).id()).isEqualTo(102L);
+    }
+
+    @Test
+    @DisplayName("getMyClaims: retrieves claims filtered by status")
+    void getMyClaims_withStatus_returnsFiltered() {
+        Claim c1 = new Claim(testDonation, testNgoUser);
+        c1.setId(101L);
+        c1.setStatus(ClaimStatus.ACTIVE);
+
+        when(userRepository.findByEmail("ngo@example.com")).thenReturn(Optional.of(testNgoUser));
+        when(claimRepository.findByNgoIdAndStatusOrderByClaimedAtDesc(20L, ClaimStatus.ACTIVE))
+                .thenReturn(List.of(c1));
+
+        List<ClaimResponse> result = claimService.getMyClaims("ngo@example.com", ClaimStatus.ACTIVE);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).id()).isEqualTo(101L);
+        assertThat(result.get(0).status()).isEqualTo(ClaimStatus.ACTIVE);
     }
 }

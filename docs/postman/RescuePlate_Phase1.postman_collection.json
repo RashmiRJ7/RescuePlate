@@ -1,0 +1,450 @@
+{
+  "info": {
+    "_postman_id": "7b8f98c2-3e4b-4a56-829d-foodrescue01",
+    "name": "RescuePlate API - Phase 1",
+    "description": "Complete Phase 1 Postman test collection for RescuePlate layered monolith food rescue platform.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "donationId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "claimId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "1. Register Donor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"City Grand Hotel\",\n  \"email\": \"grandhotel@example.com\",\n  \"password\": \"Password@123\",\n  \"role\": \"DONOR\",\n  \"phone\": \"9845012345\",\n  \"address\": \"MG Road, Belagavi\",\n  \"latitude\": 15.8520,\n  \"longitude\": 74.5020\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "2. Register NGO",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Seva Kitchen Foundation\",\n  \"email\": \"sevakitchen@example.com\",\n  \"password\": \"Password@123\",\n  \"role\": \"NGO\",\n  \"phone\": \"9845054321\",\n  \"address\": \"Camp, Belagavi\",\n  \"latitude\": 15.8540,\n  \"longitude\": 74.5040,\n  \"capacityMeals\": 60,\n  \"serviceRadiusKm\": 12.0,\n  \"acceptedCategories\": [\"COOKED_MEAL\", \"BAKERY\", \"PACKAGED\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "3. Register Duplicate Email (Expect 409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Duplicate User\",\n  \"email\": \"grandhotel@example.com\",\n  \"password\": \"Password@123\",\n  \"role\": \"DONOR\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "4. Register as ADMIN (Expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rogue Admin\",\n  \"email\": \"rogue@example.com\",\n  \"password\": \"Password@123\",\n  \"role\": \"ADMIN\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "5. Login Wrong Password (Expect 401)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"grandhotel@example.com\",\n  \"password\": \"WrongPassword!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "6. Login as Donor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"donor1@example.com\",\n  \"password\": \"Password@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "7. Get Current User (/me)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "8. Login as NGO 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ngo1@example.com\",\n  \"password\": \"Password@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "9. Login as NGO 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ngo2@example.com\",\n  \"password\": \"Password@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "10. Login as Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@rescueplate.com\",\n  \"password\": \"Admin@12345\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "11. Logout",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Donor",
+      "item": [
+        {
+          "name": "1. Post Valid Donation (Expect 201 AVAILABLE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"foodName\": \"Freshly Cooked Veg Biryani\",\n  \"category\": \"COOKED_MEAL\",\n  \"quantity\": 50,\n  \"description\": \"Packed in sanitized foil containers\",\n  \"pickupAddress\": \"Club Road, Belagavi\",\n  \"latitude\": 15.8500,\n  \"longitude\": 74.5000,\n  \"safeUntil\": \"2026-11-22T16:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/donations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "donations"]
+            }
+          }
+        },
+        {
+          "name": "2. Post Invalid Donation (Past safeUntil, Expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"foodName\": \"Expired Curry\",\n  \"category\": \"COOKED_MEAL\",\n  \"quantity\": 20,\n  \"pickupAddress\": \"Club Road, Belagavi\",\n  \"latitude\": 15.8500,\n  \"longitude\": 74.5000,\n  \"safeUntil\": \"2020-01-01T00:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/donations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "donations"]
+            }
+          }
+        },
+        {
+          "name": "3. Get My Donations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/donations/mine",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "donations", "mine"]
+            }
+          }
+        },
+        {
+          "name": "4. Get Donation By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/donations/{{donationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "donations", "{{donationId}}"]
+            }
+          }
+        },
+        {
+          "name": "5. Get Donation Status History",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/donations/{{donationId}}/history",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "donations", "{{donationId}}", "history"]
+            }
+          }
+        },
+        {
+          "name": "6. Donor Access NGO Feed (Expect 403 Forbidden)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/donations/feed",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "donations", "feed"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "NGO",
+      "item": [
+        {
+          "name": "1. View Urgency-Ranked Feed",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/donations/feed",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "donations", "feed"]
+            }
+          }
+        },
+        {
+          "name": "2. View Feed with Filters (?category=COOKED_MEAL)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/donations/feed?category=COOKED_MEAL&minQuantity=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "donations", "feed"],
+              "query": [
+                { "key": "category", "value": "COOKED_MEAL" },
+                { "key": "minQuantity", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. Claim Donation (NGO 1 - Expect 201 Created)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/donations/{{donationId}}/claim",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "donations", "{{donationId}}", "claim"]
+            }
+          }
+        },
+        {
+          "name": "4. Concurrency Double Claim (NGO 2 - Expect 409 Conflict)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/donations/{{donationId}}/claim",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "donations", "{{donationId}}", "claim"]
+            }
+          }
+        },
+        {
+          "name": "5. View My Claims",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/claims/mine",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "claims", "mine"]
+            }
+          }
+        },
+        {
+          "name": "6. Deliver Before Pickup (Expect 400 Bad Request)",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/api/claims/{{claimId}}/deliver",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "claims", "{{claimId}}", "deliver"]
+            }
+          }
+        },
+        {
+          "name": "7. Mark Claim Picked Up (Expect 200)",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/api/claims/{{claimId}}/pickup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "claims", "{{claimId}}", "pickup"]
+            }
+          }
+        },
+        {
+          "name": "8. Mark Claim Delivered (Expect 200)",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/api/claims/{{claimId}}/deliver",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "claims", "{{claimId}}", "deliver"]
+            }
+          }
+        },
+        {
+          "name": "9. Cancel Claim (Expect 200)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Volunteer transport unavailable\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/claims/{{claimId}}/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "claims", "{{claimId}}", "cancel"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "1. Login Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@rescueplate.com\",\n  \"password\": \"Admin@12345\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "2. Health Check (Public, Expect 200)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "health"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

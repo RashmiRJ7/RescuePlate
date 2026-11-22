@@ -1,9 +1,11 @@
 package com.foodrescue.service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,8 +15,10 @@ import com.foodrescue.entity.Claim;
 import com.foodrescue.entity.Donation;
 import com.foodrescue.entity.NgoProfile;
 import com.foodrescue.entity.User;
+import com.foodrescue.enums.ClaimStatus;
 import com.foodrescue.enums.DonationStatus;
 import com.foodrescue.exception.DonationNotClaimableException;
+import com.foodrescue.exception.InvalidStatusTransitionException;
 import com.foodrescue.exception.NgoNotEligibleException;
 import com.foodrescue.exception.ResourceNotFoundException;
 import com.foodrescue.repository.ClaimRepository;
@@ -142,5 +146,172 @@ public class ClaimService {
         donationRepository.saveAndFlush(donation);
 
         return ClaimResponse.from(savedClaim);
+    }
+
+    /**
+     * Cancels an active claim (Task C2).
+     * <p>
+     * Sets claim status to CANCELLED, nullifies activeDonationId (releasing the unique constraint),
+     * and reopens the donation back to AVAILABLE via DonationService.changeStatus.
+     * </p>
+     *
+     * @param claimId  the claim to cancel
+     * @param ngoEmail the email of the claiming NGO
+     * @param reason   optional cancellation reason
+     * @return updated {@link ClaimResponse}
+     */
+    @Transactional
+    public ClaimResponse cancelClaim(Long claimId, String ngoEmail, String reason) {
+        return cancelClaim(claimId, ngoEmail, reason, Instant.now());
+    }
+
+    @Transactional
+    public ClaimResponse cancelClaim(Long claimId, String ngoEmail, String reason, Instant now) {
+        Objects.requireNonNull(claimId, "Claim ID must not be null");
+        Objects.requireNonNull(ngoEmail, "NGO email must not be null");
+        if (now == null) {
+            now = Instant.now();
+        }
+
+        Claim claim = claimRepository.findById(claimId)
+                .orElseThrow(() -> new ResourceNotFoundException("Claim not found with id: " + claimId));
+
+        User ngoUser = userRepository.findByEmail(ngoEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + ngoEmail));
+
+        // Ownership check
+        if (!claim.getNgo().getId().equals(ngoUser.getId())) {
+            throw new AccessDeniedException("Access denied.");
+        }
+
+        // State check: only ACTIVE claims can be cancelled
+        if (claim.getStatus() != ClaimStatus.ACTIVE) {
+            throw new InvalidStatusTransitionException("Claim in status " + claim.getStatus() + " cannot be cancelled");
+        }
+
+        String effectiveReason = (reason != null && !reason.trim().isEmpty()) ? reason.trim() : "Claim cancelled by NGO";
+        claim.markCancelled(effectiveReason, now);
+
+        // Reopen rule: Phase 1 reopens donation to AVAILABLE
+        Donation donation = claim.getDonation();
+        donationService.changeStatus(donation, DonationStatus.AVAILABLE, ngoUser, "Claim cancelled: " + effectiveReason);
+
+        Claim savedClaim = claimRepository.save(claim);
+        return ClaimResponse.from(savedClaim);
+    }
+
+    /**
+     * Confirms pickup of an active claim (Task C3).
+     * Transitions both claim and donation to PICKED_UP.
+     *
+     * @param claimId  the claim being picked up
+     * @param ngoEmail the email of the claiming NGO
+     * @return updated {@link ClaimResponse}
+     */
+    @Transactional
+    public ClaimResponse pickupClaim(Long claimId, String ngoEmail) {
+        return pickupClaim(claimId, ngoEmail, Instant.now());
+    }
+
+    @Transactional
+    public ClaimResponse pickupClaim(Long claimId, String ngoEmail, Instant now) {
+        Objects.requireNonNull(claimId, "Claim ID must not be null");
+        Objects.requireNonNull(ngoEmail, "NGO email must not be null");
+        if (now == null) {
+            now = Instant.now();
+        }
+
+        Claim claim = claimRepository.findById(claimId)
+                .orElseThrow(() -> new ResourceNotFoundException("Claim not found with id: " + claimId));
+
+        User ngoUser = userRepository.findByEmail(ngoEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + ngoEmail));
+
+        // Ownership check
+        if (!claim.getNgo().getId().equals(ngoUser.getId())) {
+            throw new AccessDeniedException("Access denied.");
+        }
+
+        // State check: must be ACTIVE
+        if (claim.getStatus() != ClaimStatus.ACTIVE) {
+            throw new InvalidStatusTransitionException("Claim in status " + claim.getStatus() + " cannot be picked up");
+        }
+
+        claim.markPickedUp(now);
+        Donation donation = claim.getDonation();
+        donationService.changeStatus(donation, DonationStatus.PICKED_UP, ngoUser, "Picked up by " + ngoUser.getName());
+
+        Claim savedClaim = claimRepository.save(claim);
+        return ClaimResponse.from(savedClaim);
+    }
+
+    /**
+     * Confirms delivery of a picked-up claim (Task C3).
+     * Transitions claim to COMPLETED and donation to DELIVERED.
+     *
+     * @param claimId  the claim being delivered
+     * @param ngoEmail the email of the claiming NGO
+     * @return updated {@link ClaimResponse}
+     */
+    @Transactional
+    public ClaimResponse deliverClaim(Long claimId, String ngoEmail) {
+        return deliverClaim(claimId, ngoEmail, Instant.now());
+    }
+
+    @Transactional
+    public ClaimResponse deliverClaim(Long claimId, String ngoEmail, Instant now) {
+        Objects.requireNonNull(claimId, "Claim ID must not be null");
+        Objects.requireNonNull(ngoEmail, "NGO email must not be null");
+        if (now == null) {
+            now = Instant.now();
+        }
+
+        Claim claim = claimRepository.findById(claimId)
+                .orElseThrow(() -> new ResourceNotFoundException("Claim not found with id: " + claimId));
+
+        User ngoUser = userRepository.findByEmail(ngoEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + ngoEmail));
+
+        // Ownership check
+        if (!claim.getNgo().getId().equals(ngoUser.getId())) {
+            throw new AccessDeniedException("Access denied.");
+        }
+
+        // State check: deliver before pickup -> 400
+        if (claim.getStatus() == ClaimStatus.ACTIVE) {
+            throw new InvalidStatusTransitionException("Claim must be picked up before delivery");
+        }
+        if (claim.getStatus() != ClaimStatus.PICKED_UP) {
+            throw new InvalidStatusTransitionException("Claim in status " + claim.getStatus() + " cannot be delivered");
+        }
+
+        claim.markDelivered(now);
+        Donation donation = claim.getDonation();
+        donationService.changeStatus(donation, DonationStatus.DELIVERED, ngoUser, "Delivered by " + ngoUser.getName());
+
+        Claim savedClaim = claimRepository.save(claim);
+        return ClaimResponse.from(savedClaim);
+    }
+
+    /**
+     * Retrieves all claims owned by the authenticated NGO (Task C4).
+     * Optionally filtered by status, ordered newest first.
+     *
+     * @param ngoEmail authenticated NGO email
+     * @param status   optional claim status filter
+     * @return list of {@link ClaimResponse}
+     */
+    @Transactional(readOnly = true)
+    public List<ClaimResponse> getMyClaims(String ngoEmail, ClaimStatus status) {
+        Objects.requireNonNull(ngoEmail, "NGO email must not be null");
+
+        User ngoUser = userRepository.findByEmail(ngoEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + ngoEmail));
+
+        List<Claim> claims = (status != null)
+                ? claimRepository.findByNgoIdAndStatusOrderByClaimedAtDesc(ngoUser.getId(), status)
+                : claimRepository.findByNgoIdOrderByClaimedAtDesc(ngoUser.getId());
+
+        return claims.stream().map(ClaimResponse::from).toList();
     }
 }

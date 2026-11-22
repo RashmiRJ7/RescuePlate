@@ -7,7 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -455,5 +457,94 @@ class DonationServiceTest {
         assertEquals(2, history.size());
         assertEquals("Donor Hotel", history.get(0).changedBy());
         assertEquals("System", history.get(1).changedBy());
+    }
+
+    // --- Task S1: expireOverdueDonations tests ---
+
+    @Test
+    void expireOverdueDonations_expiresPastDueAvailableAndReservedDonations() {
+        Instant now = Instant.parse("2026-11-20T12:00:00Z");
+
+        Donation d1 = createDonation(1L, DonationStatus.AVAILABLE);
+        d1.setSafeUntil(now.minusSeconds(60));
+
+        Donation d2 = createDonation(2L, DonationStatus.RESERVED);
+        d2.setSafeUntil(now.minusSeconds(120));
+
+        when(donationRepository.findByStatusInAndSafeUntilBefore(any(), eq(now)))
+                .thenReturn(List.of(d1, d2));
+        when(donationRepository.save(any(Donation.class))).thenAnswer(i -> i.getArgument(0));
+        when(claimRepository.findByActiveDonationId(1L)).thenReturn(Optional.empty());
+        when(claimRepository.findByActiveDonationId(2L)).thenReturn(Optional.empty());
+
+        int count = donationService.expireOverdueDonations(now);
+
+        assertEquals(2, count);
+        assertEquals(DonationStatus.EXPIRED, d1.getStatus());
+        assertEquals(DonationStatus.EXPIRED, d2.getStatus());
+
+        ArgumentCaptor<DonationStatusHistory> historyCaptor = ArgumentCaptor.forClass(DonationStatusHistory.class);
+        verify(historyRepository, times(2)).save(historyCaptor.capture());
+
+        List<DonationStatusHistory> histories = historyCaptor.getAllValues();
+        assertEquals(DonationStatus.AVAILABLE, histories.get(0).getFromStatus());
+        assertEquals(DonationStatus.EXPIRED, histories.get(0).getToStatus());
+        assertNull(histories.get(0).getChangedBy()); // null represents System
+        assertEquals("Food expired past safeUntil", histories.get(0).getNote());
+
+        assertEquals(DonationStatus.RESERVED, histories.get(1).getFromStatus());
+        assertEquals(DonationStatus.EXPIRED, histories.get(1).getToStatus());
+        assertNull(histories.get(1).getChangedBy());
+    }
+
+    @Test
+    void expireOverdueDonations_closesActiveClaimOnReservedDonation() {
+        Instant now = Instant.parse("2026-11-20T12:00:00Z");
+
+        Donation d1 = createDonation(1L, DonationStatus.RESERVED);
+        d1.setSafeUntil(now.minusSeconds(60));
+
+        Claim claim = new Claim(d1, ngoUser);
+        claim.setId(10L);
+        claim.setStatus(ClaimStatus.ACTIVE);
+        claim.setActiveDonationId(1L);
+
+        when(donationRepository.findByStatusInAndSafeUntilBefore(any(), eq(now)))
+                .thenReturn(List.of(d1));
+        when(donationRepository.save(any(Donation.class))).thenAnswer(i -> i.getArgument(0));
+        when(claimRepository.findByActiveDonationId(1L)).thenReturn(Optional.of(claim));
+
+        int count = donationService.expireOverdueDonations(now);
+
+        assertEquals(1, count);
+        assertEquals(DonationStatus.EXPIRED, d1.getStatus());
+        assertEquals(ClaimStatus.EXPIRED, claim.getStatus());
+        assertNull(claim.getActiveDonationId()); // unique constraint released
+
+        verify(claimRepository).save(claim);
+    }
+
+    @Test
+    void expireOverdueDonations_idempotent_runningTwiceChangesNothing() {
+        Instant now = Instant.parse("2026-11-20T12:00:00Z");
+
+        Donation d1 = createDonation(1L, DonationStatus.AVAILABLE);
+        d1.setSafeUntil(now.minusSeconds(60));
+
+        // First run returns d1
+        when(donationRepository.findByStatusInAndSafeUntilBefore(any(), eq(now)))
+                .thenReturn(List.of(d1))
+                .thenReturn(List.of()); // Second run returns empty list
+
+        when(donationRepository.save(any(Donation.class))).thenAnswer(i -> i.getArgument(0));
+        when(claimRepository.findByActiveDonationId(1L)).thenReturn(Optional.empty());
+
+        int count1 = donationService.expireOverdueDonations(now);
+        assertEquals(1, count1);
+        assertEquals(DonationStatus.EXPIRED, d1.getStatus());
+
+        // Second run: no overdue donations found because d1 is now EXPIRED
+        int count2 = donationService.expireOverdueDonations(now);
+        assertEquals(0, count2);
     }
 }
