@@ -15,6 +15,8 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
 
     List<Donation> findByDonorIdOrderByCreatedAtDesc(Long donorId);
 
+    List<Donation> findByDonorIdAndStatusOrderByCreatedAtDesc(Long donorId, DonationStatus status);
+
     List<Donation> findByStatusInAndSafeUntilAfter(Collection<DonationStatus> statuses, Instant now);
 
     List<Donation> findByStatusInAndSafeUntilBefore(Collection<DonationStatus> statuses, Instant now);
