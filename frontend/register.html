@@ -74,7 +74,7 @@
           RescuePlate
         </a>
         <h2>Join a community that rescues meals.</h2>
-        <p>Whether you're a hostel mess, bakery, wedding caterer, or an NGO — your next rescue starts here.</p>
+        <p>Whether you share surplus food or collect it for your community, your next rescue starts here.</p>
       </div>
     </aside>
 
@@ -91,13 +91,13 @@
         <section class="auth-card" aria-labelledby="register-heading">
           <p class="mr-kicker"><i class="bi bi-heart-pulse" aria-hidden="true"></i> Make good food go further</p>
           <h1 class="register-heading" id="register-heading">Join the RescuePlate community</h1>
-          <p class="register-subtitle">Donate surplus food or help collect meals for your community. It takes less than a minute.</p>
+          <p class="register-subtitle">Create a donor or NGO account with your basic contact details. You can configure your profile later.</p>
 
           <form id="register-form" novalidate>
             <div class="row g-3">
               <div class="col-md-6">
-                <label class="register-label" for="full-name">Full name</label>
-                <input class="form-control register-control" id="full-name" name="fullName" type="text" autocomplete="name" placeholder="Your full name" aria-describedby="full-name-error" required>
+                <label class="register-label" id="account-name-label" for="full-name">Your name</label>
+                <input class="form-control register-control" id="full-name" name="name" type="text" autocomplete="name" placeholder="Your name" aria-describedby="full-name-error" required>
                 <div class="invalid-feedback" id="full-name-error"></div>
               </div>
               <div class="col-md-6">
@@ -124,12 +124,13 @@
                   </div>
                 </div>
                 <div class="text-danger small mt-1" id="account-type-error"></div>
+                <p class="register-hint" id="account-type-hint">Choose Donor or NGO to continue.</p>
               </div>
 
               <div class="col-md-6">
                 <label class="register-label" for="password">Password</label>
                 <div class="password-wrap">
-                  <input class="form-control register-control" id="password" name="password" type="password" autocomplete="new-password" placeholder="Create a password" aria-describedby="password-error" required>
+                  <input class="form-control register-control" id="password" name="password" type="password" minlength="8" autocomplete="new-password" placeholder="Create a password" aria-describedby="password-error" required>
                   <button class="password-toggle" type="button" data-password-toggle="password" aria-label="Show password" aria-pressed="false">
                     <i class="bi bi-eye" aria-hidden="true"></i>
                   </button>
@@ -148,55 +149,12 @@
               </div>
             </div>
 
-            <section class="conditional-fields" id="donor-fields" aria-labelledby="donor-fields-heading" hidden>
-              <h2 class="conditional-heading" id="donor-fields-heading">Donor details</h2>
-              <div class="row g-3">
-                <div class="col-12">
-                  <label class="register-label" for="donor-type">Donor type</label>
-                  <select class="form-select register-control" id="donor-type" name="donorType" aria-describedby="donor-type-hint donor-type-error">
-                    <option value="">Choose your donor type</option>
-                    <option value="Hostel/Mess">Hostel / Mess</option>
-                    <option value="Hotel">Hotel / Restaurant</option>
-                    <option value="Bakery">Bakery / Sweet Shop</option>
-                    <option value="Events/Catering">Event / Catering</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  <p class="register-hint" id="donor-type-hint">Choose the kind of kitchen or event sharing food.</p>
-                  <div class="invalid-feedback" id="donor-type-error"></div>
-                </div>
-                <div class="col-12">
-                  <label class="register-label" for="donor-organization">Business or organization name</label>
-                  <input class="form-control register-control" id="donor-organization" name="donorOrganization" type="text" autocomplete="organization" placeholder="e.g. Pune hostel mess or neighbourhood bakery" aria-describedby="donor-organization-error">
-                  <div class="invalid-feedback" id="donor-organization-error"></div>
-                </div>
-                <div class="col-12">
-                  <label class="register-label" for="donor-address">Address</label>
-                  <textarea class="form-control register-control" id="donor-address" name="donorAddress" rows="2" autocomplete="street-address" placeholder="Street, area, city, and PIN code" aria-describedby="donor-address-error"></textarea>
-                  <div class="invalid-feedback" id="donor-address-error"></div>
-                </div>
-              </div>
-            </section>
-
-            <section class="conditional-fields" id="ngo-fields" aria-labelledby="ngo-fields-heading" hidden>
-              <h2 class="conditional-heading" id="ngo-fields-heading">NGO details</h2>
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <label class="register-label" for="ngo-organization">NGO organization name</label>
-                  <input class="form-control register-control" id="ngo-organization" name="ngoOrganization" type="text" autocomplete="organization" placeholder="Your NGO's name" aria-describedby="ngo-organization-error">
-                  <div class="invalid-feedback" id="ngo-organization-error"></div>
-                </div>
-                <div class="col-md-6">
-                  <label class="register-label" for="ngo-registration">Registration number</label>
-                  <input class="form-control register-control" id="ngo-registration" name="ngoRegistration" type="text" placeholder="Official registration number" aria-describedby="ngo-registration-error">
-                  <div class="invalid-feedback" id="ngo-registration-error"></div>
-                </div>
-                <div class="col-12">
-                  <label class="register-label" for="ngo-address">Address</label>
-                  <textarea class="form-control register-control" id="ngo-address" name="ngoAddress" rows="2" autocomplete="street-address" placeholder="Street, area, city, and PIN code" aria-describedby="ngo-address-error"></textarea>
-                  <div class="invalid-feedback" id="ngo-address-error"></div>
-                </div>
-              </div>
-            </section>
+            <div class="mt-3">
+              <label class="register-label" for="address">Basic address</label>
+              <textarea class="form-control register-control" id="address" name="address" rows="2" autocomplete="street-address" placeholder="Street, area, city, and PIN code" aria-describedby="address-error" required></textarea>
+              <div class="invalid-feedback" id="address-error"></div>
+              <p class="register-hint" id="ngo-signup-hint" hidden>Nearby donation matching and advanced preferences can be configured in NGO profile settings after signup.</p>
+            </div>
 
             <button class="btn mr-btn mr-btn-primary register-submit" type="submit">Create account</button>
             <p class="register-feedback" id="form-feedback" aria-live="polite"></p>
@@ -212,15 +170,15 @@
   <script>
     const registrationForm = document.getElementById("register-form");
     const accountTypeInputs = document.querySelectorAll('input[name="accountType"]');
-    const donorFields = document.getElementById("donor-fields");
-    const ngoFields = document.getElementById("ngo-fields");
     const formFeedback = document.getElementById("form-feedback");
 
     function setFieldError(field, message) {
       const errorElement = document.getElementById(field.id + "-error");
       field.setAttribute("aria-invalid", message ? "true" : "false");
-      errorElement.textContent = message;
-      errorElement.classList.toggle("d-block", Boolean(message));
+      if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.classList.toggle("d-block", Boolean(message));
+      }
     }
 
     function clearFieldError(field) {
@@ -232,41 +190,16 @@
       formFeedback.className = "register-feedback";
     }
 
-    function clearConditionalFields(container) {
-      container.querySelectorAll("input, select, textarea").forEach(function (field) {
-        field.value = "";
-        field.required = false;
-        clearFieldError(field);
-      });
-    }
-
     function updateAccountFields() {
       const selectedType = document.querySelector('input[name="accountType"]:checked');
-      const accountTypeError = document.getElementById("account-type-error");
-      accountTypeError.textContent = "";
+      const isNgo = selectedType && selectedType.value === "ngo";
+      document.getElementById("account-name-label").textContent = isNgo ? "Organization name" : "Your name";
+      document.getElementById("full-name").placeholder = isNgo ? "Your NGO's name" : "Your name";
+      document.getElementById("ngo-signup-hint").hidden = !isNgo;
       accountTypeInputs.forEach(function (input) {
         input.removeAttribute("aria-invalid");
       });
-
-      donorFields.hidden = !selectedType || selectedType.value !== "donor";
-      ngoFields.hidden = !selectedType || selectedType.value !== "ngo";
-
-      if (donorFields.hidden) {
-        clearConditionalFields(donorFields);
-      } else {
-        donorFields.querySelectorAll("input, select, textarea").forEach(function (field) {
-          field.required = true;
-        });
-      }
-
-      if (ngoFields.hidden) {
-        clearConditionalFields(ngoFields);
-      } else {
-        ngoFields.querySelectorAll("input, select, textarea").forEach(function (field) {
-          field.required = true;
-        });
-      }
-
+      document.getElementById("account-type-error").textContent = "";
       clearFeedback();
     }
 
@@ -286,7 +219,7 @@
     });
 
     registrationForm.addEventListener("input", function (event) {
-      if (event.target.matches("input:not([name='accountType']), select, textarea")) {
+      if (event.target.id && event.target.id !== "type-donor" && event.target.id !== "type-ngo") {
         clearFieldError(event.target);
       }
       clearFeedback();
@@ -297,7 +230,7 @@
       clearFeedback();
 
       let firstInvalidField = null;
-      const requiredFieldIds = ["full-name", "email", "phone", "password", "confirm-password"];
+      const requiredFieldIds = ["full-name", "email", "phone", "password", "confirm-password", "address"];
       const selectedType = document.querySelector('input[name="accountType"]:checked');
 
       requiredFieldIds.forEach(function (fieldId) {
@@ -335,14 +268,6 @@
           input.setAttribute("aria-invalid", "true");
         });
         if (!firstInvalidField) firstInvalidField = document.getElementById("type-donor");
-      } else {
-        const activeFields = selectedType.value === "donor" ? donorFields : ngoFields;
-        activeFields.querySelectorAll("input, select, textarea").forEach(function (field) {
-          if (!field.value.trim()) {
-            setFieldError(field, "This field is required.");
-            if (!firstInvalidField) firstInvalidField = field;
-          }
-        });
       }
 
       if (firstInvalidField) {
@@ -350,8 +275,45 @@
         return;
       }
 
-      formFeedback.textContent = "Your details are valid. Account creation is not connected yet.";
-      formFeedback.classList.add("text-success");
+      const role = selectedType.value === "donor" ? "DONOR" : "NGO";
+      const payload = {
+        name: document.getElementById("full-name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        password: passwordField.value,
+        role: role,
+        phone: phoneValue,
+        address: document.getElementById("address").value.trim()
+      };
+
+      const submitButton = registrationForm.querySelector('[type="submit"]');
+      submitButton.disabled = true;
+      formFeedback.textContent = "Creating your account...";
+      fetch("/api/auth/register", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(async function (response) {
+        const body = await response.json().catch(function () { return null; });
+        if (!response.ok) {
+          const fieldMessage = body && body.fieldErrors
+            ? Object.entries(body.fieldErrors).map(function (entry) {
+              return entry[0] + ": " + entry[1];
+            }).join(" ")
+            : "";
+          throw new Error(fieldMessage || (body && body.message) || "Account creation failed.");
+        }
+        formFeedback.textContent = "Account created successfully. Redirecting to sign in...";
+        formFeedback.classList.add("text-success");
+        window.setTimeout(function () {
+          window.location.href = "/login.html?registered=true";
+        }, 1200);
+      }).catch(function (error) {
+        formFeedback.textContent = error.message || "Unable to connect. Please try again.";
+        formFeedback.classList.add("text-danger");
+      }).finally(function () {
+        submitButton.disabled = false;
+      });
     });
   </script>
 </body>

@@ -41,17 +41,20 @@ public class ClaimService {
     private final UserRepository userRepository;
     private final NgoProfileRepository ngoProfileRepository;
     private final DonationService donationService;
+    private final NotificationService notificationService;
 
     public ClaimService(DonationRepository donationRepository,
                         ClaimRepository claimRepository,
                         UserRepository userRepository,
                         NgoProfileRepository ngoProfileRepository,
-                        DonationService donationService) {
+                        DonationService donationService,
+                        NotificationService notificationService) {
         this.donationRepository = donationRepository;
         this.claimRepository = claimRepository;
         this.userRepository = userRepository;
         this.ngoProfileRepository = ngoProfileRepository;
         this.donationService = donationService;
+        this.notificationService = notificationService;
     }
 
     /**
@@ -144,6 +147,7 @@ public class ClaimService {
         // occurs inside the transaction boundary
         Claim savedClaim = claimRepository.saveAndFlush(claim);
         donationRepository.saveAndFlush(donation);
+        notificationService.notifyClaimCreated(savedClaim);
 
         return ClaimResponse.from(savedClaim);
     }
@@ -197,6 +201,7 @@ public class ClaimService {
         donationService.changeStatus(donation, DonationStatus.AVAILABLE, ngoUser, "Claim cancelled: " + effectiveReason);
 
         Claim savedClaim = claimRepository.save(claim);
+        notificationService.notifyClaimCancelled(savedClaim);
         return ClaimResponse.from(savedClaim);
     }
 
@@ -242,6 +247,7 @@ public class ClaimService {
         donationService.changeStatus(donation, DonationStatus.PICKED_UP, ngoUser, "Picked up by " + ngoUser.getName());
 
         Claim savedClaim = claimRepository.save(claim);
+        notificationService.notifyClaimPickedUp(savedClaim);
         return ClaimResponse.from(savedClaim);
     }
 
@@ -290,6 +296,7 @@ public class ClaimService {
         donationService.changeStatus(donation, DonationStatus.DELIVERED, ngoUser, "Delivered by " + ngoUser.getName());
 
         Claim savedClaim = claimRepository.save(claim);
+        notificationService.notifyClaimDelivered(savedClaim);
         return ClaimResponse.from(savedClaim);
     }
 

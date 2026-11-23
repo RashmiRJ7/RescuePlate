@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.foodrescue.enums.FoodCategory;
 
+import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -19,5 +20,19 @@ public record NgoProfileUpdateRequest(
     Double serviceRadiusKm,
 
     @NotEmpty(message = "Accepted categories must not be empty")
-    Set<FoodCategory> acceptedCategories
-) {}
+    Set<FoodCategory> acceptedCategories,
+
+    @DecimalMin(value = "-90.0", message = "Latitude must be between -90 and 90")
+    @DecimalMax(value = "90.0", message = "Latitude must be between -90 and 90")
+    Double latitude,
+
+    @DecimalMin(value = "-180.0", message = "Longitude must be between -180 and 180")
+    @DecimalMax(value = "180.0", message = "Longitude must be between -180 and 180")
+    Double longitude
+) {
+    public NgoProfileUpdateRequest(Integer capacityMeals,
+                                   Double serviceRadiusKm,
+                                   Set<FoodCategory> acceptedCategories) {
+        this(capacityMeals, serviceRadiusKm, acceptedCategories, null, null);
+    }
+}

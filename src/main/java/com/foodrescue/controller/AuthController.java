@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.foodrescue.dto.AuthUserResponse;
+import com.foodrescue.dto.AdminSetupStatusResponse;
+import com.foodrescue.dto.InitialAdminSetupRequest;
 import com.foodrescue.dto.LoginRequest;
 import com.foodrescue.dto.LoginResponse;
 import com.foodrescue.dto.RegisterRequest;
 import com.foodrescue.dto.UserProfileResponse;
 import com.foodrescue.service.AuthService;
+import com.foodrescue.service.AdminAccountService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,9 +31,21 @@ import jakarta.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
+    private final AdminAccountService adminAccountService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, AdminAccountService adminAccountService) {
         this.authService = authService;
+        this.adminAccountService = adminAccountService;
+    }
+
+    @GetMapping("/admin-setup/status")
+    public ResponseEntity<AdminSetupStatusResponse> adminSetupStatus() {
+        return ResponseEntity.ok(new AdminSetupStatusResponse(adminAccountService.isInitialSetupAvailable()));
+    }
+
+    @PostMapping("/admin-setup")
+    public ResponseEntity<AuthUserResponse> createInitialAdmin(@Valid @RequestBody InitialAdminSetupRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(adminAccountService.createInitialAdmin(request));
     }
 
     @PostMapping("/register")

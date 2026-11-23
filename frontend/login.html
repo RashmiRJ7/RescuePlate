@@ -149,6 +149,7 @@
           </form>
 
           <p class="auth-alt">New to RescuePlate? <a class="auth-link" href="register.html">Create an account</a></p>
+          <p class="auth-alt mt-2"><a class="auth-link" href="admin-setup.html">Initial administrator setup</a></p>
         </section>
       </main>
     </div>
@@ -161,6 +162,11 @@
     const passwordInput = document.getElementById("password");
     const passwordToggle = document.getElementById("password-toggle");
     const formFeedback = document.getElementById("form-feedback");
+
+    if (new URLSearchParams(window.location.search).get("registered") === "true") {
+      formFeedback.textContent = "Your account is ready. Sign in to continue.";
+      formFeedback.classList.add("text-success");
+    }
 
     function setFieldError(input, message) {
       const errorElement = document.getElementById(input.id + "-error");
@@ -233,19 +239,31 @@
         return;
       }
 
-      formFeedback.textContent = "Demo sign-in is not connected. Preview the selected workspace instead:";
-      const dashboards = {
-        donor: { href: "donor-dashboard.html", label: "Donor" },
-        ngo: { href: "ngo-dashboard.html", label: "NGO" },
-        admin: { href: "admin-dashboard.html", label: "Admin" }
-      };
-      const dashboard = dashboards[selectedRole.value];
-      const previewLink = document.createElement("a");
-      previewLink.className = "login-link d-block mt-1";
-      previewLink.href = dashboard.href;
-      previewLink.textContent = "Open " + dashboard.label + " dashboard preview";
-      formFeedback.append(previewLink);
-      formFeedback.classList.add("text-success");
+      formFeedback.textContent = "Signing in...";
+      const submitButton = loginForm.querySelector('[type="submit"]');
+      submitButton.disabled = true;
+      fetch("/api/auth/login", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email, password: passwordInput.value })
+      }).then(async function (response) {
+        const body = await response.json().catch(function () { return null; });
+        if (!response.ok) throw new Error(body && body.message ? body.message : "Sign-in failed.");
+        const role = String(body.role).toLowerCase();
+        if (selectedRole.value !== role) throw new Error("This account does not match the selected role.");
+        const dashboards = {
+          donor: "donor-dashboard.html",
+          ngo: "ngo-dashboard.html",
+          admin: "admin-dashboard.html"
+        };
+        window.location.href = dashboards[role];
+      }).catch(function (error) {
+        formFeedback.textContent = error.message;
+        formFeedback.classList.add("text-danger");
+      }).finally(function () {
+        submitButton.disabled = false;
+      });
     });
 
     loginForm.addEventListener("input", function (event) {

@@ -50,7 +50,7 @@ One Spring Boot application serves both the REST API and the static frontend. Mi
 
 ```
 com.foodrescue
-├── config/        SecurityConfig, SchedulingConfig, ScoringProperties, DataSeeder
+├── config/        SecurityConfig, SchedulingConfig, ScoringProperties, DemoDataSeeder
 ├── controller/    AuthController, DonationController, ClaimController,
 │                  NgoProfileController, DashboardController, AdminController,
 │                  NotificationController*, ComplaintController*
@@ -322,18 +322,18 @@ Jobs must be **idempotent**: running twice must not double-expire or double-noti
 
 | Path | Roles |
 |---|---|
-| `/`, `/login.html`, `/register.html`, static assets (`/css/**`, `/js/**`, `/assets/**`, `/vendor/**`), `/api/auth/**`, `/api/health` | public |
+| `/`, `/login.html`, `/register.html`, `/admin-setup.html`, static assets (`/css/**`, `/js/**`, `/assets/**`, `/vendor/**`), `/api/auth/**`, `/api/health` | public |
 | `PATCH /api/claims/*/cancel` | NGO (Phase 1); NGO, ADMIN (Phase 2) |
 | `PATCH /api/donations/*/cancel` | DONOR, ADMIN (Phase 2) |
 | `/api/donations/feed`, `/api/donations/*/claim`, `/api/claims/**`, `/api/ngo/**` | NGO |
 | `POST /api/donations`, `/api/donations/mine` | DONOR |
-| `/api/admin/**` (includes `PATCH /api/admin/claims/*/resolve`) | ADMIN |
+| `/api/admin/**` | ADMIN |
 | other `/api/**` | any authenticated user |
 
   Admin can cancel claims and donations, but cannot claim, pick up or deliver. Those stay NGO-only.
 - Ownership checks in services (a donor can only cancel *their own* donation; an NGO can only update *its own* claim; Admin skips the ownership check on the two cancel endpoints).
 - CSRF is disabled for the course project; note this as a known simplification in the report.
-- Admin account seeded from properties on first start.
+- No default administrator credentials are seeded. The first admin is created once through `/admin-setup.html`, gated by the out-of-band `ADMIN_SETUP_KEY`. After an admin exists, the public setup endpoint is disabled; only an authenticated ADMIN can create further admins.
 
 ### Account deactivation
 

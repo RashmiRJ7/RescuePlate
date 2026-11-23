@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="RescuePlate admin dashboard preview with sample user and donation records.">
+  <meta name="description" content="Manage RescuePlate accounts, donations and claims.">
   <title>Admin Dashboard | RescuePlate</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,16 +32,16 @@
           <p class="admin-sidebar-label" id="admin-sidebar-title">Admin workspace</p>
           <nav class="admin-nav" aria-label="Admin dashboard sections">
             <a class="admin-nav-link active" href="#overview" aria-current="page"><i class="bi bi-grid-1x2" aria-hidden="true"></i>Overview</a>
-            <a class="admin-nav-link" href="#analytics"><i class="bi bi-bar-chart-line" aria-hidden="true"></i>Analytics</a>
             <a class="admin-nav-link" href="#users"><i class="bi bi-people" aria-hidden="true"></i>User Management</a>
             <a class="admin-nav-link" href="#donations"><i class="bi bi-basket2" aria-hidden="true"></i>Food Collection</a>
-            <a class="admin-nav-link" href="#reports"><i class="bi bi-bar-chart-line" aria-hidden="true"></i>Reports</a>
+            <a class="admin-nav-link" href="#claims"><i class="bi bi-bag-check" aria-hidden="true"></i>Claims</a>
+            <a class="admin-nav-link" href="#admin-accounts"><i class="bi bi-person-plus" aria-hidden="true"></i>Administrators</a>
           </nav>
         </div>
         <div class="admin-profile">
           <span class="admin-avatar" aria-hidden="true">AD</span>
-          <span><strong>Platform Admin</strong><small>Demo account</small></span>
-          <a class="admin-signout" href="login.html" data-demo-logout aria-label="Log out of demo and return to login" title="Log out of demo"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></a>
+          <span><strong id="admin-profile-name">Administrator</strong><small>Platform admin</small></span>
+          <a class="admin-signout" id="admin-signout" href="login.html" aria-label="Sign out" title="Sign out"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></a>
         </div>
       </div>
     </aside>
@@ -55,7 +55,7 @@
           <span class="admin-topbar-kicker">Platform administration</span>
           <strong>RescuePlate</strong>
         </div>
-        <span class="admin-demo-pill"><i class="bi bi-info-circle" aria-hidden="true"></i> DEMO MODE</span>
+        <span class="admin-demo-pill" id="admin-live-status" role="status">Loading live data…</span>
       </header>
 
       <div class="admin-content">
@@ -64,37 +64,32 @@
             <div>
               <p class="admin-eyebrow"><span class="admin-eyebrow-dot"></span>Platform overview</p>
               <h1 id="overview-title">A clearer view of good food in motion.</h1>
-              <p>Manage sample accounts and follow donations across the community.</p>
+              <p>Review registered accounts, donations and claim activity.</p>
             </div>
             <span class="admin-welcome-icon" aria-hidden="true"><i class="bi bi-graph-up-arrow"></i></span>
-          </div>
-
-          <div class="admin-sample-note" role="note">
-            <i class="bi bi-info-circle" aria-hidden="true"></i>
-            <span>All figures and records are sample data for this frontend demo. Changes stay in this page and do not update real accounts or donations.</span>
           </div>
 
           <div class="admin-stats" aria-label="Platform summary">
             <article class="admin-stat-card">
               <span class="admin-stat-icon"><i class="bi bi-people-fill" aria-hidden="true"></i></span>
-              <div><span class="admin-stat-label">Total Users</span><strong>146</strong><small>Demo accounts</small></div>
+              <div><span class="admin-stat-label">Total Users</span><strong id="stat-total-users">—</strong><small>Registered accounts</small></div>
             </article>
             <article class="admin-stat-card">
               <span class="admin-stat-icon orange"><i class="bi bi-shop" aria-hidden="true"></i></span>
-              <div><span class="admin-stat-label">Total Donors</span><strong>60</strong><small>Demo accounts</small></div>
+              <div><span class="admin-stat-label">Total Donors</span><strong id="stat-total-donors">—</strong><small>Registered donors</small></div>
             </article>
             <article class="admin-stat-card">
               <span class="admin-stat-icon cream"><i class="bi bi-heart-pulse" aria-hidden="true"></i></span>
-              <div><span class="admin-stat-label">NGO Partners</span><strong>86</strong><small>Demo accounts</small></div>
+              <div><span class="admin-stat-label">NGO Partners</span><strong id="stat-total-ngos">—</strong><small>Registered NGOs</small></div>
             </article>
             <article class="admin-stat-card">
               <span class="admin-stat-icon turmeric"><i class="bi bi-basket2-fill" aria-hidden="true"></i></span>
-              <div><span class="admin-stat-label">Total Donations</span><strong>324</strong><small>Demo listings</small></div>
+              <div><span class="admin-stat-label">Total Donations</span><strong id="stat-total-donations">—</strong><small>Database records</small></div>
             </article>
           </div>
         </section>
 
-        <section class="admin-section mr-reveal mr-stagger" id="analytics" aria-labelledby="analytics-title" style="--mr-stagger-delay: 100ms">
+        <section class="admin-section d-none" id="analytics" aria-labelledby="analytics-title" hidden>
           <div class="admin-section-heading">
             <div>
               <p class="admin-eyebrow">Food rescue activity · DEMO DATA</p>
@@ -135,10 +130,12 @@
               <select class="form-select" id="analytics-status">
                 <option value="all">All statuses</option>
                 <option value="Available">Available</option>
+                <option value="Dispatching">Dispatching</option>
                 <option value="Reserved">Reserved</option>
                 <option value="Picked Up">Picked Up</option>
                 <option value="Delivered">Delivered</option>
                 <option value="Expired">Expired</option>
+                <option value="Cancelled">Cancelled</option>
               </select>
             </label>
             <button class="admin-analytics-reset" id="analytics-reset" type="button">
@@ -234,14 +231,14 @@
             <div>
               <p class="admin-eyebrow">Community accounts</p>
               <h2 id="users-title">User Management</h2>
-              <p>Review sample donor and NGO accounts.</p>
+              <p>Review registered donors, NGOs and administrators.</p>
             </div>
             <span class="admin-section-count"><strong id="user-result-count">0</strong> users</span>
           </div>
 
           <div class="admin-table-card">
             <div class="admin-table-toolbar">
-              <p>Account status controls are local demo interactions.</p>
+              <p>Account status changes apply to the selected registered user.</p>
               <div class="admin-table-filters">
                 <label class="admin-search">
                   <i class="bi bi-search" aria-hidden="true"></i>
@@ -252,8 +249,9 @@
                   <span class="visually-hidden">Filter users by role</span>
                   <select class="form-select" id="user-role-filter">
                     <option value="all">All roles</option>
-                    <option value="Donor">Donors</option>
+                    <option value="DONOR">Donors</option>
                     <option value="NGO">NGOs</option>
+                    <option value="ADMIN">Administrators</option>
                   </select>
                 </label>
               </div>
@@ -275,14 +273,14 @@
             <div>
               <p class="admin-eyebrow">Food handoffs</p>
               <h2 id="donations-title">Food Collection</h2>
-              <p>Sample listings and their current rescue status.</p>
+              <p>Database listings and their current rescue status.</p>
             </div>
             <span class="admin-section-count"><strong id="donation-result-count">0</strong> listings</span>
           </div>
 
           <div class="admin-table-card">
             <div class="admin-table-toolbar">
-              <p>Showing sample donation records only.</p>
+              <p>Showing live donation records.</p>
               <div class="admin-table-filters">
                 <label class="admin-search">
                   <i class="bi bi-search" aria-hidden="true"></i>
@@ -314,7 +312,64 @@
           </div>
         </section>
 
-        <section class="admin-section mr-reveal mr-stagger" id="reports" aria-labelledby="reports-title" style="--mr-stagger-delay: 400ms">
+        <section class="admin-section mr-reveal mr-stagger" id="claims" aria-labelledby="claims-title" style="--mr-stagger-delay: 350ms">
+          <div class="admin-section-heading">
+            <div>
+              <p class="admin-eyebrow">Rescue lifecycle</p>
+              <h2 id="claims-title">Claims</h2>
+              <p>Review claim owners and current lifecycle statuses.</p>
+            </div>
+            <span class="admin-section-count"><strong id="claim-result-count">0</strong> claims</span>
+          </div>
+          <div class="admin-table-card">
+            <div class="admin-table-scroll">
+              <table class="table admin-table">
+                <thead>
+                  <tr><th scope="col">Food</th><th scope="col">Donor</th><th scope="col">NGO</th><th scope="col">Status</th><th scope="col">Claimed</th><th scope="col">Last update</th></tr>
+                </thead>
+                <tbody id="claims-table-body" aria-live="polite"></tbody>
+              </table>
+            </div>
+            <div class="admin-empty" id="claims-empty" hidden>No claims have been recorded.</div>
+          </div>
+        </section>
+
+        <section class="admin-section mr-reveal mr-stagger" id="admin-accounts" aria-labelledby="admin-accounts-title" style="--mr-stagger-delay: 375ms">
+          <div class="admin-section-heading">
+            <div>
+              <p class="admin-eyebrow">Platform access</p>
+              <h2 id="admin-accounts-title">Create administrator account</h2>
+              <p>Only an authenticated administrator can create another administrator.</p>
+            </div>
+          </div>
+          <div class="admin-table-card p-4">
+            <form id="admin-account-form" class="row g-3" novalidate>
+              <div class="col-md-6">
+                <label class="form-label" for="new-admin-name">Full name</label>
+                <input class="form-control" id="new-admin-name" name="name" maxlength="100" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="new-admin-email">Email</label>
+                <input class="form-control" id="new-admin-email" name="email" type="email" maxlength="150" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="new-admin-phone">Phone (optional)</label>
+                <input class="form-control" id="new-admin-phone" name="phone" type="tel" maxlength="20">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="new-admin-password">Temporary password</label>
+                <input class="form-control" id="new-admin-password" name="password" type="password" minlength="12" maxlength="72" autocomplete="new-password" required>
+                <div class="form-text">At least 12 characters.</div>
+              </div>
+              <div class="col-12">
+                <button class="btn admin-action-button" type="submit">Create administrator</button>
+                <p class="mt-2 mb-0" id="admin-account-feedback" role="status" aria-live="polite"></p>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section class="admin-section d-none" id="reports" aria-labelledby="reports-title" hidden>
           <div class="admin-section-heading">
             <div>
               <p class="admin-eyebrow">A small impact snapshot</p>
@@ -349,7 +404,7 @@
 
         <footer class="admin-footer">
           <a href="index.html">RescuePlate</a>
-          <span>Frontend preview · Sample data only</span>
+          <span>Live RescuePlate administration</span>
         </footer>
       </div>
     </main>
@@ -359,7 +414,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <div><span class="admin-modal-kicker">ACCOUNT DETAILS · DEMO</span><h2 class="modal-title" id="user-modal-name">Account details</h2></div>
+          <div><span class="admin-modal-kicker">ACCOUNT DETAILS</span><h2 class="modal-title" id="user-modal-name">Account details</h2></div>
           <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close account details"></button>
         </div>
         <div class="modal-body">
@@ -371,7 +426,6 @@
             <div><dt>Location</dt><dd id="modal-user-location"></dd></div>
             <div><dt>Joined</dt><dd id="modal-user-joined"></dd></div>
           </dl>
-          <p class="admin-modal-note"><i class="bi bi-info-circle" aria-hidden="true"></i> Sample account only. No real account data is displayed or changed.</p>
         </div>
       </div>
     </div>
@@ -379,11 +433,7 @@
 
   <div class="admin-toast" id="admin-toast" role="status" aria-live="polite" hidden></div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <script src="js/app.js"></script>
-  <script src="js/demo-session.js"></script>
-  <script src="js/admin-analytics-data.js"></script>
   <script src="js/admin-dashboard.js"></script>
-  <script src="js/admin-analytics.js"></script>
 </body>
 </html>

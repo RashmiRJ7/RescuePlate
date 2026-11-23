@@ -20,13 +20,16 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.foodrescue.config.SecurityConfig;
+import com.foodrescue.dto.AdminSetupStatusResponse;
 import com.foodrescue.dto.AuthUserResponse;
+import com.foodrescue.dto.InitialAdminSetupRequest;
 import com.foodrescue.dto.LoginResponse;
 import com.foodrescue.dto.RegisterRequest;
 import com.foodrescue.dto.UserProfileResponse;
 import com.foodrescue.enums.Role;
 import com.foodrescue.exception.DuplicateResourceException;
 import com.foodrescue.service.AuthService;
+import com.foodrescue.service.AdminAccountService;
 import com.foodrescue.service.CustomUserDetailsService;
 
 @WebMvcTest(AuthController.class)
@@ -38,6 +41,9 @@ class AuthControllerTest {
 
     @MockitoBean
     private AuthService authService;
+
+    @MockitoBean
+    private AdminAccountService adminAccountService;
 
     @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
@@ -66,6 +72,39 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.name").value("Hotel Sunrise"))
                 .andExpect(jsonPath("$.email").value("kitchen@sunrise.example"))
                 .andExpect(jsonPath("$.role").value("DONOR"));
+    }
+
+    @Test
+    void initialAdminSetupStatusIsPublic() throws Exception {
+        when(adminAccountService.isInitialSetupAvailable()).thenReturn(true);
+
+        mockMvc.perform(get("/api/auth/admin-setup/status"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.available").value(true));
+    }
+
+    @Test
+    void initialAdminSetupCreatesAdminWithoutAcceptingClientRole() throws Exception {
+        when(adminAccountService.createInitialAdmin(any(InitialAdminSetupRequest.class)))
+                .thenReturn(new AuthUserResponse(9L, "RescuePlate Admin", "admin@example.com", Role.ADMIN));
+
+        String body = """
+                {
+                  "name": "RescuePlate Admin",
+                  "email": "admin@example.com",
+                  "password": "LongAndSecurePassword1!",
+                  "confirmPassword": "LongAndSecurePassword1!",
+                  "phone": "9876543210",
+                  "setupKey": "provided-out-of-band"
+                }
+                """;
+
+        mockMvc.perform(post("/api/auth/admin-setup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.role").value("ADMIN"))
+                .andExpect(jsonPath("$.email").value("admin@example.com"));
     }
 
     @Test

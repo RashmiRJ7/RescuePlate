@@ -1,229 +1,293 @@
 (function () {
   "use strict";
 
-  function hoursFromNow(hours) {
-    return new Date(Date.now() + hours * 60 * 60 * 1000);
-  }
-
-  const users = [
-    { id: "user-101", name: "Shivaji College Hostel Mess", email: "mess@shivajicollege.example", role: "Donor", status: "Active", organization: "Shivaji College Hostel Mess", location: "Deccan, Pune", joined: "Jan 12, 2026" },
-    { id: "user-102", name: "Deccan Heritage Hotel", email: "kitchen@deccanheritage.example", role: "Donor", status: "Active", organization: "Deccan Heritage Hotel", location: "Shivajinagar, Pune", joined: "Feb 03, 2026" },
-    { id: "user-103", name: "Asha Bakery & Sweets", email: "contact@ashabakery.example", role: "Donor", status: "Inactive", organization: "Asha Bakery & Sweets", location: "Kothrud, Pune", joined: "Mar 18, 2026" },
-    { id: "user-104", name: "Sahyog Food Collective", email: "hello@sahyogfood.example", role: "NGO", status: "Active", organization: "Sahyog Food Collective", location: "Deccan, Pune", joined: "Jan 20, 2026" },
-    { id: "user-105", name: "Annadaan Community Trust", email: "team@annadaantrust.example", role: "NGO", status: "Active", organization: "Annadaan Community Trust", location: "Aundh, Pune", joined: "Feb 11, 2026" },
-    { id: "user-106", name: "Seva Meals Network", email: "contact@sevameals.example", role: "NGO", status: "Inactive", organization: "Seva Meals Network", location: "Baner, Pune", joined: "Apr 06, 2026" }
-  ];
-
-  const donations = [
-    { name: "Rice, dal, roti and seasonal sabzi", donor: "Shivaji College Hostel Mess", quantity: "40 plates", ngo: "", status: "Available", expiry: hoursFromNow(3) },
-    { name: "Fresh bread and buns", donor: "Asha Bakery & Sweets", quantity: "25 packets", ngo: "", status: "Available", expiry: hoursFromNow(6) },
-    { name: "Wedding buffet meal portions", donor: "Saanvi Wedding Caterers", quantity: "120 portions", ngo: "Sahyog Food Collective", status: "Reserved", expiry: hoursFromNow(2) },
-    { name: "Vegetable pulao", donor: "Deccan Heritage Hotel", quantity: "35 portions", ngo: "Annadaan Community Trust", status: "Picked Up", expiry: hoursFromNow(-1) },
-    { name: "College event snack boxes", donor: "Campus Utsav Team", quantity: "50 boxes", ngo: "Seva Meals Network", status: "Delivered", expiry: hoursFromNow(-2) }
-  ];
-
-  const userSearch = document.getElementById("user-search");
-  const userRoleFilter = document.getElementById("user-role-filter");
-  const donationSearch = document.getElementById("donation-search");
-  const donationStatusFilter = document.getElementById("donation-status-filter");
-  const userTableBody = document.getElementById("users-table-body");
-  const donationTableBody = document.getElementById("donations-table-body");
-  const userModalElement = document.getElementById("user-details-modal");
-  const userModal = bootstrap.Modal.getOrCreateInstance(userModalElement);
+  const API = "/api";
+  let users = [];
+  let donations = [];
+  let claims = [];
+  const userModal = bootstrap.Modal.getOrCreateInstance(document.getElementById("user-details-modal"));
   const toast = document.getElementById("admin-toast");
   let toastTimer;
 
-  function formatDate(date) {
-    return date.toLocaleDateString("en-IN", {
-      timeZone: "Asia/Kolkata",
-      month: "short",
-      day: "numeric",
-      year: "numeric"
+  async function apiRequest(path, options) {
+    const request = options || {};
+    const response = await fetch(API + path, {
+      credentials: "include",
+      headers: { "Content-Type": "application/json", ...(request.headers || {}) },
+      ...request
     });
-  }
 
-  function statusClass(status) {
-    return status.toLowerCase().replace(/\s+/g, "-");
+    if (response.status === 401) {
+      window.location.href = "/login.html";
+      throw new Error("Please sign in again.");
+    }
+
+    const body = response.status === 204 ? null : await response.json().catch(function () { return null; });
+    if (!response.ok) {
+      const fieldErrors = body && body.fieldErrors
+        ? Object.entries(body.fieldErrors).map(function (entry) { return entry[0] + ": " + entry[1]; }).join(" ")
+        : "";
+      const error = new Error(fieldErrors || (body && body.message) || "The request could not be completed.");
+      error.status = response.status;
+      throw error;
+    }
+    return body;
   }
 
   function setText(id, value) {
-    document.getElementById(id).textContent = value;
+    const element = document.getElementById(id);
+    if (element) element.textContent = value == null ? "" : String(value);
   }
 
-  function showToast(message) {
+  function displayEnum(value) {
+    return String(value || "").replaceAll("_", " ").toLowerCase().replace(/\b\w/g, function (letter) {
+      return letter.toUpperCase();
+    });
+  }
+
+  function displayDate(value) {
+    if (!value) return "—";
+    return new Date(value).toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      dateStyle: "medium",
+      timeStyle: "short"
+    });
+  }
+
+  function showToast(message, isError) {
     toast.textContent = message;
     toast.hidden = false;
+    toast.classList.toggle("text-danger", Boolean(isError));
     window.clearTimeout(toastTimer);
-    toastTimer = window.setTimeout(function () {
-      toast.hidden = true;
-    }, 4200);
+    toastTimer = window.setTimeout(function () { toast.hidden = true; }, 4200);
   }
 
   function renderUsers() {
-    const searchTerm = userSearch.value.trim().toLowerCase();
-    const selectedRole = userRoleFilter.value;
-    const filteredUsers = users.filter(function (user) {
-      const matchesSearch = (user.name + " " + user.email).toLowerCase().includes(searchTerm);
-      return matchesSearch && (selectedRole === "all" || user.role === selectedRole);
+    const term = document.getElementById("user-search").value.trim().toLowerCase();
+    const selectedRole = document.getElementById("user-role-filter").value;
+    const visibleUsers = users.filter(function (user) {
+      return (selectedRole === "all" || user.role === selectedRole)
+        && (user.name + " " + user.email).toLowerCase().includes(term);
     });
+    const body = document.getElementById("users-table-body");
+    body.replaceChildren();
 
-    userTableBody.replaceChildren();
-    filteredUsers.forEach(function (user) {
+    visibleUsers.forEach(function (user) {
       const row = document.createElement("tr");
       const nameCell = document.createElement("td");
-      const userName = document.createElement("span");
-      userName.className = "admin-user-name";
-      userName.textContent = user.name;
-      nameCell.append(userName);
+      const name = document.createElement("span");
+      name.className = "admin-user-name";
+      name.textContent = user.name;
+      nameCell.append(name);
 
-      const emailCell = document.createElement("td");
-      emailCell.className = "admin-user-email";
-      emailCell.textContent = user.email;
+      const email = document.createElement("td");
+      email.className = "admin-user-email";
+      email.textContent = user.email;
 
       const roleCell = document.createElement("td");
-      const roleBadge = document.createElement("span");
-      roleBadge.className = "admin-role" + (user.role === "NGO" ? " ngo" : "");
-      roleBadge.textContent = user.role;
-      roleCell.append(roleBadge);
+      const role = document.createElement("span");
+      role.className = "admin-role" + (user.role === "NGO" ? " ngo" : "");
+      role.textContent = displayEnum(user.role);
+      roleCell.append(role);
 
       const statusCell = document.createElement("td");
-      const statusBadge = document.createElement("span");
-      statusBadge.className = "admin-status " + statusClass(user.status);
-      statusBadge.textContent = user.status;
-      statusCell.append(statusBadge);
+      const status = document.createElement("span");
+      status.className = "admin-status " + (user.active ? "active" : "inactive");
+      status.textContent = user.active ? "Active" : "Inactive";
+      statusCell.append(status);
 
       const actionsCell = document.createElement("td");
       const actions = document.createElement("div");
       actions.className = "admin-row-actions";
-      const detailsButton = document.createElement("button");
-      detailsButton.className = "admin-action-button";
-      detailsButton.type = "button";
-      detailsButton.dataset.userDetails = user.id;
-      detailsButton.textContent = "View details";
-      const toggleButton = document.createElement("button");
-      toggleButton.className = "admin-action-button" + (user.status === "Active" ? " deactivate" : "");
-      toggleButton.type = "button";
-      toggleButton.dataset.toggleUser = user.id;
-      toggleButton.textContent = user.status === "Active" ? "Deactivate" : "Activate";
-      actions.append(detailsButton, toggleButton);
+      const details = document.createElement("button");
+      details.type = "button";
+      details.className = "admin-action-button";
+      details.dataset.userDetails = String(user.id);
+      details.textContent = "View details";
+      actions.append(details);
+      if (user.role !== "ADMIN") {
+        const toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.className = "admin-action-button" + (user.active ? " deactivate" : "");
+        toggle.dataset.toggleUser = String(user.id);
+        toggle.textContent = user.active ? "Deactivate" : "Activate";
+        actions.append(toggle);
+      }
       actionsCell.append(actions);
-      row.append(nameCell, emailCell, roleCell, statusCell, actionsCell);
-      userTableBody.append(row);
+      row.append(nameCell, email, roleCell, statusCell, actionsCell);
+      body.append(row);
     });
 
-    setText("user-result-count", String(filteredUsers.length));
-    document.getElementById("users-empty").hidden = filteredUsers.length !== 0;
+    setText("user-result-count", visibleUsers.length);
+    document.getElementById("users-empty").hidden = visibleUsers.length !== 0;
   }
 
   function renderDonations() {
-    const searchTerm = donationSearch.value.trim().toLowerCase();
-    const selectedStatus = donationStatusFilter.value;
-    const filteredDonations = donations.filter(function (donation) {
-      const searchText = [donation.name, donation.donor, donation.quantity, donation.ngo, donation.status].join(" ").toLowerCase();
-      return searchText.includes(searchTerm) && (selectedStatus === "all" || donation.status === selectedStatus);
+    const term = document.getElementById("donation-search").value.trim().toLowerCase();
+    const selectedStatus = document.getElementById("donation-status-filter").value.toUpperCase().replaceAll(" ", "_");
+    const visible = donations.filter(function (donation) {
+      const search = [donation.foodName, donation.donorName, donation.quantity,
+        donation.ngoName, donation.status].join(" ").toLowerCase();
+      return search.includes(term) && (selectedStatus === "ALL" || donation.status === selectedStatus);
     });
+    const body = document.getElementById("donations-table-body");
+    body.replaceChildren();
 
-    donationTableBody.replaceChildren();
-    filteredDonations.forEach(function (donation) {
+    visible.forEach(function (donation) {
       const row = document.createElement("tr");
-      const foodCell = document.createElement("td");
-      const foodName = document.createElement("span");
-      foodName.className = "admin-food-name";
-      foodName.textContent = donation.name;
-      foodCell.append(foodName);
-
-      const donorCell = document.createElement("td");
-      donorCell.textContent = donation.donor;
-      const quantityCell = document.createElement("td");
-      quantityCell.textContent = donation.quantity;
-      const ngoCell = document.createElement("td");
-      ngoCell.textContent = donation.ngo || "—";
-
+      [donation.foodName, donation.donorName, donation.quantity, donation.ngoName || "—"].forEach(function (value) {
+        const cell = document.createElement("td");
+        cell.textContent = value == null ? "—" : String(value);
+        row.append(cell);
+      });
       const statusCell = document.createElement("td");
-      const statusBadge = document.createElement("span");
-      statusBadge.className = "admin-status " + statusClass(donation.status);
-      statusBadge.textContent = donation.status;
-      statusCell.append(statusBadge);
-
-      const expiryCell = document.createElement("td");
-      expiryCell.textContent = formatDate(donation.expiry);
-      row.append(foodCell, donorCell, quantityCell, ngoCell, statusCell, expiryCell);
-      donationTableBody.append(row);
+      const badge = document.createElement("span");
+      badge.className = "admin-status " + donation.status.toLowerCase().replaceAll("_", "-");
+      badge.textContent = displayEnum(donation.status);
+      statusCell.append(badge);
+      const safeUntil = document.createElement("td");
+      safeUntil.textContent = displayDate(donation.safeUntil);
+      row.append(statusCell, safeUntil);
+      body.append(row);
     });
 
-    setText("donation-result-count", String(filteredDonations.length));
-    document.getElementById("donations-empty").hidden = filteredDonations.length !== 0;
+    setText("donation-result-count", visible.length);
+    document.getElementById("donations-empty").hidden = visible.length !== 0;
   }
 
-  function renderReportSummary() {
-    const statuses = ["Available", "Reserved", "Picked Up", "Delivered", "Expired"];
-    const summary = document.getElementById("donation-status-summary");
-    summary.replaceChildren();
-    statuses.forEach(function (status) {
-      const item = document.createElement("div");
-      const label = document.createElement("dt");
-      label.textContent = status;
-      const count = document.createElement("dd");
-      count.textContent = String(donations.filter(function (donation) {
-        return donation.status === status;
-      }).length);
-      item.append(label, count);
-      summary.append(item);
+  function renderClaims() {
+    const body = document.getElementById("claims-table-body");
+    body.replaceChildren();
+    claims.forEach(function (claim) {
+      const row = document.createElement("tr");
+      [claim.foodName, claim.donorName, claim.ngoName].forEach(function (value) {
+        const cell = document.createElement("td");
+        cell.textContent = value || "—";
+        row.append(cell);
+      });
+      const statusCell = document.createElement("td");
+      const badge = document.createElement("span");
+      badge.className = "admin-status " + String(claim.status).toLowerCase().replaceAll("_", "-");
+      badge.textContent = displayEnum(claim.status);
+      statusCell.append(badge);
+      const claimedAt = document.createElement("td");
+      claimedAt.textContent = displayDate(claim.claimedAt);
+      const updatedAt = document.createElement("td");
+      updatedAt.textContent = displayDate(claim.deliveredAt || claim.cancelledAt || claim.pickedUpAt);
+      row.append(statusCell, claimedAt, updatedAt);
+      body.append(row);
     });
+    setText("claim-result-count", claims.length);
+    document.getElementById("claims-empty").hidden = claims.length !== 0;
   }
 
   function showUserDetails(userId) {
-    const user = users.find(function (item) {
-      return item.id === userId;
-    });
+    const user = users.find(function (item) { return String(item.id) === userId; });
     if (!user) return;
     setText("user-modal-name", user.name);
     setText("modal-user-email", user.email);
-    setText("modal-user-role", user.role);
-    setText("modal-user-status", user.status);
-    setText("modal-user-organization", user.organization);
-    setText("modal-user-location", user.location);
-    setText("modal-user-joined", user.joined);
+    setText("modal-user-role", displayEnum(user.role));
+    setText("modal-user-status", user.active ? "Active" : "Inactive");
+    setText("modal-user-organization", user.name);
+    setText("modal-user-location", user.address || "Not provided");
+    setText("modal-user-joined", displayDate(user.createdAt));
     userModal.show();
   }
 
-  function toggleUserStatus(userId) {
-    const user = users.find(function (item) {
-      return item.id === userId;
-    });
-    if (!user) return;
-    user.status = user.status === "Active" ? "Inactive" : "Active";
-    renderUsers();
-    showToast(user.name + " is now " + user.status.toLowerCase() + " in this demo only. No real account was changed.");
+  async function toggleUserStatus(userId, button) {
+    button.disabled = true;
+    try {
+      const updated = await apiRequest("/admin/users/" + encodeURIComponent(userId) + "/toggle", { method: "PATCH" });
+      users = users.map(function (user) { return user.id === updated.id ? updated : user; });
+      renderUsers();
+      showToast(updated.name + " is now " + (updated.active ? "active." : "inactive."));
+    } catch (error) {
+      showToast(error.message, true);
+    }
   }
 
-  function setActiveNavigation(sectionId) {
-    document.querySelectorAll(".admin-nav-link").forEach(function (link) {
-      const active = link.getAttribute("href") === "#" + sectionId;
-      link.classList.toggle("active", active);
-      if (active) link.setAttribute("aria-current", "page");
-      else link.removeAttribute("aria-current");
-    });
+  async function createAdmin(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const feedback = document.getElementById("admin-account-feedback");
+    const button = form.querySelector('[type="submit"]');
+    feedback.textContent = "";
+    feedback.className = "mt-2 mb-0";
+    if (!form.reportValidity()) return;
+
+    const payload = {
+      name: document.getElementById("new-admin-name").value.trim(),
+      email: document.getElementById("new-admin-email").value.trim(),
+      phone: document.getElementById("new-admin-phone").value.trim() || null,
+      password: document.getElementById("new-admin-password").value
+    };
+
+    button.disabled = true;
+    try {
+      const created = await apiRequest("/admin/users/admins", {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+      form.reset();
+      feedback.textContent = "Administrator " + created.email + " was created.";
+      feedback.classList.add("text-success");
+      users = await apiRequest("/admin/users");
+      setText("stat-total-users", users.length);
+      renderUsers();
+    } catch (error) {
+      feedback.textContent = error.message;
+      feedback.classList.add("text-danger");
+    } finally {
+      button.disabled = false;
+    }
   }
 
-  userSearch.addEventListener("input", renderUsers);
-  userRoleFilter.addEventListener("change", renderUsers);
-  donationSearch.addEventListener("input", renderDonations);
-  donationStatusFilter.addEventListener("change", renderDonations);
-
-  userTableBody.addEventListener("click", function (event) {
-    const detailsButton = event.target.closest("[data-user-details]");
-    if (detailsButton) {
-      showUserDetails(detailsButton.dataset.userDetails);
+  async function loadDashboard() {
+    const me = await apiRequest("/auth/me");
+    if (me.role !== "ADMIN") {
+      window.location.href = me.role === "DONOR" ? "/donor-dashboard.html" : "/ngo-dashboard.html";
       return;
     }
-    const toggleButton = event.target.closest("[data-toggle-user]");
-    if (toggleButton) toggleUserStatus(toggleButton.dataset.toggleUser);
-  });
+    setText("admin-profile-name", me.name || "Administrator");
 
+    const results = await Promise.all([
+      apiRequest("/admin/stats"),
+      apiRequest("/admin/users"),
+      apiRequest("/admin/donations"),
+      apiRequest("/admin/claims")
+    ]);
+    setText("stat-total-users", results[0].totalUsers);
+    setText("stat-total-donors", results[0].totalDonors);
+    setText("stat-total-ngos", results[0].totalNgos);
+    setText("stat-total-donations", results[0].totalDonations);
+    users = results[1];
+    donations = results[2];
+    claims = results[3];
+    renderUsers();
+    renderDonations();
+    renderClaims();
+    setText("admin-live-status", "Live database data");
+  }
+
+  document.getElementById("user-search").addEventListener("input", renderUsers);
+  document.getElementById("user-role-filter").addEventListener("change", renderUsers);
+  document.getElementById("donation-search").addEventListener("input", renderDonations);
+  document.getElementById("donation-status-filter").addEventListener("change", renderDonations);
+  document.getElementById("users-table-body").addEventListener("click", function (event) {
+    const details = event.target.closest("[data-user-details]");
+    if (details) showUserDetails(details.dataset.userDetails);
+    const toggle = event.target.closest("[data-toggle-user]");
+    if (toggle) toggleUserStatus(toggle.dataset.toggleUser, toggle);
+  });
+  document.getElementById("admin-account-form").addEventListener("submit", createAdmin);
+  document.getElementById("admin-signout").addEventListener("click", function (event) {
+    event.preventDefault();
+    apiRequest("/auth/logout", { method: "POST", body: "{}" })
+      .then(function () { window.location.href = "/login.html"; })
+      .catch(function (error) { showToast(error.message, true); });
+  });
   document.querySelectorAll(".admin-nav-link").forEach(function (link) {
     link.addEventListener("click", function () {
-      setActiveNavigation(link.getAttribute("href").slice(1));
       if (window.innerWidth < 992) {
         const sidebar = document.getElementById("admin-sidebar");
         const offcanvas = bootstrap.Offcanvas.getInstance(sidebar);
@@ -232,21 +296,8 @@
     });
   });
 
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(function (entries) {
-      const visibleSections = entries.filter(function (entry) {
-        return entry.isIntersecting;
-      }).sort(function (first, second) {
-        return second.intersectionRatio - first.intersectionRatio;
-      });
-      if (visibleSections.length) setActiveNavigation(visibleSections[0].target.id);
-    }, { rootMargin: "-15% 0px -70% 0px", threshold: [0, 0.1, 0.35] });
-    document.querySelectorAll("#overview, #users, #donations, #reports").forEach(function (section) {
-      observer.observe(section);
-    });
-  }
-
-  renderUsers();
-  renderDonations();
-  renderReportSummary();
-}());
+  loadDashboard().catch(function (error) {
+    setText("admin-live-status", error.message);
+    showToast(error.message, true);
+  });
+})();

@@ -3,6 +3,7 @@ package com.foodrescue.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -232,5 +233,18 @@ class FeedServiceTest {
         List<DonationFeedResponse> feed = feedService.getFeed("shelter@ngo.example", null, null, null, 0, 20, now);
 
         assertTrue(feed.isEmpty());
+    }
+
+    @Test
+    void missingNgoLocationReturnsActionableErrorInsteadOfEmptyFeed() {
+        ngoUser.setLatitude(null);
+        ngoUser.setLongitude(null);
+        when(userRepository.findByEmail("shelter@ngo.example")).thenReturn(Optional.of(ngoUser));
+        when(ngoProfileRepository.findByUserId(5L)).thenReturn(Optional.of(ngoProfile));
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
+                () -> feedService.getFeed("shelter@ngo.example", null, null, null, 0, 20, now));
+
+        assertTrue(error.getMessage().contains("location is not set"));
     }
 }

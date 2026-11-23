@@ -25,7 +25,7 @@
 ### Minute 0:00 - 0:45: The Problem & Architecture Intro
 - **Say:** *"Surplus food rescue is not a traditional CRUD application—it is a race against time. Cooked meals spoil in hours. Our platform solves this using real-time urgency scoring, location filtering, and concurrency protection."*
 - **Show:** 
-  - Application startup logs showing `DataSeeder` and `DemoDataSeeder` populating 3 donors, 3 NGOs, and 10 realistic food donations in Belagavi.
+  - Application startup logs showing `DemoDataSeeder` populating 3 donors, 3 NGOs, and 10 realistic food donations in Belagavi. The first administrator is created separately through the one-time setup page.
   - Health endpoint: `GET /api/health` returning `{"status":"UP"}`.
 
 ### Minute 0:45 - 1:30: Donor Food Posting & Validation

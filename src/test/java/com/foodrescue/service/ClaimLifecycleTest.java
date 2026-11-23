@@ -58,6 +58,9 @@ class ClaimLifecycleTest {
     @Mock
     private DonationStatusHistoryRepository historyRepository;
 
+    @Mock
+    private NotificationService notificationService;
+
     private DonationService donationService;
     private ClaimService claimService;
     private FeedService feedService;
@@ -76,8 +79,14 @@ class ClaimLifecycleTest {
     void setUp() {
         testNow = Instant.parse("2026-11-20T12:00:00Z");
 
-        donationService = new DonationService(donationRepository, historyRepository, claimRepository, userRepository);
-        claimService = new ClaimService(donationRepository, claimRepository, userRepository, ngoProfileRepository, donationService);
+        donationService = new DonationService(donationRepository, historyRepository, claimRepository, userRepository, notificationService);
+        claimService = new ClaimService(
+                donationRepository,
+                claimRepository,
+                userRepository,
+                ngoProfileRepository,
+                donationService,
+                notificationService);
 
         ScoringProperties scoringProperties = new ScoringProperties();
         feedService = new FeedService(donationRepository, userRepository, ngoProfileRepository, scoringProperties);

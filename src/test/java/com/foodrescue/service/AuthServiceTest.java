@@ -7,9 +7,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.EnumSet;
 import java.util.Optional;
 import java.util.Set;
 
+import org.mockito.ArgumentCaptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -171,35 +173,43 @@ class AuthServiceTest {
     }
 
     @Test
-    void registerNgoMissingLocationThrowsIllegalArgumentException() {
-        NgoProfileRegisterRequest profileRequest = new NgoProfileRegisterRequest(
-                120, 10.0, Set.of(FoodCategory.COOKED_MEAL)
-        );
+    void registerNgoWithoutAdvancedSettingsUsesDefaultsAndAllowsMissingLocation() {
         RegisterRequest request = new RegisterRequest(
                 "Food Shelter",
                 "shelter@ngo.example",
                 "Str0ngPass!",
                 Role.NGO,
-                null, null, null, null, profileRequest // lat/lng null
+                "9876543210", "Main Road", null, null, null
         );
 
         when(userRepository.existsByEmail("shelter@ngo.example")).thenReturn(false);
+        when(passwordEncoder.encode("Str0ngPass!")).thenReturn("encodedPassword");
+        User savedUser = new User("Food Shelter", "shelter@ngo.example", "encodedPassword", Role.NGO);
+        savedUser.setId(21L);
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        when(ngoProfileRepository.save(any(NgoProfile.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
-        assertThrows(IllegalArgumentException.class, () -> authService.register(request));
+        AuthUserResponse response = authService.register(request);
+
+        assertEquals(Role.NGO, response.role());
+        ArgumentCaptor<NgoProfile> profileCaptor = ArgumentCaptor.forClass(NgoProfile.class);
+        verify(ngoProfileRepository).save(profileCaptor.capture());
+        assertEquals(50, profileCaptor.getValue().getCapacityMeals());
+        assertEquals(10.0, profileCaptor.getValue().getServiceRadiusKm());
+        assertEquals(EnumSet.allOf(FoodCategory.class), profileCaptor.getValue().getAcceptedCategoriesSet());
     }
 
     @Test
-    void registerNgoMissingProfileThrowsIllegalArgumentException() {
+    void registerNgoRejectsOnlyOneCoordinate() {
         RegisterRequest request = new RegisterRequest(
                 "Food Shelter",
                 "shelter@ngo.example",
                 "Str0ngPass!",
                 Role.NGO,
-                null, null, 15.84, 74.49, null // profile null
+                null, null, 15.84, null, null
         );
-
         when(userRepository.existsByEmail("shelter@ngo.example")).thenReturn(false);
-
         assertThrows(IllegalArgumentException.class, () -> authService.register(request));
     }
 

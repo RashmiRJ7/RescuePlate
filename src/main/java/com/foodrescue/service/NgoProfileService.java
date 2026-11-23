@@ -38,9 +38,18 @@ public class NgoProfileService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
 
+        if ((request.latitude() == null) != (request.longitude() == null)) {
+            throw new IllegalArgumentException("Latitude and longitude must be provided together.");
+        }
+
         NgoProfile profile = ngoProfileRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("NGO profile not found for user: " + email));
 
+        if (request.latitude() != null) {
+            user.setLatitude(request.latitude());
+            user.setLongitude(request.longitude());
+            userRepository.save(user);
+        }
         profile.setCapacityMeals(request.capacityMeals());
         profile.setServiceRadiusKm(request.serviceRadiusKm());
         profile.setAcceptedCategoriesSet(request.acceptedCategories());

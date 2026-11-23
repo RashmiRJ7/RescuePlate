@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -68,13 +69,27 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 
-    @ExceptionHandler({OptimisticLockingFailureException.class, DataIntegrityViolationException.class})
-    public ResponseEntity<ErrorResponse> handleConcurrencyConflict(Exception ex, HttpServletRequest request) {
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public ResponseEntity<ErrorResponse> handleConcurrencyConflict(OptimisticLockingFailureException ex,
+                                                                   HttpServletRequest request) {
         log.warn("Concurrency conflict at {}: {}", request.getRequestURI(), ex.getMessage());
         ErrorResponse body = ErrorResponse.of(
                 HttpStatus.CONFLICT.value(),
                 HttpStatus.CONFLICT.getReasonPhrase(),
                 "This donation has already been claimed by another NGO.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex,
+                                                                      HttpServletRequest request) {
+        log.warn("Data integrity violation at {}: {}", request.getRequestURI(), ex.getMessage());
+        ErrorResponse body = ErrorResponse.of(
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                "The request conflicts with existing data or a database constraint.",
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
@@ -129,6 +144,18 @@ public class GlobalExceptionHandler {
                 fieldErrors
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleUnreadableRequest(HttpMessageNotReadableException ex,
+                                                                  HttpServletRequest request) {
+        ErrorResponse body = ErrorResponse.of(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "Request body contains invalid or incorrectly formatted values.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.badRequest().body(body);
     }
 
     @ExceptionHandler(AccessDeniedException.class)

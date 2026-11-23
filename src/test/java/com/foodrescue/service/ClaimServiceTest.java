@@ -58,6 +58,9 @@ class ClaimServiceTest {
     @Mock
     private DonationService donationService;
 
+    @Mock
+    private NotificationService notificationService;
+
     @InjectMocks
     private ClaimService claimService;
 

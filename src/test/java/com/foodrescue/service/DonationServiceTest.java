@@ -47,6 +47,7 @@ import com.foodrescue.repository.ClaimRepository;
 import com.foodrescue.repository.DonationRepository;
 import com.foodrescue.repository.DonationStatusHistoryRepository;
 import com.foodrescue.repository.UserRepository;
+import com.foodrescue.service.NotificationService;
 
 @ExtendWith(MockitoExtension.class)
 class DonationServiceTest {
@@ -62,6 +63,9 @@ class DonationServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private NotificationService notificationService;
 
     @InjectMocks
     private DonationService donationService;

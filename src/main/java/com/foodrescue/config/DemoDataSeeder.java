@@ -24,17 +24,16 @@ import com.foodrescue.repository.NgoProfileRepository;
 import com.foodrescue.repository.UserRepository;
 
 /**
- * Seeds realistic demonstration data for development, testing, and project evaluation (Task T2).
+ * Seeds donor, NGO, and donation demonstration data for development and evaluation.
  * <p>
  * Active under Spring profile "demo" (e.g. {@code --spring.profiles.active=demo}).
  * Seeds:
  * <ul>
- *   <li>1 Administrator</li>
  *   <li>3 Donors (Hotel Sunrise, Green Leaf Bakery, Fresh Mart Supermarket)</li>
  *   <li>3 NGOs with configured profiles (Helping Hands, Food For All, City Relief Mission)</li>
  *   <li>10 donations with varied categories, expiry times, and capacity demonstration</li>
  * </ul>
- * </p>
+ * Administrator accounts are created through the protected one-time setup workflow.
  */
 @Component
 @Profile("demo")

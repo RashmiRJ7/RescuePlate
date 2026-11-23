@@ -165,7 +165,7 @@ If you fall behind, protect **Steps 3, 4, 8, 9, 11**. They are the core of the p
 - Load a user by email and map the role to an authority (`ROLE_DONOR` and so on)
 - BCrypt bean
 - Role rules, with more specific rules **before** general ones
-- `DataSeeder` that creates the admin from properties if missing
+- No default admin credentials. Create the first admin through the one-time setup flow using `ADMIN_SETUP_KEY`; additional admins are created by authenticated ADMIN accounts.
 - JSON 401 and 403 responses instead of redirects to a login page
 
 **Senior tip:** in Spring Security 6 a JSON login endpoint must **save the security context to the session** itself after `authenticate(...)`; otherwise login "works" but the next request is anonymous. Look up `SecurityContextRepository.saveContext`.
@@ -291,7 +291,7 @@ If you fall behind, protect **Steps 3, 4, 8, 9, 11**. They are the core of the p
 
 ## Step 12: Harden and demo (T1-T5)
 
-- **T2 `DemoDataSeeder`:** 1 admin, 3 donors, 3 NGOs, about 10 donations with varied expiry and categories. NGOs must satisfy the eligibility rules, or the feed will look empty.
+- **T2 `DemoDataSeeder`:** 3 donors, 3 NGOs, about 10 donations with varied expiry and categories. Administrator creation is handled separately by the one-time setup flow. NGOs must satisfy the eligibility rules, or the feed will look empty.
 - **T1 Postman:** happy path per role plus the double-claim pair.
 - **T3 Acceptance run** against `PRD.md` §10.
 - **T4:** a teammate follows `README.md` from a clean checkout.

@@ -76,6 +76,8 @@ For validation errors (400), add a field map:
 | 2 | POST | `/auth/login` | public | P1 | Log in |
 | 3 | POST | `/auth/logout` | any | P1 | Log out |
 | 4 | GET | `/auth/me` | any | P1 | Current user |
+| 4a | GET | `/auth/admin-setup/status` | public | P1 | Check if initial admin setup is available |
+| 4b | POST | `/auth/admin-setup` | public + setup key | P1 | One-time first admin creation |
 | 5 | GET | `/ngo/profile` | NGO | P1 | Get NGO settings |
 | 6 | PUT | `/ngo/profile` | NGO | P1 | Update capacity, radius, categories |
 | 7 | POST | `/donations` | DONOR | P1 | Post surplus food |
@@ -90,11 +92,16 @@ For validation errors (400), add a field map:
 | 16 | PATCH | `/claims/{id}/pickup` | NGO (owner) | P1 | Mark picked up |
 | 17 | PATCH | `/claims/{id}/deliver` | NGO (owner) | P1 | Mark delivered |
 | 18 | GET | `/dashboard` | any | P2 | Role-aware stats |
-| 19 | GET | `/admin/users` | ADMIN | P2 | List users |
-| 20 | PATCH | `/admin/users/{id}/status` | ADMIN | P2 | Activate / deactivate |
-| 21 | GET | `/admin/donations` | ADMIN | P2 | All donations |
-| 22 | GET | `/notifications` | any | P2 | My notifications |
-| 23 | PATCH | `/notifications/{id}/read` | any | P2 | Mark read |
+| 19 | GET | `/admin/stats` | ADMIN | P1 | Database-backed platform counts |
+| 20 | GET | `/admin/users` | ADMIN | P1 | List registered users |
+| 20a | PATCH | `/admin/users/{id}/toggle` | ADMIN | P1 | Activate / deactivate a non-admin user |
+| 20b | POST | `/admin/users/admins` | ADMIN | P1 | Create another administrator |
+| 21 | GET | `/admin/donations` | ADMIN | P1 | All donations |
+| 21a | GET | `/admin/claims` | ADMIN | P1 | Claim lifecycle and status history |
+| 22 | GET | `/notifications?page=0&size=20` | authenticated | P1 | Current user's notifications |
+| 22a | GET | `/notifications/unread-count` | authenticated | P1 | Current user's unread count |
+| 23 | PATCH | `/notifications/{id}/read` | authenticated | P1 | Mark own notification read |
+| 23a | PATCH | `/notifications/read-all` | authenticated | P1 | Mark all own notifications read |
 | 24 | POST | `/complaints` | any | P2 | File complaint |
 | 25 | GET | `/admin/complaints` | ADMIN | P2 | List complaints |
 | 26 | PATCH | `/admin/complaints/{id}/resolve` | ADMIN | P2 | Resolve complaint |
@@ -448,25 +455,51 @@ Use this when a claim stays `PICKED_UP` and the NGO never marks it delivered (fo
 
 ---
 
-## 9. Notifications (P2)
+## 9. Notifications
 
-`GET /notifications?unreadOnly=true` →
+`GET /notifications?page=0&size=20` returns only the authenticated user's notifications, newest first. The server caps page size at 100.
 ```json
 [
   {
     "id": 55,
-    "type": "NEW_DONATION",
-    "message": "50 meals of cooked food available 2.4 km away. Safe for 28 minutes.",
+    "type": "DONATION_NEW",
+    "title": "New food donation",
+    "message": "Fresh rice · 25 meals · Central Market · 120 minutes until safe-until",
     "donationId": 7,
     "read": false,
-    "createdAt": "2026-11-20T14:31:00Z"
+    "createdAt": "2026-11-20T14:31:00Z",
+    "readAt": null
   }
 ]
 ```
 
-Types: `NEW_DONATION`, `URGENT_DONATION`, `CLAIM_CONFIRMED`, `CLAIM_CANCELLED`, `DONATION_CANCELLED`, `DONATION_EXPIRED`, `COMPLAINT_UPDATE`.
+Types: `DONATION_NEW`, `CLAIM_CREATED`, `CLAIM_CANCELLED`, `CLAIM_PICKED_UP`, `CLAIM_DELIVERED`, `EXPIRY_WARNING`. New donation notifications are sent once at creation to active NGOs matching the category and configured service radius; feed refreshes do not create notifications. Claim lifecycle notifications go only to the involved donor and NGO.
 
-`PATCH /notifications/{id}/read` → `200`.
+`GET /notifications/unread-count` returns a JSON number.
+
+`PATCH /notifications/{id}/read` and `PATCH /notifications/read-all` return `204`. A user cannot read or modify another user's notifications.
+
+## 9a. Initial and additional administrator setup
+
+Set a long random `ADMIN_SETUP_KEY` in the server environment or ignored `.env` file. No default administrator credentials are seeded.
+
+`GET /auth/admin-setup/status` → `{ "available": true }` only when the key is configured and the database has no ADMIN account.
+
+`POST /auth/admin-setup` (public, one time):
+```json
+{
+  "name": "Platform Administrator",
+  "email": "admin@example.com",
+  "password": "a-long-unique-password",
+  "confirmPassword": "a-long-unique-password",
+  "phone": "9876543210",
+  "setupKey": "provided-out-of-band"
+}
+```
+
+The server assigns the `ADMIN` role and hashes the password. The setup key is never returned. Once an admin exists, the endpoint responds with a conflict and setup status becomes unavailable.
+
+An authenticated ADMIN can create further admins using `POST /admin/users/admins` with `{ "name", "email", "password", "phone" }`. Public `/auth/register` accepts only `DONOR` and `NGO`.
 
 ---
 

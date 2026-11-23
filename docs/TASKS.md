@@ -51,7 +51,7 @@ Endpoint paths in this board are relative to the base URL `/api`, as in `API_DOC
 
 ## 2. Phase 1 tasks
 
-Phase 1 is a working vertical slice (about 30% of the project): donor posts → NGO sees the urgency-ordered feed → claims (conflict-safe) → picks up → delivers, with automatic expiry. The Admin can log in (seeded account) but has no admin features yet. Reliability counters (`total_claims`, `completed_claims`) exist in the schema but are only updated from Phase 2 (task P15).
+Phase 1 is a working vertical slice (about 30% of the project): donor posts → NGO sees the urgency-ordered feed → claims (conflict-safe) → picks up → delivers, with automatic expiry. The first Admin is provisioned through a one-time setup-key flow; admin dashboard and account management are implemented. Reliability counters (`total_claims`, `completed_claims`) exist in the schema but are only updated from Phase 2 (task P15).
 
 ### Group F: Foundation (Day 1, do in order)
 
@@ -62,7 +62,7 @@ Everything else depends on this block. F5 can run in parallel.
 | F1 | Project setup: Maven, Java 17, Spring Boot 3, dependencies (web, data-jpa, security, validation, mysql). `application.properties`, `.gitignore`, create DB `food_rescue` | `[core]` | none | M | `mvn spring-boot:run` starts and connects to MySQL |
 | F2 | Enums (`Role`, `FoodCategory`, `DonationStatus`, `ClaimStatus`), entities (`User`, `NgoProfile`, `Donation` with `@Version`, `Claim` with unique `activeDonationId`, `DonationStatusHistory`) and repositories | `[core]` | F1 | L | Tables are created in MySQL with the columns in `ARCHITECTURE.md` §3 |
 | F3 | Exceptions + `GlobalExceptionHandler` (`ResourceNotFound`, `DonationNotClaimable` → 409, `NgoNotEligible` → 400, `InvalidStatusTransition`, validation errors) returning the standard error JSON | `[BE]` | F1 | M | A thrown exception returns the right HTTP code and JSON shape (`ARCHITECTURE.md` §8) |
-| F4 | Security: `SecurityConfig`, session login, BCrypt bean, role-based path rules, `DataSeeder` for the admin account | `[core]` | F2 | L | Seeded admin can log in; Phase 1 role rules from `ARCHITECTURE.md` §7 enforced (Admin rules on the cancel endpoints and `SessionRegistry` come in Phase 2, M1/M2) |
+| F4 | Security: `SecurityConfig`, session login, BCrypt bean, role-based path rules, and protected first-admin setup | `[core]` | F2 | L | Admin setup key is required and setup closes after first admin; role rules from `ARCHITECTURE.md` §7 enforced |
 | F5 | Frontend skeleton in `resources/static`: Bootstrap layout, role-aware navbar, `api.js` (`fetch` wrapper with error handling), a `mock/` folder with example JSON from the API doc | `[FE]` | none | M | Pages share one layout; `api.js` can call a test endpoint |
 | F6 | Git repo setup, branch rules, empty Postman collection with folders Auth / Donor / NGO / Admin | `[TEST]` | none | S | Everyone can clone, run, and push a branch |
 
@@ -116,7 +116,7 @@ Everything else depends on this block. F5 can run in parallel.
 | ID | Task (files) | Tag | Needs | Est | Done when |
 |---|---|---|---|---|---|
 | T1 | Minimal Postman collection: one happy path per role (Donor: register → login → post → my donations; NGO: register → login → feed → claim → pickup → deliver; Admin: login only), plus the double-claim pair | `[TEST]` | F6 + endpoints | S | Collection runs top to bottom on a fresh DB |
-| T2 | `DemoDataSeeder`: 1 admin, 3 donors, 3 NGOs, ~10 donations with **varied expiry times** and categories (profile `demo`). Seeded NGOs and donations must satisfy the eligibility rules (`ALGORITHMS.md` §3.1): accepted categories cover the donations, donation locations within each NGO's `serviceRadiusKm`, and at least one donation demonstrating the `exceedsCapacity` warning | `[BE]` | F2 | M | Fresh start: each seeded NGO's feed is non-empty and visibly shows the urgency ordering |
+| T2 | `DemoDataSeeder`: 3 donors, 3 NGOs, ~10 donations with **varied expiry times** and categories (profile `demo`). Admin is created separately through one-time setup. Seeded NGOs and donations must satisfy the eligibility rules (`ALGORITHMS.md` §3.1): accepted categories cover the donations, donation locations within each NGO's `serviceRadiusKm`, and at least one donation demonstrating the `exceedsCapacity` warning | `[BE]` | F2 | M | Fresh start: each seeded NGO's feed is non-empty and visibly shows the urgency ordering |
 | T3 | Acceptance run against `PRD.md` §10 checklist; log bugs as cards | `[TEST]` | most of Phase 1 | M | Every checkbox ticked or a bug card exists |
 | T4 | Fresh-machine check: a teammate follows `README.md` exactly and reports what is missing | `[DOC]` | F1 | S | README steps work without help |
 | T5 | Demo script (5 minutes) and screenshots for the report | `[DOC]` | most of Phase 1 | M | Script walks: donor posts → NGO sees urgency order → claim → conflict demo → pickup → delivered → expiry shown on a short-lived donation |

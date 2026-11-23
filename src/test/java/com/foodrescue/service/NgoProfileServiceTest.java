@@ -89,6 +89,41 @@ class NgoProfileServiceTest {
     }
 
     @Test
+    void updateProfileSavesOptionalLocationCoordinates() {
+        User user = new User("Hope Shelter", "hope@ngo.example", "hash", Role.NGO);
+        user.setId(5L);
+        NgoProfile profile = new NgoProfile(user, 50, 10.0, "COOKED_MEAL");
+
+        when(userRepository.findByEmail("hope@ngo.example")).thenReturn(Optional.of(user));
+        when(ngoProfileRepository.findByUserId(5L)).thenReturn(Optional.of(profile));
+        when(ngoProfileRepository.save(any(NgoProfile.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        NgoProfileUpdateRequest request = new NgoProfileUpdateRequest(
+                75, 12.0, Set.of(FoodCategory.COOKED_MEAL), 15.8497, 74.4977
+        );
+
+        ngoProfileService.updateProfile("hope@ngo.example", request);
+
+        assertEquals(15.8497, user.getLatitude());
+        assertEquals(74.4977, user.getLongitude());
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    void updateProfileRejectsPartialLocationCoordinates() {
+        User user = new User("Hope Shelter", "hope@ngo.example", "hash", Role.NGO);
+        user.setId(5L);
+        when(userRepository.findByEmail("hope@ngo.example")).thenReturn(Optional.of(user));
+
+        NgoProfileUpdateRequest request = new NgoProfileUpdateRequest(
+                75, 12.0, Set.of(FoodCategory.COOKED_MEAL), 15.8497, null
+        );
+
+        assertThrows(IllegalArgumentException.class,
+                () -> ngoProfileService.updateProfile("hope@ngo.example", request));
+    }
+
+    @Test
     void getProfileNotFoundThrowsResourceNotFoundException() {
         when(userRepository.findByEmail("missing@ngo.example")).thenReturn(Optional.empty());
 

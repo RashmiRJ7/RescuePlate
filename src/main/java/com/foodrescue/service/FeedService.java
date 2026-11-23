@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ public class FeedService {
     private final NgoProfileRepository ngoProfileRepository;
     private final UrgencyScoreCalculator urgencyCalculator;
 
+    @Autowired
     public FeedService(DonationRepository donationRepository,
                        UserRepository userRepository,
                        NgoProfileRepository ngoProfileRepository,
@@ -82,7 +84,9 @@ public class FeedService {
         Double ngoLat = ngoUser.getLatitude();
         Double ngoLng = ngoUser.getLongitude();
         if (ngoLat == null || ngoLng == null) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException(
+                    "NGO location is not set. Add your location in NGO profile settings to see nearby donations."
+            );
         }
 
         // 1. Candidate claimable donations from DB

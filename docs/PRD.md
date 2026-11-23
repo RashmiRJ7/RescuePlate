@@ -230,7 +230,7 @@ Phase 1 is a working vertical slice (about 30% of the project): donor posts → 
 
 | Day | Focus |
 |---|---|
-| 1 | Project setup, database, entities, exceptions, security with seeded admin; in parallel: frontend skeleton, urgency calculator, distance util |
+| 1 | Project setup, database, entities, exceptions, session security with one-time first-admin setup; in parallel: frontend skeleton, urgency calculator, distance util |
 | 2 | Register/login, NGO profile, status changes with history, donation posting; login/register and donor pages |
 | 3 | Urgency-sorted eligible feed, donation details/history API, claim with 409 handling; NGO feed page |
 | 4 | Cancel claim, pickup/deliver, my claims, expiry monitor; my-claims page, role guards, demo data |

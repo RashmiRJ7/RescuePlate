@@ -78,31 +78,39 @@ cd RescuePlate
 
 # 2. Create the database
 mysql -u root -p -e "CREATE DATABASE food_rescue CHARACTER SET utf8mb4;"
+# Windows fallback when mysql.exe is not on PATH (adjust the install folder if needed):
+# & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p -e "CREATE DATABASE IF NOT EXISTS food_rescue CHARACTER SET utf8mb4;"
 
 # 3. Configure credentials: copy the template and fill in your own values
 cp .env.example .env          # Windows: copy .env.example .env
 #    DB_URL=jdbc:mysql://localhost:3306/food_rescue?serverTimezone=UTC
 #    DB_USERNAME=<your-user>
 #    DB_PASSWORD=<your-password>
+#    ADMIN_SETUP_KEY=<long-random-one-time-setup-key>
 
-# 4. Run standard or with demo seed data (from repository root)
+# 4. Run standard or with demo data (from repository root)
 ./mvnw spring-boot:run                                  # Standard run
-./mvnw spring-boot:run -Dspring-boot.run.profiles=demo  # Seeded demo data (1 admin, 3 donors, 3 NGOs, 10 donations)
+./mvnw spring-boot:run -Dspring-boot.run.profiles=demo  # Demo donors, NGOs, and donations
 # Windows:
-# mvnw.cmd spring-boot:run
-# mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=demo
+# In PowerShell, set JAVA_HOME to your installed JDK 17+ root if needed:
+# $env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-21.0.13.9-hotspot"
+# $env:Path = "$env:JAVA_HOME\bin;$env:Path"
+# .\mvnw.cmd spring-boot:run
+# .\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=demo
 
 # 5. Open
 #    http://localhost:8080             landing page
 #    http://localhost:8080/api/health  {"status":"UP",...}
 ```
 
-Build and run all 204 automated tests:
+The static frontend is packaged and served by Spring Boot from the same origin; there is no separate frontend server or `npm start` command.
+
+Build and run the automated test suite:
 ```bash
 ./mvnw test               # Windows: mvnw.cmd test
 ```
 
-A default **Admin** account is seeded on first start (`admin@rescueplate.com` / `Admin@12345`). When the `demo` profile is activated, realistic donor, NGO, and urgency-ranked donation records in Belagavi are automatically seeded.
+No default administrator credentials are created. Before the first startup, set a long random `ADMIN_SETUP_KEY` in `.env` (loaded from the project root). If there is no administrator in the database, open `http://localhost:8080/admin-setup.html` and create the first admin using that key. The endpoint becomes unavailable once an admin exists; remove `ADMIN_SETUP_KEY` from `.env` after setup. Existing accounts in an existing database are preserved. The optional `demo` profile seeds sample donor, NGO, and donation records in Belagavi, but does not create an administrator.
 
 > Never commit real passwords or API keys. Keep them in `.env` or environment variables (`.env` and `application-local.properties` are listed in `.gitignore`).
 

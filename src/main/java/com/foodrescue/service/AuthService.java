@@ -1,5 +1,6 @@
 package com.foodrescue.service;
 
+import java.util.EnumSet;
 import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.foodrescue.dto.AuthUserResponse;
 import com.foodrescue.dto.LoginRequest;
 import com.foodrescue.dto.LoginResponse;
+import com.foodrescue.dto.NgoProfileRegisterRequest;
 import com.foodrescue.dto.RegisterRequest;
 import com.foodrescue.dto.UserProfileResponse;
 import com.foodrescue.entity.NgoProfile;
@@ -61,13 +63,8 @@ public class AuthService {
             throw new DuplicateResourceException("A user with email " + request.email() + " already exists.");
         }
 
-        if (request.role() == Role.NGO) {
-            if (request.latitude() == null || request.longitude() == null) {
-                throw new IllegalArgumentException("Latitude and longitude are required for NGO registration.");
-            }
-            if (request.ngoProfile() == null) {
-                throw new IllegalArgumentException("NGO profile details are required for NGO registration.");
-            }
+        if ((request.latitude() == null) != (request.longitude() == null)) {
+            throw new IllegalArgumentException("Latitude and longitude must be provided together.");
         }
 
         User user = new User(
@@ -84,15 +81,22 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
-        if (request.role() == Role.NGO && request.ngoProfile() != null) {
-            String categories = request.ngoProfile().acceptedCategories().stream()
+        if (request.role() == Role.NGO) {
+            var ngoSettings = request.ngoProfile() != null
+                    ? request.ngoProfile()
+                    : new NgoProfileRegisterRequest(
+                            50,
+                            10.0,
+                            EnumSet.allOf(FoodCategory.class)
+                    );
+            String categories = ngoSettings.acceptedCategories().stream()
                     .map(FoodCategory::name)
                     .collect(Collectors.joining(","));
 
             NgoProfile profile = new NgoProfile(
                     savedUser,
-                    request.ngoProfile().capacityMeals(),
-                    request.ngoProfile().serviceRadiusKm(),
+                    ngoSettings.capacityMeals(),
+                    ngoSettings.serviceRadiusKm(),
                     categories
             );
             NgoProfile savedProfile = ngoProfileRepository.save(profile);

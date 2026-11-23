@@ -78,15 +78,18 @@ public class DonationService {
     private final DonationStatusHistoryRepository historyRepository;
     private final ClaimRepository claimRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     public DonationService(DonationRepository donationRepository,
                            DonationStatusHistoryRepository historyRepository,
                            ClaimRepository claimRepository,
-                           UserRepository userRepository) {
+                           UserRepository userRepository,
+                           NotificationService notificationService) {
         this.donationRepository = donationRepository;
         this.historyRepository = historyRepository;
         this.claimRepository = claimRepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     /**
@@ -243,6 +246,8 @@ public class DonationService {
                 "Donation posted"
         );
         historyRepository.save(initialHistory);
+
+        notificationService.notifyNewDonation(saved);
 
         return DonationResponse.from(saved, now, null);
     }
